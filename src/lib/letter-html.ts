@@ -58,7 +58,7 @@ export function generateLetterHTML(
   const signersList = data.signers && data.signers.length > 0 
     ? data.signers 
     : [{
-        nama: data.namaPenandatangan || "Rafi Atmaja",
+        nama: data.namaPenandatangan || "Raffi Atalla Natha Atmaja",
         jabatan: data.jabatan || "CEO GetMasjid",
         signatureImage: sig.signatureImage,
         showSignature: sig.showSignature,

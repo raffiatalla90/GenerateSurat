@@ -63,7 +63,7 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
     let newList = [...currentList];
     if (newList.length < count) {
       const defaults = [
-        { nama: "Rafi Atmaja", jabatan: "CEO GetMasjid", showSignature: true, showStamp: true },
+        { nama: "Raffi Atalla Natha Atmaja", jabatan: "CEO GetMasjid", showSignature: true, showStamp: true },
         { nama: "Sekretaris GetMasjid", jabatan: "Sekretaris", showSignature: true, showStamp: false },
         { nama: "Bendahara GetMasjid", jabatan: "Bendahara", showSignature: true, showStamp: false },
         { nama: "Ketua DKM", jabatan: "Ketua DKM Masjid", showSignature: true, showStamp: true }

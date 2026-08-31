@@ -26,12 +26,12 @@ export default function Home() {
     perihal: "Kerja Sama",
     isiSurat: SURAT_TEMPLATES["Kerja Sama"],
     tanggal: todayISO(),
-    namaPenandatangan: "Rafi Atmaja",
+    namaPenandatangan: "Raffi Atalla Natha Atmaja",
     jabatan: "CEO GetMasjid",
     attachments: [],
     signers: [
       {
-        nama: "Rafi Atmaja",
+        nama: "Raffi Atalla Natha Atmaja",
         jabatan: "CEO GetMasjid",
         showSignature: true,
         showStamp: true,
@@ -103,7 +103,7 @@ export default function Home() {
     const updatedData = {
       ...item.data,
       signers: item.data.signers || [{
-        nama: item.data.namaPenandatangan || "Rafi Atmaja",
+        nama: item.data.namaPenandatangan || "Raffi Atalla Natha Atmaja",
         jabatan: item.data.jabatan || "CEO GetMasjid",
         showSignature: true,
         showStamp: true,
