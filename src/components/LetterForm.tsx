@@ -192,13 +192,13 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
             </div>
             
             <div className="p-4 rounded-2xl bg-black/[0.02] ring-1 ring-black/5 space-y-3">
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                 <button 
                   type="button" 
                   onClick={() => attachmentInputRef.current?.click()} 
-                  className="h-8 px-3.5 rounded-full bg-white ring-1 ring-black/5 text-xs font-semibold hover:bg-stone-50 transition active:scale-95 flex items-center gap-1.5"
+                  className="h-9 px-4 rounded-full bg-white ring-1 ring-black/5 text-xs font-semibold text-stone-800 hover:bg-stone-50 transition active:scale-95 flex items-center justify-center gap-1.5 shrink-0 whitespace-nowrap shadow-sm w-fit"
                 >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   Tambah Gambar Lampiran
                 </button>
                 <input 
@@ -209,7 +209,7 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
                   className="hidden" 
                   onChange={handleAttachmentUpload} 
                 />
-                <span className="text-[10px] text-stone-500">Maksimal 3 gambar. Format PNG/JPG/WebP.</span>
+                <span className="text-[11px] text-stone-500">Maks. 3 gambar (PNG, JPG, WebP)</span>
               </div>
               
               {(data.attachments || []).length > 0 && (
@@ -312,14 +312,14 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
                           <span className="text-[9px] text-stone-400 text-center">Default</span>
                         )}
                       </div>
-                      <div className="flex-1 flex gap-2">
+                      <div className="flex-1 flex flex-wrap gap-2 items-center">
                         <button
                           type="button"
                           onClick={() => {
                             const input = document.getElementById(`signer-sig-input-${idx}`);
                             input?.click();
                           }}
-                          className="h-7 px-2.5 rounded-full bg-white ring-1 ring-black/5 text-[10px] font-semibold hover:bg-stone-50"
+                          className="h-7 px-3 rounded-full bg-white ring-1 ring-black/5 text-[10px] font-semibold hover:bg-stone-50 whitespace-nowrap shrink-0"
                         >
                           Upload Tanda Tangan
                         </button>
@@ -327,7 +327,7 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
                           <button
                             type="button"
                             onClick={() => handleSignerPropertyChange(idx, "signatureImage", undefined)}
-                            className="h-7 px-2.5 rounded-full bg-red-50 text-red-600 text-[10px] font-semibold hover:bg-red-100"
+                            className="h-7 px-2.5 rounded-full bg-red-50 text-red-600 text-[10px] font-semibold hover:bg-red-100 whitespace-nowrap shrink-0"
                           >
                             Reset
                           </button>
