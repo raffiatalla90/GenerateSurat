@@ -379,7 +379,7 @@ export function generateLetterHTML(
         <tr><td>Perihal</td><td>:</td><td><strong>${escapeHtml(perihalDisplay)}</strong></td></tr>
       </table>
       <div style="text-align:right; font-size:10pt; color:#333;">
-        Jakarta, ${escapeHtml(tanggalFormatted)}
+        Surakarta, ${escapeHtml(tanggalFormatted)}
       </div>
     </div>
 
