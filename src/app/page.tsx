@@ -15,28 +15,6 @@ function todayISO(): string {
   return d.toISOString().slice(0, 10);
 }
 
-const downloadPdfClientSide = async (html: string, filename: string) => {
-  const html2pdf = await new Promise<any>((resolve) => {
-    if ((window as any).html2pdf) {
-      resolve((window as any).html2pdf);
-      return;
-    }
-    const script = document.createElement("script");
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
-    script.onload = () => resolve((window as any).html2pdf);
-    document.head.appendChild(script);
-  });
-
-  const opt = {
-    margin: 0,
-    filename: filename,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, logging: false },
-    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-  };
-
-  await html2pdf().from(html).set(opt).save();
-};
 
 export default function Home() {
   const [nomorSurat, setNomorSurat] = useState("001/GMJ/--/----");
@@ -145,7 +123,8 @@ export default function Home() {
         const err = await res.json().catch(() => null);
         const htmlFallback = err?.html as string | undefined;
         if (htmlFallback) {
-          await downloadPdfClientSide(htmlFallback, filename);
+          const win = window.open("", "_blank");
+          if (win) { win.document.write(htmlFallback); win.document.close(); win.focus(); setTimeout(() => win.print(), 500); }
           return;
         }
         throw new Error("Gagal");
@@ -179,9 +158,8 @@ export default function Home() {
         const err = await res.json().catch(() => null);
         const htmlFallback = err?.html as string | undefined;
         if (htmlFallback) {
-          const customNomorFile = (err.nomorSurat || data.nomorSurat).replace(/\//g, "-");
-          const customFilename = `${customNomorFile} - ${perihalFile}.pdf`;
-          await downloadPdfClientSide(htmlFallback, customFilename);
+          const win = window.open("", "_blank");
+          if (win) { win.document.write(htmlFallback); win.document.close(); win.focus(); setTimeout(() => win.print(), 500); }
           return;
         }
         throw new Error(err?.error || "Gagal generate PDF");
