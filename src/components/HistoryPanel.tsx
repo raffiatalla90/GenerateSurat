@@ -17,9 +17,9 @@ export function HistoryPanel({ items, onLoad, onDelete, onDownload }: Props) {
   );
 
   return (
-    <div className="p-1.5 rounded-[2rem] bg-black/[0.04] ring-1 ring-black/5">
-      <div className="rounded-[calc(2rem-0.375rem)] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_12px_40px_rgba(0,0,0,0.06)] overflow-hidden">
-        <div className="px-6 md:px-7 pt-6 pb-4 flex items-start justify-between gap-4">
+    <div className="p-1 sm:p-1.5 rounded-[1.75rem] sm:rounded-[2rem] bg-black/[0.04] ring-1 ring-black/5">
+      <div className="rounded-[calc(1.75rem-0.25rem)] sm:rounded-[calc(2rem-0.375rem)] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_12px_40px_rgba(0,0,0,0.06)] overflow-hidden">
+        <div className="px-4 sm:px-6 md:px-7 pt-5 sm:pt-6 pb-3 sm:pb-4 flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
               <span className="w-7 h-7 rounded-full bg-black text-white grid place-items-center">
@@ -33,7 +33,7 @@ export function HistoryPanel({ items, onLoad, onDelete, onDownload }: Props) {
           <div className="hidden sm:block text-[11px] text-stone-500">Hapus background & crop ikut tersimpan</div>
         </div>
 
-        <div className="px-5 md:px-6 pb-2">
+        <div className="px-4 sm:px-6 pb-2">
           <div className="relative">
             <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
             <input value={q} onChange={(e)=>setQ(e.target.value)} placeholder="Cari nomor, penerima, instansi, perihal..." className="w-full h-9 rounded-full bg-[#FDFBF7] ring-1 ring-black/5 pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-black/10 focus:bg-white transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]" />

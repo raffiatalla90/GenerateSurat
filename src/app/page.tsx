@@ -237,17 +237,17 @@ export default function Home() {
       </header>
 
       {/* Professional Hero - compact */}
-      <section className="max-w-[1280px] w-full mx-auto px-4 md:px-6 pt-8 md:pt-10 pb-6 border-b border-stone-200 bg-white">
-        <div className={`flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${reveal ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}>
-          <div className="space-y-3">
+      <section className="max-w-[1280px] w-full mx-auto px-4 md:px-6 pt-6 sm:pt-8 md:pt-10 pb-5 sm:pb-6 border-b border-stone-200 bg-white">
+        <div className={`flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 sm:gap-6 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${reveal ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}>
+          <div className="space-y-2.5 sm:space-y-3">
             <span className="inline-flex rounded-full px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] font-medium bg-stone-900 text-white">Generator Surat Resmi</span>
-            <h1 className="text-[28px] md:text-[32px] font-semibold tracking-tight leading-tight text-stone-900">
+            <h1 className="text-[24px] sm:text-[28px] md:text-[32px] font-semibold tracking-tight leading-tight text-stone-900">
               Buat surat resmi <span className="text-[#0f6b4a]">GetMasjid</span> yang rapi,<br className="hidden md:block" /> siap kirim ke masjid & instansi
             </h1>
-            <p className="text-[13px] leading-6 text-stone-600 max-w-[560px]">Nomor otomatis <span className="font-mono bg-stone-50 px-1 py-0.5 rounded ring-1 ring-stone-200">XXX/GMJ/MM/YYYY</span> • Kop & TTD custom • PDF A4 presisi.</p>
+            <p className="text-[13px] leading-relaxed sm:leading-6 text-stone-600 max-w-[560px]">Nomor otomatis <span className="font-mono bg-stone-50 px-1 py-0.5 rounded ring-1 ring-stone-200">XXX/GMJ/MM/YYYY</span> • Kop & TTD custom • PDF A4 presisi.</p>
           </div>
           <div className="flex flex-wrap gap-2 items-center">
-            <button onClick={handlePreview} className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold shadow-sm transition active:scale-95">
+            <button onClick={handlePreview} className="inline-flex items-center gap-2 px-5 py-2.5 sm:py-2 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold shadow-sm transition active:scale-95">
               <span>Lihat Preview</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
@@ -256,11 +256,11 @@ export default function Home() {
       </section>
 
       {/* Main Editorial Split - Form + Preview */}
-      <main className="max-w-[1280px] w-full mx-auto px-4 md:px-6 py-8 md:py-4">
-        <div className="flex justify-center mb-6">
-          <div className="inline-flex items-center gap-2 p-1 rounded-full bg-black/[0.04] ring-1 ring-black/5">
-            <span className="text-xs px-3 py-1">💾 Riwayat save-first — simpan dulu baru muncul di history</span>
-            <button onClick={handleSave} className="px-4 py-1.5 rounded-full bg-black text-white text-xs font-medium hover:bg-stone-800 transition">Simpan Surat ke Riwayat</button>
+      <main className="max-w-[1280px] w-full mx-auto px-3 sm:px-4 md:px-6 py-6 md:py-4">
+        <div className="flex justify-center mb-5 sm:mb-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 p-2.5 sm:p-1 rounded-2xl sm:rounded-full bg-black/[0.04] ring-1 ring-black/5 w-full sm:w-auto text-center sm:text-left">
+            <span className="text-xs px-2 sm:px-3 py-0.5 text-stone-700">💾 Riwayat save-first — simpan dulu baru muncul di riwayat</span>
+            <button onClick={handleSave} className="w-full sm:w-auto px-4 py-2 sm:py-1.5 rounded-full bg-black text-white text-xs font-medium hover:bg-stone-800 transition shadow-sm">Simpan Surat ke Riwayat</button>
           </div>
         </div>
         <div className="grid lg:grid-cols-[580px_1fr] gap-6 md:gap-8 items-start">
@@ -287,9 +287,15 @@ export default function Home() {
             <HistoryPanel items={history} onLoad={handleLoadHistory} onDelete={handleDeleteHistory} onDownload={handleDownloadHistory} />
             {/* Floating Action Bar on Mobile Preview */}
             {showMobilePreview && (
-              <div className="lg:hidden fixed bottom-5 left-4 right-4 z-40 flex gap-3 bg-white/90 backdrop-blur-xl p-2.5 rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.15)] ring-1 ring-black/5 transition-all">
-                <button onClick={() => setShowMobilePreview(false)} className="flex-1 h-11 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 font-semibold text-xs uppercase tracking-wider transition active:scale-95">Edit Surat</button>
-                <button onClick={handleDownload} disabled={isGenerating} className="flex-1 h-11 rounded-full bg-[#0f6b4a] text-white font-semibold text-xs uppercase tracking-wider disabled:opacity-60 transition active:scale-95">{isGenerating ? "Memproses..." : "Download PDF"}</button>
+              <div className="lg:hidden fixed bottom-5 left-3 right-3 sm:left-6 sm:right-6 z-40 flex gap-2.5 bg-white/95 backdrop-blur-xl p-2 rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.18)] ring-1 ring-black/10 transition-all">
+                <button onClick={() => setShowMobilePreview(false)} className="flex-1 h-12 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-900 font-semibold text-xs uppercase tracking-wider transition active:scale-95 flex items-center justify-center gap-1.5 shadow-sm">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  <span>Edit Surat</span>
+                </button>
+                <button onClick={handleDownload} disabled={isGenerating} className="flex-1 h-12 rounded-xl bg-[#0f6b4a] hover:bg-[#0d5a3f] text-white font-semibold text-xs uppercase tracking-wider disabled:opacity-60 transition active:scale-95 flex items-center justify-center gap-1.5 shadow-md">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v12M8 11l4 4 4-4M3 17v3h18v-3" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  <span>{isGenerating ? "Memproses..." : "Download PDF"}</span>
+                </button>
               </div>
             )}
           </div>

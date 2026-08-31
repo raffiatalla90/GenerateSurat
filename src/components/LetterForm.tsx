@@ -125,13 +125,13 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
   };
 
   return (
-    <div className="p-1.5 rounded-[2rem] bg-black/[0.04] ring-1 ring-black/5">
-      <div className="rounded-[calc(2rem-0.375rem)] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_20px_60px_rgba(0,0,0,0.06)] overflow-hidden">
-        <div className="px-7 md:px-8 pt-7 pb-6">
+    <div className="p-1 sm:p-1.5 rounded-[1.75rem] sm:rounded-[2rem] bg-black/[0.04] ring-1 ring-black/5">
+      <div className="rounded-[calc(1.75rem-0.25rem)] sm:rounded-[calc(2rem-0.375rem)] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_20px_60px_rgba(0,0,0,0.06)] overflow-hidden">
+        <div className="px-4 sm:px-6 md:px-8 pt-6 sm:pt-7 pb-5 sm:pb-6">
           <div className="flex items-start justify-between gap-4">
             <div>
               <span className="inline-flex rounded-full px-2.5 py-1 text-[10px] uppercase tracking-[0.16em] font-medium bg-black text-white">Form Surat Resmi</span>
-              <p className="text-[13px] text-stone-500 mt-3 leading-relaxed max-w-[36ch]">Lengkapi data penerima & isi surat. Nomor otomatis ter-generate.</p>
+              <p className="text-[13px] text-stone-500 mt-2.5 sm:mt-3 leading-relaxed max-w-[36ch]">Lengkapi data penerima & isi surat. Nomor otomatis ter-generate.</p>
             </div>
             <span className="hidden md:inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full bg-[#FDFBF7] ring-1 ring-black/5 text-stone-600">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Auto-save
@@ -139,7 +139,7 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
           </div>
         </div>
 
-        <div className="px-7 md:px-8 pb-6 space-y-6">
+        <div className="px-4 sm:px-6 md:px-8 pb-6 space-y-5 sm:space-y-6">
           <div className="p-1 rounded-2xl bg-black/[0.03] ring-1 ring-black/5">
             <div className="rounded-[calc(1rem-4px)] bg-[#f0faf4] px-4 py-3.5 flex items-center justify-between">
               <div>
@@ -239,23 +239,26 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
 
           {/* Section Penandatangan (1-4 Orang) */}
           <div className="space-y-4 pt-2">
-            <div className="flex items-center justify-between border-t border-black/5 pt-4">
-              <Label required>Tanda Tangan & Penandatangan (1-4 Orang)</Label>
-              <div className="flex bg-black/[0.04] ring-1 ring-black/5 rounded-full p-0.5">
-                {[1, 2, 3, 4].map((num) => (
-                  <button
-                    key={num}
-                    type="button"
-                    onClick={() => handleSignerCountChange(num)}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
-                      (data.signers || []).length === num
-                        ? "bg-white text-stone-850 shadow-sm"
-                        : "text-stone-500 hover:text-stone-800"
-                    }`}
-                  >
-                    {num}
-                  </button>
-                ))}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-t border-black/5 pt-4">
+              <Label required>Tanda Tangan & Penandatangan</Label>
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <span className="text-[11px] text-stone-400 font-medium hidden sm:inline">Jumlah:</span>
+                <div className="flex bg-black/[0.04] ring-1 ring-black/5 rounded-full p-0.5">
+                  {[1, 2, 3, 4].map((num) => (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => handleSignerCountChange(num)}
+                      className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                        (data.signers || []).length === num
+                          ? "bg-white text-stone-900 shadow-sm"
+                          : "text-stone-500 hover:text-stone-800"
+                      }`}
+                    >
+                      {num}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
