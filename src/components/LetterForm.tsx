@@ -56,6 +56,52 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
     });
   };
 
+  const handleSignerCountChange = (count: number) => {
+    const currentList = data.signers || [];
+    if (currentList.length === count) return;
+    
+    let newList = [...currentList];
+    if (newList.length < count) {
+      const defaults = [
+        { nama: "Rafi Atmaja", jabatan: "CEO GetMasjid", showSignature: true, showStamp: true },
+        { nama: "Sekretaris GetMasjid", jabatan: "Sekretaris", showSignature: true, showStamp: false },
+        { nama: "Bendahara GetMasjid", jabatan: "Bendahara", showSignature: true, showStamp: false },
+        { nama: "Ketua DKM", jabatan: "Ketua DKM Masjid", showSignature: true, showStamp: true }
+      ];
+      
+      for (let i = newList.length; i < count; i++) {
+        newList.push(defaults[i] || { nama: "", jabatan: "", showSignature: true, showStamp: false });
+      }
+    } else {
+      newList = newList.slice(0, count);
+    }
+    
+    onChange({
+      ...data,
+      signers: newList,
+      namaPenandatangan: newList[0]?.nama || "",
+      jabatan: newList[0]?.jabatan || "",
+    });
+  };
+
+  const handleSignerPropertyChange = (idx: number, key: string, val: any) => {
+    const currentList = data.signers || [];
+    const newList = currentList.map((signer, i) => {
+      if (i === idx) {
+        return { ...signer, [key]: val };
+      }
+      return signer;
+    });
+    
+    onChange({
+      ...data,
+      signers: newList,
+      namaPenandatangan: newList[0]?.nama || "",
+      jabatan: newList[0]?.jabatan || "",
+    });
+  };
+
+
   const handlePerihalChange = (value: PerihalOption) => {
     setPerihalOption(value);
     if (value === "Custom") {
@@ -191,9 +237,120 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4">
-            <Field label="Nama Penandatangan" required placeholder="Rafi Atmaja" value={data.namaPenandatangan} onChange={(v) => onChange({ ...data, namaPenandatangan: v })} />
-            <Field label="Jabatan" required placeholder="CEO GetMasjid" value={data.jabatan} onChange={(v) => onChange({ ...data, jabatan: v })} />
+          {/* Section Penandatangan (1-4 Orang) */}
+          <div className="space-y-4 pt-2">
+            <div className="flex items-center justify-between border-t border-black/5 pt-4">
+              <Label required>Tanda Tangan & Penandatangan (1-4 Orang)</Label>
+              <div className="flex bg-black/[0.04] ring-1 ring-black/5 rounded-full p-0.5">
+                {[1, 2, 3, 4].map((num) => (
+                  <button
+                    key={num}
+                    type="button"
+                    onClick={() => handleSignerCountChange(num)}
+                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                      (data.signers || []).length === num
+                        ? "bg-white text-stone-850 shadow-sm"
+                        : "text-stone-500 hover:text-stone-800"
+                    }`}
+                  >
+                    {num}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {(data.signers || []).map((signer, idx) => (
+                <div key={idx} className="p-4 rounded-2xl bg-black/[0.02] ring-1 ring-black/5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Penandatangan {idx + 1}</span>
+                    <div className="flex gap-3">
+                      <label className="flex items-center gap-1.5 text-xs text-stone-600 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={signer.showSignature}
+                          onChange={(e) => handleSignerPropertyChange(idx, "showSignature", e.target.checked)}
+                          className="rounded text-[#0f6b4a]"
+                        />
+                        Ttd
+                      </label>
+                      <label className="flex items-center gap-1.5 text-xs text-stone-600 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={signer.showStamp}
+                          onChange={(e) => handleSignerPropertyChange(idx, "showStamp", e.target.checked)}
+                          className="rounded text-[#0f6b4a]"
+                        />
+                        Cap
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-3">
+                    <Field
+                      label={`Nama Orang #${idx + 1}`}
+                      required
+                      placeholder={`Nama Penandatangan ${idx + 1}`}
+                      value={signer.nama}
+                      onChange={(v) => handleSignerPropertyChange(idx, "nama", v)}
+                    />
+                    <Field
+                      label={`Jabatan #${idx + 1}`}
+                      required
+                      placeholder={`Jabatan Penandatangan ${idx + 1}`}
+                      value={signer.jabatan}
+                      onChange={(v) => handleSignerPropertyChange(idx, "jabatan", v)}
+                    />
+                  </div>
+
+                  {signer.showSignature && (
+                    <div className="flex gap-3 items-center pt-1 bg-white p-2.5 rounded-xl border border-black/5">
+                      <div className="w-[64px] h-[40px] rounded-lg border border-black/5 bg-[#FDFBF7] flex items-center justify-center overflow-hidden shrink-0">
+                        {signer.signatureImage ? (
+                          <img src={signer.signatureImage} alt={`ttd ${idx+1}`} className="max-w-full max-h-full object-contain" />
+                        ) : (
+                          <span className="text-[9px] text-stone-400 text-center">Default</span>
+                        )}
+                      </div>
+                      <div className="flex-1 flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const input = document.getElementById(`signer-sig-input-${idx}`);
+                            input?.click();
+                          }}
+                          className="h-7 px-2.5 rounded-full bg-white ring-1 ring-black/5 text-[10px] font-semibold hover:bg-stone-50"
+                        >
+                          Upload Tanda Tangan
+                        </button>
+                        {signer.signatureImage && (
+                          <button
+                            type="button"
+                            onClick={() => handleSignerPropertyChange(idx, "signatureImage", undefined)}
+                            className="h-7 px-2.5 rounded-full bg-red-50 text-red-600 text-[10px] font-semibold hover:bg-red-100"
+                          >
+                            Reset
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        id={`signer-sig-input-${idx}`}
+                        type="file"
+                        accept="image/png,image/jpeg,image/jpg"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          const r = new FileReader();
+                          r.onload = () => handleSignerPropertyChange(idx, "signatureImage", r.result as string);
+                          r.readAsDataURL(file);
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

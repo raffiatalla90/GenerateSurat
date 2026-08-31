@@ -54,6 +54,100 @@ export function generateLetterHTML(
 
   const sigImg = sig.showSignature ? (sig.signatureImage || SIGNATURE_SVG_FALLBACK) : "";
   const stampImg = sig.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : "";
+
+  const signersList = data.signers && data.signers.length > 0 
+    ? data.signers 
+    : [{
+        nama: data.namaPenandatangan || "Rafi Atmaja",
+        jabatan: data.jabatan || "CEO GetMasjid",
+        signatureImage: sig.signatureImage,
+        showSignature: sig.showSignature,
+        showStamp: sig.showStamp
+      }];
+
+  let ttdHtml = '';
+  if (signersList.length === 1) {
+    const signer = signersList[0];
+    const sImg = signer.showSignature ? (signer.signatureImage || sig.signatureImage || SIGNATURE_SVG_FALLBACK) : null;
+    const stImg = signer.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : null;
+    ttdHtml = `
+      <div class="ttd-container">
+        <div class="ttd-row justify-end">
+          <div class="ttd-box">
+            <div class="tanggal">Hormat kami,</div>
+            <div class="jabatan-atas">${escapeHtml(signer.jabatan)}</div>
+            <div class="ttd-images">
+              ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
+              ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;margin-top:20px;">(tanpa tanda tangan)</div>`}
+            </div>
+            <div class="ttd-name">${escapeHtml(signer.nama)}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (signersList.length <= 3) {
+    ttdHtml = `
+      <div class="ttd-container">
+        <div style="font-size: 10pt; color: #333; margin-bottom: 10px; padding-left: 20px;">Hormat kami,</div>
+        <div class="ttd-row">
+          ${signersList.map((signer) => {
+            const sImg = signer.showSignature ? (signer.signatureImage || sig.signatureImage || SIGNATURE_SVG_FALLBACK) : null;
+            const stImg = signer.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : null;
+            return `
+              <div class="ttd-box">
+                <div class="jabatan-atas">${escapeHtml(signer.jabatan)}</div>
+                <div class="ttd-images">
+                  ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
+                  ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;margin-top:20px;">(tanpa tanda tangan)</div>`}
+                </div>
+                <div class="ttd-name">${escapeHtml(signer.nama)}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  } else {
+    const row1 = signersList.slice(0, 2);
+    const row2 = signersList.slice(2, 4);
+    ttdHtml = `
+      <div class="ttd-container">
+        <div style="font-size: 10pt; color: #333; margin-bottom: 10px; padding-left: 20px;">Hormat kami,</div>
+        <div class="ttd-row">
+          ${row1.map((signer) => {
+            const sImg = signer.showSignature ? (signer.signatureImage || sig.signatureImage || SIGNATURE_SVG_FALLBACK) : null;
+            const stImg = signer.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : null;
+            return `
+              <div class="ttd-box">
+                <div class="jabatan-atas">${escapeHtml(signer.jabatan)}</div>
+                <div class="ttd-images">
+                  ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
+                  ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;margin-top:20px;">(tanpa tanda tangan)</div>`}
+                </div>
+                <div class="ttd-name">${escapeHtml(signer.nama)}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        <div class="ttd-row" style="margin-top: 20px;">
+          ${row2.map((signer) => {
+            const sImg = signer.showSignature ? (signer.signatureImage || sig.signatureImage || SIGNATURE_SVG_FALLBACK) : null;
+            const stImg = signer.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : null;
+            return `
+              <div class="ttd-box">
+                <div class="jabatan-atas">${escapeHtml(signer.jabatan)}</div>
+                <div class="ttd-images">
+                  ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
+                  ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;margin-top:20px;">(tanpa tanda tangan)</div>`}
+                </div>
+                <div class="ttd-name">${escapeHtml(signer.nama)}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
   const logoHtml = kop.logoImage
     ? `<img src="${kop.logoImage}" alt="logo" style="width:46px;height:46px;object-fit:contain;" />`
     : `<div class="logo" style="background:${escapeHtml(kop.accentColor)}">${escapeHtml(kop.logoText || "GM")}</div>`;
@@ -172,15 +266,24 @@ export function generateLetterHTML(
     margin-bottom: 28px;
   }
   /* TTD */
-  .ttd-wrap {
+  .ttd-container {
+    margin-top: 15px;
+    width: 100%;
+  }
+  .ttd-row {
     display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .ttd-row.justify-end {
     justify-content: flex-end;
-    margin-top: 10px;
   }
   .ttd-box {
     text-align: center;
-    width: 260px;
+    width: 220px;
     position: relative;
+    box-sizing: border-box;
   }
   .ttd-box .tanggal { font-size: 10pt; margin-bottom: 6px; color: #333; }
   .ttd-box .jabatan-atas { font-size: 10pt; color: #333; margin-bottom: 8px; }
@@ -194,7 +297,7 @@ export function generateLetterHTML(
   }
   .ttd-images .stamp {
     position: absolute;
-    right: 28px;
+    right: 12px;
     top: 4px;
     width: 88px;
     height: 88px;
@@ -299,17 +402,7 @@ export function generateLetterHTML(
     </div>
 
     <!-- TTD -->
-    <div class="ttd-wrap">
-      <div class="ttd-box">
-        <div class="tanggal">Hormat kami,</div>
-        <div class="ttd-images">
-          ${stampImg ? `<img class="stamp" src="${stampImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
-          ${sigImg ? `<img class="signature" src="${sigImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;">(tanpa tanda tangan)</div>`}
-        </div>
-        <div class="ttd-name">${escapeHtml(data.namaPenandatangan)}</div>
-        <div class="ttd-jabatan">${escapeHtml(data.jabatan)}</div>
-      </div>
-    </div>
+    ${ttdHtml}
 
     <div class="footer">
       <span>Dokumen ini diterbitkan secara elektronik oleh GetMasjid &bull; Sah tanpa tanda tangan basah</span>

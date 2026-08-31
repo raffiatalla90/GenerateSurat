@@ -29,6 +29,14 @@ export default function Home() {
     namaPenandatangan: "Rafi Atmaja",
     jabatan: "CEO GetMasjid",
     attachments: [],
+    signers: [
+      {
+        nama: "Rafi Atmaja",
+        jabatan: "CEO GetMasjid",
+        showSignature: true,
+        showStamp: true,
+      }
+    ],
   });
   const [kopConfig, setKopConfig] = useState<KopSuratConfig>(DEFAULT_KOP);
   const [sigConfig, setSigConfig] = useState<SignatureConfig>(DEFAULT_SIG);
@@ -92,7 +100,16 @@ export default function Home() {
   };
 
   const handleLoadHistory = (item: HistoryItem) => {
-    setData(item.data);
+    const updatedData = {
+      ...item.data,
+      signers: item.data.signers || [{
+        nama: item.data.namaPenandatangan || "Rafi Atmaja",
+        jabatan: item.data.jabatan || "CEO GetMasjid",
+        showSignature: true,
+        showStamp: true,
+      }]
+    };
+    setData(updatedData);
     setKopConfig(item.kopConfig);
     setSigConfig(item.signatureConfig);
     setNomorSurat(item.nomorSurat);

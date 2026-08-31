@@ -7,6 +7,14 @@ export type PerihalOption =
   | "Permohonan"
   | "Custom";
 
+export interface Signer {
+  nama: string;
+  jabatan: string;
+  signatureImage?: string;
+  showSignature: boolean;
+  showStamp: boolean;
+}
+
 export interface LetterData {
   nomorSurat: string;
   namaPenerima: string;
@@ -19,6 +27,7 @@ export interface LetterData {
   namaPenandatangan: string;
   jabatan: string;
   attachments?: string[];
+  signers?: Signer[];
 }
 
 export interface LetterFormData extends Omit<LetterData, "nomorSurat"> {
