@@ -244,13 +244,13 @@ export default function Home() {
             <h1 className="text-[28px] md:text-[32px] font-semibold tracking-tight leading-tight text-stone-900">
               Buat surat resmi <span className="text-[#0f6b4a]">GetMasjid</span> yang rapi,<br className="hidden md:block" /> siap kirim ke masjid & instansi
             </h1>
-            <p className="text-[13px] leading-6 text-stone-600 max-w-[560px]">Nomor otomatis <span className="font-mono bg-stone-50 px-1 py-0.5 rounded ring-1 ring-stone-200">XXX/GMJ/MM/YYYY</span> • Kop & TTD custom • PDF A4 presisi — bahasa Indonesia formal justify.</p>
+            <p className="text-[13px] leading-6 text-stone-600 max-w-[560px]">Nomor otomatis <span className="font-mono bg-stone-50 px-1 py-0.5 rounded ring-1 ring-stone-200">XXX/GMJ/MM/YYYY</span> • Kop & TTD custom • PDF A4 presisi.</p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <span className="px-3 py-1.5 rounded-full bg-stone-50 ring-1 ring-stone-200 text-xs">Formal</span>
-            <span className="px-3 py-1.5 rounded-full bg-stone-50 ring-1 ring-stone-200 text-xs">Justify Rapi</span>
-            <span className="px-3 py-1.5 rounded-full bg-stone-50 ring-1 ring-stone-200 text-xs">A4</span>
-            <button onClick={handlePreview} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-stone-900 text-white text-xs font-medium">Lihat Preview →</button>
+          <div className="flex flex-wrap gap-2 items-center">
+            <button onClick={handlePreview} className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold shadow-sm transition active:scale-95">
+              <span>Lihat Preview</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
           </div>
         </div>
       </section>
