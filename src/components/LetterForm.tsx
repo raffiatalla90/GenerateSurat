@@ -354,22 +354,49 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
           </div>
         </div>
 
-        <div className="px-7 md:px-8 py-5 bg-[#FDFBF7]/70 flex flex-col gap-3">
+        <div className="px-5 sm:px-8 py-5 bg-[#FDFBF7]/80 flex flex-col gap-3 border-t border-black/5">
           <div className="flex flex-col sm:flex-row gap-3">
-            <button type="button" onClick={onPreview} className="group flex-1 h-[46px] rounded-full bg-white ring-1 ring-black/5 text-stone-800 font-medium text-[14px] hover:bg-white transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] flex items-center justify-center gap-2 active:scale-[0.98]">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
-              Preview
+            <button 
+              type="button" 
+              onClick={onPreview} 
+              className="group flex-1 h-[48px] rounded-full bg-white ring-1 ring-stone-200 hover:ring-stone-300 text-stone-800 font-semibold text-[14px] hover:bg-stone-50 transition-all flex items-center justify-center gap-2.5 active:scale-[0.98] shadow-sm"
+            >
+              <span className="w-7 h-7 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 group-hover:bg-stone-200 transition">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+              </span>
+              <span>Lihat Preview Surat</span>
             </button>
-            <button type="button" onClick={onDownload} disabled={isGenerating} className="group flex-1 h-[46px] rounded-full bg-[#0f6b4a] text-white font-medium text-[14px] hover:bg-[#0d5a3f] disabled:opacity-60 flex items-center justify-center gap-2 pl-5 pr-1.5 active:scale-[0.98] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] shadow-[0_12px_24px_rgba(15,107,74,0.18)]">
-              {isGenerating ? <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin"/> Generating...</> : <>Download PDF <span className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.4"><path d="M12 5v12M8 11l4 4 4-4M3 17v3h18v-3" strokeLinecap="round" strokeLinejoin="round"/></svg></span></>}
+            <button 
+              type="button" 
+              onClick={onDownload} 
+              disabled={isGenerating} 
+              className="group flex-1 h-[48px] rounded-full bg-[#0f6b4a] text-white font-semibold text-[14px] hover:bg-[#0d5a3f] disabled:opacity-60 flex items-center justify-center gap-2 pl-5 pr-2 active:scale-[0.98] transition-all shadow-[0_8px_20px_rgba(15,107,74,0.22)]"
+            >
+              {isGenerating ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin"/>
+                  <span>Memproses...</span>
+                </>
+              ) : (
+                <>
+                  <span>Download PDF</span>
+                  <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:translate-x-0.5 transition-all">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v12M8 11l4 4 4-4M3 17v3h18v-3" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </span>
+                </>
+              )}
             </button>
           </div>
-          <button type="button" onClick={onSave} className="w-full h-[42px] rounded-full bg-black text-white font-medium text-[13px] hover:bg-stone-800 flex items-center justify-center gap-2 active:scale-[0.98] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.4"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
-            Simpan ke Riwayat (save-first)
+          <button 
+            type="button" 
+            onClick={onSave} 
+            className="w-full h-[44px] rounded-full bg-stone-900 text-white font-medium text-[13px] hover:bg-stone-800 flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-sm"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+            <span>Simpan ke Riwayat (save-first)</span>
           </button>
         </div>
-        <p className="px-7 md:px-8 pb-6 text-[11px] text-stone-500 text-center">Nomor tercatat otomatis saat download. Pastikan data benar.</p>
+        <p className="px-5 sm:px-8 pb-6 text-[11px] text-stone-500 text-center">Nomor tercatat otomatis saat download. Pastikan data benar.</p>
       </div>
     </div>
   );
