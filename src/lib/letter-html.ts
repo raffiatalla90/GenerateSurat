@@ -24,9 +24,6 @@ const STAMP_SVG_FALLBACK = svgToDataUrl(
     <path id="topArc" d="M 18 70 A 52 52 0 0 1 122 70"/>
     <path id="bottomArc" d="M 22 70 A 48 48 0 0 0 118 70"/>
   </defs>
-  <text fill="#0f6b4a" font-family="sans-serif" font-size="7.5" font-weight="700" letter-spacing="1.4" text-anchor="middle">
-    <textPath href="#topArc" startOffset="50%">PT GETMASJID DIGITAL INDONESIA</textPath>
-  </text>
   <text fill="#0f6b4a" font-family="sans-serif" font-size="5.2" font-weight="600" letter-spacing="1.1" text-anchor="middle" opacity="0.9">
     <textPath href="#bottomArc" startOffset="50%">TEMUKAN DAN TERHUBUNG KE MASJID</textPath>
   </text>
@@ -58,7 +55,7 @@ export function generateLetterHTML(
   const sigImg = sig.showSignature ? (sig.signatureImage || SIGNATURE_SVG_FALLBACK) : "";
   const stampImg = sig.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : "";
   const logoHtml = kop.logoImage
-    ? `<img src="${kop.logoImage}" alt="logo" style="width:46px;height:46px;object-fit:contain;border-radius:10px;background:white;border:1px solid #e5e7eb;" />`
+    ? `<img src="${kop.logoImage}" alt="logo" style="width:46px;height:46px;object-fit:contain;" />`
     : `<div class="logo" style="background:${escapeHtml(kop.accentColor)}">${escapeHtml(kop.logoText || "GM")}</div>`;
 
   // Split company name for GetMasjid style if contains no space; otherwise full
@@ -308,28 +305,37 @@ export function generateLetterHTML(
     </div>
   </div>
   <script>
+    let currentManualScale = 1;
     function autoScale() {
       const page = document.querySelector('.page');
       if (!page) return;
       const width = window.innerWidth;
       const targetWidth = 794; // approx A4 width in px at 96dpi (210mm)
+      let fitScale = 1;
       if (width < targetWidth) {
-        const scale = width / targetWidth;
-        if ('zoom' in document.body.style) {
-          document.body.style.zoom = scale;
-        } else {
-          // Firefox fallback
-          page.style.transform = 'scale(' + scale + ')';
-          page.style.transformOrigin = 'top center';
-          document.body.style.width = targetWidth + 'px';
-          document.body.style.overflowX = 'hidden';
-        }
+        fitScale = width / targetWidth;
+      }
+      const finalScale = fitScale * currentManualScale;
+
+      if ('zoom' in document.body.style) {
+        document.body.style.zoom = finalScale;
+        document.body.style.overflowX = finalScale > (width / targetWidth) ? 'auto' : 'hidden';
       } else {
-        document.body.style.zoom = '1';
-        page.style.transform = 'none';
-        document.body.style.width = 'auto';
+        // Firefox fallback
+        page.style.transform = 'scale(' + finalScale + ')';
+        page.style.transformOrigin = 'top center';
+        document.body.style.width = targetWidth + 'px';
+        document.body.style.overflowX = finalScale > (width / targetWidth) ? 'auto' : 'hidden';
       }
     }
+
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'set-zoom') {
+        currentManualScale = event.data.scale;
+        autoScale();
+      }
+    });
+
     window.addEventListener('load', autoScale);
     window.addEventListener('resize', autoScale);
     autoScale();
