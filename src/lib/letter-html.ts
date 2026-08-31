@@ -272,7 +272,7 @@ export function generateLetterHTML(
     <div class="meta">
       <table>
         <tr><td>Nomor</td><td>:</td><td>${escapeHtml(data.nomorSurat)}</td></tr>
-        <tr><td>Lampiran</td><td>:</td><td>-</td></tr>
+        <tr><td>Lampiran</td><td>:</td><td>${data.attachments && data.attachments.length > 0 ? `${data.attachments.length} lembar` : "-"}</td></tr>
         <tr><td>Perihal</td><td>:</td><td><strong>${escapeHtml(perihalDisplay)}</strong></td></tr>
       </table>
       <div style="text-align:right; font-size:10pt; color:#333;">
@@ -316,11 +316,32 @@ export function generateLetterHTML(
       <span>${escapeHtml(data.nomorSurat)}</span>
     </div>
   </div>
+
+  ${data.attachments && data.attachments.length > 0 ? data.attachments.map((img, idx) => `
+    <div class="page attachment-page" style="page-break-before: always; break-before: page; display: flex; flex-direction: column; justify-content: space-between; min-height: 297mm; background: white; padding: 18mm 22mm; box-sizing: border-box;">
+      <!-- Header Lampiran -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #0f6b4a; padding-bottom: 8px; margin-bottom: 15px;">
+        <span style="font-size: 10pt; font-weight: 700; color: #0f6b4a; text-transform: uppercase; letter-spacing: 0.5px;">Lampiran ${idx + 1}</span>
+        <span style="font-size: 8.5pt; color: #666; font-family: monospace;">No. ${escapeHtml(data.nomorSurat)}</span>
+      </div>
+      
+      <!-- Body Lampiran: Center Image -->
+      <div style="flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 10px 0;">
+        <img src="${img}" alt="Lampiran ${idx + 1}" style="max-width: 100%; max-height: 200mm; object-fit: contain; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" />
+      </div>
+      
+      <!-- Footer Lampiran -->
+      <div style="border-top: 1px solid #e5e7eb; padding-top: 8px; display: flex; justify-content: space-between; font-size: 7pt; color: #888; letter-spacing: 0.2px; margin-top: 15px;">
+        <span>Dokumen ini diterbitkan secara elektronik oleh GetMasjid</span>
+        <span>Halaman ${idx + 2}</span>
+      </div>
+    </div>
+  `).join("") : ""}
   <script>
     let currentManualScale = 1;
     function autoScale() {
-      const page = document.querySelector('.page');
-      if (!page) return;
+      const pages = document.querySelectorAll('.page');
+      if (pages.length === 0) return;
       const width = window.innerWidth;
       const targetWidth = 794; // approx A4 width in px at 96dpi (210mm)
       let fitScale = 1;
@@ -334,8 +355,10 @@ export function generateLetterHTML(
         document.body.style.overflowX = finalScale > (width / targetWidth) ? 'auto' : 'hidden';
       } else {
         // Firefox fallback
-        page.style.transform = 'scale(' + finalScale + ')';
-        page.style.transformOrigin = 'top center';
+        pages.forEach(function(page) {
+          page.style.transform = 'scale(' + finalScale + ')';
+          page.style.transformOrigin = 'top center';
+        });
         document.body.style.width = targetWidth + 'px';
         document.body.style.overflowX = finalScale > (width / targetWidth) ? 'auto' : 'hidden';
       }

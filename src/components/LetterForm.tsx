@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { LetterData, PerihalOption } from "@/types/letter";
 import { SURAT_TEMPLATES, PERIHAL_OPTIONS } from "@/lib/letter-templates";
 
@@ -20,6 +20,41 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
   const [customPerihal, setCustomPerihal] = useState(
     !(PERIHAL_OPTIONS as readonly string[]).includes(data.perihal) ? data.perihal : ""
   );
+  const attachmentInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAttachmentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    
+    const currentAttachments = data.attachments || [];
+    if (currentAttachments.length + files.length > 3) {
+      alert("Maksimal 3 gambar lampiran saja.");
+      return;
+    }
+
+    const readers = Array.from(files).map((file) => {
+      return new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(file);
+      });
+    });
+
+    Promise.all(readers).then((base64Images) => {
+      onChange({
+        ...data,
+        attachments: [...currentAttachments, ...base64Images]
+      });
+    });
+  };
+
+  const handleRemoveAttachment = (idx: number) => {
+    const currentAttachments = data.attachments || [];
+    onChange({
+      ...data,
+      attachments: currentAttachments.filter((_, i) => i !== idx)
+    });
+  };
 
   const handlePerihalChange = (value: PerihalOption) => {
     setPerihalOption(value);
@@ -98,6 +133,61 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
               {["Kerja Sama","Pengajuan","Undangan"].map(k=>(
                 <button key={k} type="button" onClick={()=>handleTemplateInsert(k)} className="text-[12px] px-3 py-1 rounded-full bg-white ring-1 ring-black/5 hover:ring-black/10 hover:bg-[#FDFBF7] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">{k}</button>
               ))}
+            </div>
+          </div>
+
+          {/* Section Lampiran Gambar */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <Label optional>Gambar Lampiran (Opsional)</Label>
+              <span className="text-[11px] px-2 py-1 rounded-full bg-black/[0.04] ring-1 ring-black/5">
+                {(data.attachments || []).length} Gambar
+              </span>
+            </div>
+            
+            <div className="p-4 rounded-2xl bg-black/[0.02] ring-1 ring-black/5 space-y-3">
+              <div className="flex items-center gap-3">
+                <button 
+                  type="button" 
+                  onClick={() => attachmentInputRef.current?.click()} 
+                  className="h-8 px-3.5 rounded-full bg-white ring-1 ring-black/5 text-xs font-semibold hover:bg-stone-50 transition active:scale-95 flex items-center gap-1.5"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  Tambah Gambar Lampiran
+                </button>
+                <input 
+                  ref={attachmentInputRef} 
+                  type="file" 
+                  accept="image/png,image/jpeg,image/jpg,image/webp" 
+                  multiple 
+                  className="hidden" 
+                  onChange={handleAttachmentUpload} 
+                />
+                <span className="text-[10px] text-stone-500">Maksimal 3 gambar. Format PNG/JPG/WebP.</span>
+              </div>
+              
+              {(data.attachments || []).length > 0 && (
+                <div className="grid grid-cols-3 gap-3 pt-1">
+                  {(data.attachments || []).map((img, idx) => (
+                    <div key={idx} className="relative aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-black/5 bg-[#FDFBF7] group">
+                      <img src={img} alt={`lampiran ${idx + 1}`} className="w-full h-full object-contain p-1" />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <button 
+                          type="button" 
+                          onClick={() => handleRemoveAttachment(idx)} 
+                          className="w-7 h-7 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center active:scale-90 transition shadow-lg"
+                          title="Hapus Lampiran"
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        </button>
+                      </div>
+                      <span className="absolute top-1 left-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded-md font-mono">
+                        Hal {idx + 2}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 

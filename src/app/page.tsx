@@ -28,6 +28,7 @@ export default function Home() {
     tanggal: todayISO(),
     namaPenandatangan: "Rafi Atmaja",
     jabatan: "CEO GetMasjid",
+    attachments: [],
   });
   const [kopConfig, setKopConfig] = useState<KopSuratConfig>(DEFAULT_KOP);
   const [sigConfig, setSigConfig] = useState<SignatureConfig>(DEFAULT_SIG);

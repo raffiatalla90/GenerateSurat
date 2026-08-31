@@ -18,6 +18,7 @@ export interface LetterData {
   tanggal: string; // YYYY-MM-DD
   namaPenandatangan: string;
   jabatan: string;
+  attachments?: string[];
 }
 
 export interface LetterFormData extends Omit<LetterData, "nomorSurat"> {
