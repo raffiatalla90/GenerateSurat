@@ -82,31 +82,56 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
   };
 
   return (
-    <div className="p-1.5 rounded-[2rem] bg-black/[0.04] ring-1 ring-black/5">
-      <div className="rounded-[calc(2rem-0.375rem)] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_12px_40px_rgba(0,0,0,0.06)] overflow-hidden">
-        <button type="button" onClick={() => setOpen((v) => !v)} className="w-full flex items-center justify-between px-6 md:px-7 py-5 hover:bg-black/[0.02] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#1c1a17] text-white grid place-items-center">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.3"><path d="M12 8a4 4 0 100 8 4 4 0 000-8z"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.42-1.42"/></svg>
+    <div className="p-1 rounded-[1.75rem] bg-black/[0.04] ring-1 ring-black/5">
+      <div className="rounded-[calc(1.75rem-0.25rem)] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden transition-all">
+        <button 
+          type="button" 
+          onClick={() => setOpen((v) => !v)} 
+          className="w-full flex items-center justify-between p-4 sm:px-6 sm:py-4.5 hover:bg-stone-50/70 transition-all text-left group"
+        >
+          <div className="flex items-center gap-3 sm:gap-3.5 min-w-0 pr-2">
+            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-800 ring-1 ring-emerald-600/15 flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
             </div>
-            <div className="text-left">
-              <div className="text-[13px] font-medium tracking-tight text-[#1c1a17]">Pengaturan Kop & Tanda Tangan</div>
-              <div className="text-[11px] text-stone-500">Hapus background otomatis • Cap resmi GetMasjid • Preview = PDF</div>
+            <div className="min-w-0">
+              <div className="text-[13px] sm:text-[14px] font-semibold text-stone-900 tracking-tight">
+                Pengaturan Kop & Tanda Tangan
+              </div>
+              <div className="text-[11px] text-stone-500 truncate mt-0.5">
+                Kustom logo GetMasjid, cap DKM & tanda tangan
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className={`text-[11px] px-2.5 py-1 rounded-full ring-1 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${open ? "bg-black text-white ring-black" : "bg-[#FDFBF7] ring-black/5 text-stone-600"}`}>{open ? "Tutup" : "Atur"}</span>
-            <span className={`w-7 h-7 rounded-full bg-black text-white grid place-items-center transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${open ? "rotate-180" : ""}`}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5"><path d="M6 9l6 6 6-6"/></svg>
-            </span>
+          <div className="shrink-0">
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11.5px] font-semibold transition-all ${open ? "bg-[#0f6b4a] text-white shadow-sm" : "bg-stone-100 hover:bg-stone-200 text-stone-700 ring-1 ring-black/5"}`}>
+              <span>{open ? "Tutup" : "Buka"}</span>
+              <svg className={`w-3.5 h-3.5 transition-transform duration-300 ${open ? "rotate-180" : ""}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
           </div>
         </button>
 
         {open && (
-          <div className="border-t border-black/5">
-            <div className="flex gap-1 p-1 bg-[#FDFBF7] ring-1 ring-black/5 rounded-full w-fit mx-5 mt-4">
-              <button onClick={() => setTab("kop")} className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${tab === "kop" ? "bg-black text-white shadow" : "text-stone-600 hover:text-black"}`}>Kop Surat</button>
-              <button onClick={() => setTab("ttd")} className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${tab === "ttd" ? "bg-black text-white shadow" : "text-stone-600 hover:text-black"}`}>Tanda Tangan & Cap</button>
+          <div className="border-t border-black/5 bg-[#FAFAF8]/50">
+            <div className="flex gap-1.5 p-1 bg-white ring-1 ring-black/5 rounded-full w-fit mx-4 sm:mx-6 mt-4 shadow-sm">
+              <button 
+                type="button"
+                onClick={() => setTab("kop")} 
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${tab === "kop" ? "bg-[#0f6b4a] text-white shadow-sm" : "text-stone-600 hover:text-stone-900"}`}
+              >
+                Kop Surat
+              </button>
+              <button 
+                type="button"
+                onClick={() => setTab("ttd")} 
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${tab === "ttd" ? "bg-[#0f6b4a] text-white shadow-sm" : "text-stone-600 hover:text-stone-900"}`}
+              >
+                Tanda Tangan & Cap
+              </button>
             </div>
 
             <div className="p-5 md:p-6">
