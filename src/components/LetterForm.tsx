@@ -307,7 +307,7 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
                   </div>
 
                   {signer.showSignature && (
-                    <div className="flex gap-3 items-center pt-1 bg-white p-2.5 rounded-xl border border-black/5">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 pt-1 bg-white p-2.5 rounded-xl border border-black/5">
                       <div className="w-[64px] h-[40px] rounded-lg border border-black/5 bg-[#FDFBF7] flex items-center justify-center overflow-hidden shrink-0">
                         {signer.signatureImage ? (
                           <img src={signer.signatureImage} alt={`ttd ${idx+1}`} className="max-w-full max-h-full object-contain" />

@@ -134,14 +134,14 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
               </button>
             </div>
 
-            <div className="p-5 md:p-6">
+            <div className="p-3.5 sm:p-5 md:p-6">
               {tab === "kop" && (
                 <div className="space-y-5">
-                  <div className="flex gap-4 items-start">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start">
                     <div className="w-[88px] h-[88px] rounded-2xl ring-1 ring-black/5 grid place-items-center overflow-hidden shrink-0 relative" style={{ background: checkerBg }}>
                       {kop.logoImage ? <img src={kop.logoImage} alt="logo" className="w-full h-full object-contain p-1.5" /> : <div className="w-12 h-12 rounded-xl grid place-items-center text-white font-bold text-sm" style={{ background: kop.accentColor }}>{kop.logoText}</div>}
                     </div>
-                    <div className="flex-1 space-y-2">
+                    <div className="flex-1 space-y-2 w-full min-w-0">
                       <div className="text-xs font-medium text-stone-700">Logo GetMasjid — Preview & Crop</div>
                       <p className="text-[11px] text-stone-500">Upload → geser & zoom di preview → crop. Bisa hapus background juga.</p>
                       <div className="flex flex-wrap gap-2">
@@ -225,18 +225,18 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
               {tab === "ttd" && (
                 <div className="space-y-6">
                   <div className="p-1 rounded-[1.5rem] bg-emerald-50 ring-1 ring-emerald-100">
-                    <div className="rounded-[calc(1.5rem-4px)] bg-white p-4">
+                    <div className="rounded-[calc(1.5rem-4px)] bg-white p-3.5 sm:p-4">
                       <div className="flex items-center justify-between mb-2">
                         <div className="text-xs font-medium text-emerald-800">Tanda Tangan CEO — PDF / JPG / PNG</div>
                         <label className="flex items-center gap-2 text-xs"><input type="checkbox" checked={sig.showSignature} onChange={(e) => onSigChange({ ...sig, showSignature: e.target.checked })} className="rounded" /> Tampilkan</label>
                       </div>
                       <p className="text-[11px] text-stone-600 mb-3">Upload PDF scan atau JPG. Auto hapus background putih jadi transparan & autocrop.</p>
-                      <div className="flex gap-4">
-                        <div className="flex-1 h-[110px] rounded-2xl ring-1 ring-black/5 grid place-items-center overflow-hidden p-2 relative" style={{ background: checkerBg }}>
+                      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                        <div className="w-full sm:flex-1 h-[110px] rounded-2xl ring-1 ring-black/5 grid place-items-center overflow-hidden p-2 relative" style={{ background: checkerBg }}>
                           {sig.signatureImage ? <img src={sig.signatureImage} alt="ttd" className="max-h-full max-w-full object-contain" style={{ transform: `scale(${sig.signatureScale})` }} /> : <span className="text-xs text-stone-500 text-center px-2">Belum ada • upload lalu hapus BG</span>}
                           {processing === "pdf-sig" && <div className="absolute inset-0 bg-white/80 grid place-items-center text-xs font-medium">Membaca PDF...</div>}
                         </div>
-                        <div className="flex flex-col gap-2 min-w-[132px]">
+                        <div className="flex flex-col gap-2 w-full sm:w-auto sm:min-w-[132px]">
                           <button onClick={() => sigRef.current?.click()} className="h-8 px-3 rounded-full bg-white ring-1 ring-black/5 text-xs font-medium">Upload PDF/JPG</button>
                           {sig.signatureImage && (
                             <>
@@ -252,14 +252,14 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                   </div>
 
                   <div className="p-1 rounded-[1.5rem] bg-black/[0.03] ring-1 ring-black/5">
-                    <div className="rounded-[calc(1.5rem-4px)] bg-white p-4">
+                    <div className="rounded-[calc(1.5rem-4px)] bg-white p-3.5 sm:p-4">
                       <div className="flex items-center justify-between mb-1"><div className="text-xs font-medium text-stone-700">Cap / Stempel Resmi — GetMasjid</div><label className="flex items-center gap-2 text-xs"><input type="checkbox" checked={sig.showStamp} onChange={(e) => onSigChange({ ...sig, showStamp: e.target.checked })} className="rounded" /> Tampilkan</label></div>
                       <p className="text-[11px] text-stone-500 mb-3">Default: cap resmi double-circle dengan text melingkar. Bisa upload PNG/JPG custom & hapus BG.</p>
-                      <div className="flex gap-4">
-                        <div className="flex-1 h-[96px] rounded-2xl ring-1 ring-black/5 grid place-items-center overflow-hidden p-2 relative" style={{ background: checkerBg }}>
+                      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                        <div className="w-full sm:flex-1 h-[96px] rounded-2xl ring-1 ring-black/5 grid place-items-center overflow-hidden p-2 relative" style={{ background: checkerBg }}>
                           {sig.stampImage ? <img src={sig.stampImage} alt="cap" className="max-h-full max-w-full object-contain" style={{ opacity: sig.stampOpacity }} /> : <span className="text-xs text-stone-500 text-center">Default cap resmi • Upload jika punya</span>}
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 w-full sm:w-auto sm:min-w-[132px]">
                           <button onClick={() => stampRef.current?.click()} className="h-8 px-3 rounded-full bg-white ring-1 ring-black/5 text-xs font-medium">Upload Cap</button>
                           {sig.stampImage && (<><button disabled={processing === "stamp"} onClick={() => doRemoveBg(sig.stampImage!, (v) => onSigChange({ ...sig, stampImage: v }), "stamp")} className="h-8 px-3 rounded-full bg-[#0f6b4a] text-white text-xs disabled:opacity-60">{processing === "stamp" ? "Proses..." : "✨ Hapus BG"}</button><button onClick={() => onSigChange({ ...sig, stampImage: undefined })} className="h-8 px-3 rounded-full bg-black text-white text-xs">Hapus</button></>)}
                           <input ref={stampRef} type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={(e) => handleImageFile(e.target.files?.[0], (v) => onSigChange({ ...sig, stampImage: v }))} />

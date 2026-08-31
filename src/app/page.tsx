@@ -198,10 +198,10 @@ export default function Home() {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-[100dvh]">
+    <div className="flex-1 flex flex-col min-h-[100dvh] w-full max-w-full overflow-x-hidden">
       {/* Professional Header */}
       <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-xl border-b border-stone-200">
-        <div className="max-w-[1280px] mx-auto px-4 md:px-6 h-[64px] flex items-center justify-between gap-4">
+        <div className="max-w-[1280px] w-full mx-auto px-4 sm:px-6 md:px-8 h-[64px] flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-[#0f6b4a] text-white grid place-items-center font-bold text-[11px]">GM</div>
             <div>
@@ -237,7 +237,7 @@ export default function Home() {
       </header>
 
       {/* Professional Hero - compact */}
-      <section className="max-w-[1280px] w-full mx-auto px-4 md:px-6 pt-6 sm:pt-8 md:pt-10 pb-5 sm:pb-6 border-b border-stone-200 bg-white">
+      <section className="max-w-[1280px] w-full mx-auto px-4 sm:px-6 md:px-8 pt-6 sm:pt-8 md:pt-10 pb-5 sm:pb-6 border-b border-stone-200 bg-white">
         <div className={`flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 sm:gap-6 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${reveal ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}>
           <div className="space-y-2.5 sm:space-y-3">
             <span className="inline-flex rounded-full px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] font-medium bg-stone-900 text-white">Generator Surat Resmi</span>
@@ -256,7 +256,7 @@ export default function Home() {
       </section>
 
       {/* Main Editorial Split - Form + Preview */}
-      <main className="max-w-[1280px] w-full mx-auto px-3 sm:px-4 md:px-6 py-6 md:py-4">
+      <main className="max-w-[1280px] w-full mx-auto px-4 sm:px-6 md:px-8 py-5 sm:py-6 md:py-8">
         <div className="flex justify-center mb-5 sm:mb-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 p-2.5 sm:p-1 rounded-2xl sm:rounded-full bg-black/[0.04] ring-1 ring-black/5 w-full sm:w-auto text-center sm:text-left">
             <span className="text-xs px-2 sm:px-3 py-0.5 text-stone-700">💾 Riwayat save-first — simpan dulu baru muncul di riwayat</span>
