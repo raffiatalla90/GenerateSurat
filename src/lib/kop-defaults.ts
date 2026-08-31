@@ -7,7 +7,7 @@ export const DEFAULT_KOP: KopSuratConfig = {
   legalName: "PT GetMasjid Digital Indonesia",
   tagline: "Temukan dan Terhubung Ke Masjid",
   subTagline: "",
-  alamat: "Jl. Teknologi No. 88, Jakarta Selatan",
+  alamat: "Jalan Ir. Sutami 36, Kentingan, Jebres, Surakarta, Jawa Tengah, 57126",
   email: "hello@getmasjid.id",
   website: "www.getmasjid.com",
   phone: "+62 812-3456-7890",
@@ -35,10 +35,11 @@ export function loadKopConfig(): KopSuratConfig {
       return { 
         ...DEFAULT_KOP, 
         ...parsed,
-        // Paksa nilai brand name, tagline, dan website tetap sesuai instruksi user
+        // Paksa nilai brand name, tagline, alamat, dan website tetap sesuai instruksi user
         companyName: DEFAULT_KOP.companyName,
         tagline: DEFAULT_KOP.tagline,
         website: DEFAULT_KOP.website,
+        alamat: DEFAULT_KOP.alamat,
       };
     }
   } catch {}
