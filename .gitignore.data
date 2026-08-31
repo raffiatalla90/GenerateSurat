@@ -1,0 +1,3 @@
+# Data files (ignored - generated in memory only)
+data/**/*
+*.json
