@@ -263,17 +263,17 @@ export default function Home() {
             <button onClick={handleSave} className="w-full sm:w-auto px-4 py-2 sm:py-1.5 rounded-full bg-black text-white text-xs font-medium hover:bg-stone-800 transition shadow-sm">Simpan Surat ke Riwayat</button>
           </div>
         </div>
-        <div className="grid lg:grid-cols-[580px_1fr] gap-6 md:gap-8 items-start">
-          <div className={`${showMobilePreview ? "hidden lg:block" : "block"} space-y-6 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${reveal ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}>
+        <div className="grid grid-cols-1 lg:grid-cols-[580px_1fr] gap-6 md:gap-8 items-start w-full min-w-0">
+          <div className={`${showMobilePreview ? "hidden lg:block" : "block"} w-full min-w-0 space-y-6 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${reveal ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}>
             <SettingsPanel kop={kopConfig} sig={sigConfig} onKopChange={setKopConfig} onSigChange={setSigConfig} />
             <LetterForm data={data} onChange={setData} onPreview={handlePreview} onDownload={handleDownload} onSave={handleSave} isGenerating={isGenerating} />
-            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full min-w-0">
               {[
                 { k: "Format Nomor", v: nomorSurat },
                 { k: "Kertas", v: "A4 Premium" },
                 { k: "Output", v: "PDF 300dpi" },
               ].map(card => (
-                <div key={card.k} className="p-0.5 sm:p-1 rounded-2xl bg-black/[0.04] ring-1 ring-black/5">
+                <div key={card.k} className="p-0.5 sm:p-1 rounded-2xl bg-black/[0.04] ring-1 ring-black/5 min-w-0 overflow-hidden">
                   <div className="rounded-[calc(1rem-2px)] bg-white p-2.5 sm:p-3.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] overflow-hidden">
                     <div className="text-[9px] sm:text-[10px] tracking-[0.08em] sm:tracking-[0.14em] uppercase font-medium text-stone-500 truncate">{card.k}</div>
                     <div className="text-[10.5px] sm:text-xs font-mono font-semibold text-stone-800 mt-1 truncate" title={card.v}>{card.v}</div>
@@ -282,7 +282,7 @@ export default function Home() {
               ))}
             </div>
           </div>
-          <div ref={previewRef} className={`${showMobilePreview ? "block" : "hidden lg:block"} lg:sticky lg:top-[104px] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] delay-200 ${reveal ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"} space-y-6`}>
+          <div ref={previewRef} className={`${showMobilePreview ? "block" : "hidden lg:block"} w-full min-w-0 lg:sticky lg:top-[104px] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] delay-200 ${reveal ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"} space-y-6`}>
             <LetterPreview data={data} kop={kopConfig} sig={sigConfig} />
             <HistoryPanel items={history} onLoad={handleLoadHistory} onDelete={handleDeleteHistory} onDownload={handleDownloadHistory} />
             {/* Floating Action Bar on Mobile Preview */}

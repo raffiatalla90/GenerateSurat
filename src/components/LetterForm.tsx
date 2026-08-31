@@ -125,8 +125,8 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
   };
 
   return (
-    <div className="p-1 sm:p-1.5 rounded-[1.75rem] sm:rounded-[2rem] bg-black/[0.04] ring-1 ring-black/5">
-      <div className="rounded-[calc(1.75rem-0.25rem)] sm:rounded-[calc(2rem-0.375rem)] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_20px_60px_rgba(0,0,0,0.06)] overflow-hidden">
+    <div className="w-full min-w-0 p-1 sm:p-1.5 rounded-[1.75rem] sm:rounded-[2rem] bg-black/[0.04] ring-1 ring-black/5">
+      <div className="w-full min-w-0 rounded-[calc(1.75rem-0.25rem)] sm:rounded-[calc(2rem-0.375rem)] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_20px_60px_rgba(0,0,0,0.06)] overflow-hidden">
         <div className="px-4 sm:px-6 md:px-8 pt-6 sm:pt-7 pb-5 sm:pb-6">
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -357,7 +357,7 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
           </div>
         </div>
 
-        <div className="px-5 sm:px-8 py-5 bg-[#FDFBF7]/80 flex flex-col gap-3 border-t border-black/5">
+        <div className="px-4 sm:px-6 md:px-8 py-5 bg-[#FDFBF7]/80 flex flex-col gap-3 border-t border-black/5">
           <div className="flex flex-col sm:flex-row gap-3">
             <button 
               type="button" 
@@ -399,7 +399,7 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
             <span>Simpan ke Riwayat (save-first)</span>
           </button>
         </div>
-        <p className="px-5 sm:px-8 pb-6 text-[11px] text-stone-500 text-center">Nomor tercatat otomatis saat download. Pastikan data benar.</p>
+        <p className="px-4 sm:px-6 md:px-8 pb-6 text-[11px] text-stone-500 text-center">Nomor tercatat otomatis saat download. Pastikan data benar.</p>
       </div>
     </div>
   );

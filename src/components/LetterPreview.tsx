@@ -24,9 +24,9 @@ export function LetterPreview({ data, kop, sig }: { data: LetterData; kop?: KopS
   }, [zoomMultiplier, html]);
 
   return (
-    <div className="p-1 sm:p-1.5 rounded-[1.75rem] sm:rounded-[2rem] bg-black/[0.04] ring-1 ring-black/5">
-      <div className="rounded-[calc(1.75rem-0.25rem)] sm:rounded-[calc(2rem-0.375rem)] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_20px_60px_rgba(0,0,0,0.07)] overflow-hidden flex flex-col">
-        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 gap-2 border-b border-black/5">
+    <div className="w-full min-w-0 p-1 sm:p-1.5 rounded-[1.75rem] sm:rounded-[2rem] bg-black/[0.04] ring-1 ring-black/5">
+      <div className="w-full min-w-0 rounded-[calc(1.75rem-0.25rem)] sm:rounded-[calc(2rem-0.375rem)] bg-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_20px_60px_rgba(0,0,0,0.07)] overflow-hidden flex flex-col">
+        <div className="flex items-center justify-between px-3.5 sm:px-6 py-3.5 gap-2 border-b border-black/5">
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <span className="text-[10px] tracking-[0.16em] uppercase font-medium text-stone-500">Preview Surat</span>
             {/* Zoom Capsule */}

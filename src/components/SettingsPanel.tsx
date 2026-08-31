@@ -82,12 +82,12 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
   };
 
   return (
-    <div className="p-1 rounded-[1.75rem] bg-black/[0.04] ring-1 ring-black/5">
-      <div className="rounded-[calc(1.75rem-0.25rem)] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden transition-all">
+    <div className="w-full min-w-0 p-1 rounded-[1.75rem] bg-black/[0.04] ring-1 ring-black/5">
+      <div className="w-full min-w-0 rounded-[calc(1.75rem-0.25rem)] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden transition-all">
         <button 
           type="button" 
           onClick={() => setOpen((v) => !v)} 
-          className="w-full flex items-center justify-between p-4 sm:px-6 sm:py-4.5 hover:bg-stone-50/70 transition-all text-left group"
+          className="w-full flex items-center justify-between p-3.5 sm:px-6 sm:py-4.5 hover:bg-stone-50/70 transition-all text-left group"
         >
           <div className="flex items-center gap-3 sm:gap-3.5 min-w-0 pr-2">
             <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-800 ring-1 ring-emerald-600/15 flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
