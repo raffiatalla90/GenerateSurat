@@ -267,16 +267,16 @@ export default function Home() {
           <div className={`${showMobilePreview ? "hidden lg:block" : "block"} space-y-6 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${reveal ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}>
             <SettingsPanel kop={kopConfig} sig={sigConfig} onKopChange={setKopConfig} onSigChange={setSigConfig} />
             <LetterForm data={data} onChange={setData} onPreview={handlePreview} onDownload={handleDownload} onSave={handleSave} isGenerating={isGenerating} />
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
               {[
-                { k: "Format Nomor", v: "001/GMJ/08/2026" },
+                { k: "Format Nomor", v: nomorSurat },
                 { k: "Kertas", v: "A4 Premium" },
                 { k: "Output", v: "PDF 300dpi" },
               ].map(card => (
-                <div key={card.k} className="p-1 rounded-2xl bg-black/[0.04] ring-1 ring-black/5">
-                  <div className="rounded-[calc(1rem)] bg-white p-3.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]">
-                    <div className="text-[10px] tracking-[0.14em] uppercase font-medium text-stone-500">{card.k}</div>
-                    <div className="text-xs font-mono mt-1">{card.v}</div>
+                <div key={card.k} className="p-0.5 sm:p-1 rounded-2xl bg-black/[0.04] ring-1 ring-black/5">
+                  <div className="rounded-[calc(1rem-2px)] bg-white p-2.5 sm:p-3.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] overflow-hidden">
+                    <div className="text-[9px] sm:text-[10px] tracking-[0.08em] sm:tracking-[0.14em] uppercase font-medium text-stone-500 truncate">{card.k}</div>
+                    <div className="text-[10.5px] sm:text-xs font-mono font-semibold text-stone-800 mt-1 truncate" title={card.v}>{card.v}</div>
                   </div>
                 </div>
               ))}
