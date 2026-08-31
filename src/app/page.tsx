@@ -268,10 +268,13 @@ export default function Home() {
           <div ref={previewRef} className={`${showMobilePreview ? "block" : "hidden lg:block"} lg:sticky lg:top-[104px] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] delay-200 ${reveal ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"} space-y-6`}>
             <LetterPreview data={data} kop={kopConfig} sig={sigConfig} />
             <HistoryPanel items={history} onLoad={handleLoadHistory} onDelete={handleDeleteHistory} onDownload={handleDownloadHistory} />
-            <div className="lg:hidden flex gap-3">
-              <button onClick={() => setShowMobilePreview(false)} className="flex-1 h-11 rounded-full bg-white ring-1 ring-black/5 font-medium">Kembali ke Form</button>
-              <button onClick={handleDownload} disabled={isGenerating} className="flex-1 h-11 rounded-full bg-[#0f6b4a] text-white font-medium disabled:opacity-60">{isGenerating ? "Memproses..." : "Download PDF"}</button>
-            </div>
+            {/* Floating Action Bar on Mobile Preview */}
+            {showMobilePreview && (
+              <div className="lg:hidden fixed bottom-5 left-4 right-4 z-40 flex gap-3 bg-white/90 backdrop-blur-xl p-2.5 rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.15)] ring-1 ring-black/5 transition-all">
+                <button onClick={() => setShowMobilePreview(false)} className="flex-1 h-11 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 font-semibold text-xs uppercase tracking-wider transition active:scale-95">Edit Surat</button>
+                <button onClick={handleDownload} disabled={isGenerating} className="flex-1 h-11 rounded-full bg-[#0f6b4a] text-white font-semibold text-xs uppercase tracking-wider disabled:opacity-60 transition active:scale-95">{isGenerating ? "Memproses..." : "Download PDF"}</button>
+              </div>
+            )}
           </div>
         </div>
         {/* History also for mobile form view */}
