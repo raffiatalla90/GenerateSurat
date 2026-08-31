@@ -206,7 +206,7 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <Field label="Nama Brand" value={kop.companyName} disabled={true} />
-                    <Field label="Nama Legal PT" value={kop.legalName} disabled={true} />
+                    <Field label="Nama Legal PT" value={kop.legalName || ""} onChange={(v) => onKopChange({ ...kop, legalName: v })} placeholder="Opsional (bisa dikosongi)" />
                   </div>
                   <Field label="Tagline" value={kop.tagline} disabled={true} />
                   <Field label="Alamat Lengkap" value={kop.alamat} disabled={true} />

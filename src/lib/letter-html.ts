@@ -363,7 +363,7 @@ export function generateLetterHTML(
         </div>
       </div>
       <div class="kop-right">
-        <strong>${escapeHtml(kop.legalName)}</strong><br/>
+        ${kop.legalName ? `<strong>${escapeHtml(kop.legalName)}</strong><br/>` : ""}
         ${escapeHtml(kop.alamat)}<br/>
         ${escapeHtml(kop.email)} &nbsp;|&nbsp; ${escapeHtml(kop.website)}<br/>
         ${escapeHtml(kop.phone)}
