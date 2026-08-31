@@ -231,8 +231,20 @@ export function generateLetterHTML(
     letter-spacing: 0.2px;
   }
   @media print {
-    body { background: white; zoom: 1 !important; width: auto !important; }
-    .page { padding: 16mm 20mm; box-shadow: none; transform: none !important; }
+    @page {
+      margin: 0;
+    }
+    body {
+      background: white;
+      zoom: 1 !important;
+      width: auto !important;
+      margin: 0;
+    }
+    .page {
+      padding: 18mm 22mm 18mm 22mm;
+      box-shadow: none;
+      transform: none !important;
+    }
   }
 </style>
 </head>
