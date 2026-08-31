@@ -8,9 +8,9 @@ export const DEFAULT_KOP: KopSuratConfig = {
   tagline: "Temukan dan Terhubung Ke Masjid",
   subTagline: "",
   alamat: "Jalan Ir. Sutami 36, Kentingan, Jebres, Surakarta, Jawa Tengah, 57126",
-  email: "hello@getmasjid.id",
+  email: "support@getmasjid.com",
   website: "www.getmasjid.com",
-  phone: "+62 812-3456-7890",
+  phone: "+62 85188139451",
   accentColor: "#0f6b4a",
 };
 
@@ -35,11 +35,13 @@ export function loadKopConfig(): KopSuratConfig {
       return { 
         ...DEFAULT_KOP, 
         ...parsed,
-        // Paksa nilai brand name, tagline, alamat, dan website tetap sesuai instruksi user
+        // Paksa nilai brand name, tagline, alamat, email, telepon, dan website tetap terkunci
         companyName: DEFAULT_KOP.companyName,
         tagline: DEFAULT_KOP.tagline,
         website: DEFAULT_KOP.website,
         alamat: DEFAULT_KOP.alamat,
+        email: DEFAULT_KOP.email,
+        phone: DEFAULT_KOP.phone,
       };
     }
   } catch {}

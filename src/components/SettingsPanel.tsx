@@ -206,15 +206,14 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <Field label="Nama Brand" value={kop.companyName} disabled={true} />
-                    <Field label="Nama Legal PT" value={kop.legalName} onChange={(v) => onKopChange({ ...kop, legalName: v })} />
+                    <Field label="Nama Legal PT" value={kop.legalName} disabled={true} />
                   </div>
-                  <Field label="Tagline 1" value={kop.tagline} disabled={true} />
-                  <Field label="Tagline 2" value={kop.subTagline} disabled={true} />
-                  <Field label="Alamat Lengkap" value={kop.alamat} onChange={(v) => onKopChange({ ...kop, alamat: v })} />
+                  <Field label="Tagline" value={kop.tagline} disabled={true} />
+                  <Field label="Alamat Lengkap" value={kop.alamat} disabled={true} />
                   <div className="grid md:grid-cols-3 gap-4">
-                    <Field label="Email" value={kop.email} onChange={(v) => onKopChange({ ...kop, email: v })} />
+                    <Field label="Email" value={kop.email} disabled={true} />
                     <Field label="Website" value={kop.website} disabled={true} />
-                    <Field label="Telepon" value={kop.phone} onChange={(v) => onKopChange({ ...kop, phone: v })} />
+                    <Field label="Telepon" value={kop.phone} disabled={true} />
                   </div>
                   <div className="flex gap-2 pt-2">
                     <button onClick={() => onKopChange(DEFAULT_KOP)} className="text-xs px-3 py-1.5 rounded-full bg-[#FDFBF7] ring-1 ring-black/5 hover:bg-white transition">Reset Default</button>
