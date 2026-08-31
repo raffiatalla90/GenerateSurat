@@ -234,8 +234,8 @@ export function generateLetterHTML(
     letter-spacing: 0.2px;
   }
   @media print {
-    body { background: white; }
-    .page { padding: 16mm 20mm; box-shadow: none; }
+    body { background: white; zoom: 1 !important; width: auto !important; }
+    .page { padding: 16mm 20mm; box-shadow: none; transform: none !important; }
   }
 </style>
 </head>
@@ -307,6 +307,33 @@ export function generateLetterHTML(
       <span>${escapeHtml(data.nomorSurat)}</span>
     </div>
   </div>
+  <script>
+    function autoScale() {
+      const page = document.querySelector('.page');
+      if (!page) return;
+      const width = window.innerWidth;
+      const targetWidth = 794; // approx A4 width in px at 96dpi (210mm)
+      if (width < targetWidth) {
+        const scale = width / targetWidth;
+        if ('zoom' in document.body.style) {
+          document.body.style.zoom = scale;
+        } else {
+          // Firefox fallback
+          page.style.transform = 'scale(' + scale + ')';
+          page.style.transformOrigin = 'top center';
+          document.body.style.width = targetWidth + 'px';
+          document.body.style.overflowX = 'hidden';
+        }
+      } else {
+        document.body.style.zoom = '1';
+        page.style.transform = 'none';
+        document.body.style.width = 'auto';
+      }
+    }
+    window.addEventListener('load', autoScale);
+    window.addEventListener('resize', autoScale);
+    autoScale();
+  </script>
 </body>
 </html>`;
 }

@@ -212,7 +212,7 @@ export default function Home() {
             <span className="px-3 py-1.5 rounded-full bg-stone-50 ring-1 ring-stone-200 text-xs">Formal</span>
             <span className="px-3 py-1.5 rounded-full bg-stone-50 ring-1 ring-stone-200 text-xs">Justify Rapi</span>
             <span className="px-3 py-1.5 rounded-full bg-stone-50 ring-1 ring-stone-200 text-xs">A4</span>
-            <button onClick={handlePreview} className="hidden lg:inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-stone-900 text-white text-xs font-medium">Lihat Preview →</button>
+            <button onClick={handlePreview} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-stone-900 text-white text-xs font-medium">Lihat Preview →</button>
           </div>
         </div>
       </section>
