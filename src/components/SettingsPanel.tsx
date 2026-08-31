@@ -15,6 +15,7 @@ interface Props {
 export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<"kop" | "ttd">("kop");
+  const logoRef = useRef<HTMLInputElement>(null);
   const sigRef = useRef<HTMLInputElement>(null);
   const stampRef = useRef<HTMLInputElement>(null);
   const [processing, setProcessing] = useState<string | null>(null);
@@ -113,13 +114,70 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                 <div className="space-y-5">
                   <div className="flex gap-4 items-start">
                     <div className="w-[88px] h-[88px] rounded-2xl ring-1 ring-black/5 grid place-items-center overflow-hidden shrink-0 relative" style={{ background: checkerBg }}>
-                      {kop.logoImage ? <img src={kop.logoImage} alt="logo" className="w-full h-full object-contain p-1.5" /> : <div className="w-12 h-12 rounded-xl grid place-items-center text-white font-bold text-sm" style={{ background: kop.accentColor }}>GM</div>}
+                      {kop.logoImage ? <img src={kop.logoImage} alt="logo" className="w-full h-full object-contain p-1.5" /> : <div className="w-12 h-12 rounded-xl grid place-items-center text-white font-bold text-sm" style={{ background: kop.accentColor }}>{kop.logoText}</div>}
                     </div>
-                    <div className="flex-1 space-y-1.5 self-center">
-                      <div className="text-xs font-semibold text-stone-700">Logo GetMasjid Resmi (Tetap)</div>
-                      <p className="text-[11px] text-stone-500">Logo resmi GetMasjid telah dikunci dan tidak dapat diubah.</p>
+                    <div className="flex-1 space-y-2">
+                      <div className="text-xs font-medium text-stone-700">Logo GetMasjid — Preview & Crop</div>
+                      <p className="text-[11px] text-stone-500">Upload → geser & zoom di preview → crop. Bisa hapus background juga.</p>
+                      <div className="flex flex-wrap gap-2">
+                        <button onClick={() => logoRef.current?.click()} className="h-8 px-3 rounded-full bg-white ring-1 ring-black/5 text-xs font-medium hover:bg-[#FDFBF7] transition">Upload Logo</button>
+                        {kop.logoImage && (
+                          <>
+                            <button onClick={reopenLogoCrop} className="h-8 px-3 rounded-full bg-black text-white text-xs font-medium">✂️ Crop / Geser</button>
+                            <button disabled={processing === "logo"} onClick={() => doRemoveBg(kop.logoImage!, (v) => onKopChange({ ...kop, logoImage: v }), "logo")} className="h-8 px-3 rounded-full bg-[#0f6b4a] text-white text-xs font-medium disabled:opacity-60 flex items-center gap-1.5">
+                              {processing === "logo" ? <><span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" /> Memproses</> : <>✨ Hapus BG</>}
+                            </button>
+                            <button onClick={() => onKopChange({ ...kop, logoImage: undefined })} className="h-8 px-3 rounded-full bg-white ring-1 ring-black/5 text-xs">Hapus</button>
+                          </>
+                        )}
+                      </div>
+                      <input ref={logoRef} type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={(e) => handleLogoUpload(e.target.files?.[0])} />
+                      <div className="flex gap-2 items-center pt-1 flex-wrap">
+                        <span className="text-xs text-stone-600">Inisial</span><input value={kop.logoText} onChange={(e) => onKopChange({ ...kop, logoText: e.target.value.slice(0, 4).toUpperCase() })} className="w-16 h-7 rounded-full bg-[#FDFBF7] ring-1 ring-black/5 px-2 text-xs text-center" placeholder="GM" />
+                        <span className="text-xs text-stone-600">Warna</span><input type="color" value={kop.accentColor} onChange={(e) => onKopChange({ ...kop, accentColor: e.target.value })} className="w-7 h-7 rounded-full ring-1 ring-black/5 p-0.5" />
+                      </div>
                     </div>
                   </div>
+
+                  {showLogoCrop && logoRaw && (
+                    <div className="p-1 rounded-[1.5rem] bg-black/[0.04] ring-1 ring-black/5">
+                      <div className="rounded-[calc(1.5rem-4px)] bg-white p-4 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="text-xs font-medium">Preview & Crop Logo</div>
+                          <span className="text-[11px] px-2 py-1 rounded-full bg-[#FDFBF7] ring-1 ring-black/5">Geser untuk posisi • Zoom untuk ukuran</span>
+                        </div>
+                        <div
+                          className="relative w-full h-[220px] rounded-2xl overflow-hidden ring-1 ring-black/10 cursor-grab active:cursor-grabbing select-none"
+                          style={{ background: checkerBg }}
+                          onMouseDown={(e) => { setIsDragging(true); setDragStart({ x: e.clientX - cropOffset.x, y: e.clientY - cropOffset.y }); }}
+                          onMouseMove={(e) => { if (isDragging) setCropOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y }); }}
+                          onMouseUp={() => setIsDragging(false)}
+                          onMouseLeave={() => setIsDragging(false)}
+                          onTouchStart={(e) => { const t=e.touches[0]; setIsDragging(true); setDragStart({ x: t.clientX - cropOffset.x, y: t.clientY - cropOffset.y }); }}
+                          onTouchMove={(e) => { if (isDragging) { const t=e.touches[0]; setCropOffset({ x: t.clientX - dragStart.x, y: t.clientY - dragStart.y }); } }}
+                          onTouchEnd={() => setIsDragging(false)}
+                        >
+                          <img src={logoRaw} alt="crop preview" draggable={false} className="absolute top-1/2 left-1/2 max-w-none select-none pointer-events-none" style={{ transform: `translate(-50%, -50%) translate(${cropOffset.x}px, ${cropOffset.y}px) scale(${cropZoom})`, maxWidth: "180px", maxHeight: "180px", width: "auto", height: "auto" }} />
+                          <div className="absolute inset-0 pointer-events-none ring-1 ring-black/10 rounded-2xl" />
+                          <div className="absolute top-2 left-2 text-[10px] px-2 py-1 rounded-full bg-black/70 text-white">Preview 1:1 • Hasil crop jadi kotak transparan</div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between"><span className="text-[11px] text-stone-600">Zoom</span><span className="text-xs font-mono">{Math.round(cropZoom*100)}%</span></div>
+                          <input type="range" min={0.6} max={2.5} step={0.05} value={cropZoom} onChange={(e)=>setCropZoom(parseFloat(e.target.value))} className="w-full" />
+                          <div className="flex gap-2">
+                            <button onClick={()=>setCropOffset({x:0,y:0})} className="text-xs px-3 py-1.5 rounded-full bg-white ring-1 ring-black/5">Reset Posisi</button>
+                            <span className="text-[11px] text-stone-500 self-center">Geser gambar di atas</span>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <button onClick={()=>setShowLogoCrop(false)} className="flex-1 h-9 rounded-full bg-white ring-1 ring-black/5 text-sm">Batal</button>
+                          <button disabled={processing==="logo-crop"} onClick={applyLogoCrop} className="flex-1 h-9 rounded-full bg-black text-white text-sm disabled:opacity-60 flex items-center justify-center gap-2">
+                            {processing==="logo-crop" ? <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin"/>Memproses</> : <>✂️ Terapkan Crop</>}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <Field label="Nama Brand" value={kop.companyName} disabled={true} />

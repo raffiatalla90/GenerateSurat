@@ -35,11 +35,10 @@ export function loadKopConfig(): KopSuratConfig {
       return { 
         ...DEFAULT_KOP, 
         ...parsed,
-        // Paksa nilai brand name, tagline, website, dan logo tetap sesuai instruksi user
+        // Paksa nilai brand name, tagline, dan website tetap sesuai instruksi user
         companyName: DEFAULT_KOP.companyName,
         tagline: DEFAULT_KOP.tagline,
         website: DEFAULT_KOP.website,
-        logoImage: DEFAULT_KOP.logoImage,
       };
     }
   } catch {}

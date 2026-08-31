@@ -113,7 +113,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const filename = `Surat-${nomorSurat.replace(/\//g, "-")}.pdf`;
+    const perihalDisplay = body.perihalCustom || body.perihal;
+    const filename = `${nomorSurat.replace(/\//g, "-")} - ${perihalDisplay}.pdf`;
 
     return new NextResponse(new Uint8Array(pdfBuffer), {
       headers: {

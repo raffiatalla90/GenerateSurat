@@ -15,6 +15,29 @@ function todayISO(): string {
   return d.toISOString().slice(0, 10);
 }
 
+const downloadPdfClientSide = async (html: string, filename: string) => {
+  const html2pdf = await new Promise<any>((resolve) => {
+    if ((window as any).html2pdf) {
+      resolve((window as any).html2pdf);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+    script.onload = () => resolve((window as any).html2pdf);
+    document.head.appendChild(script);
+  });
+
+  const opt = {
+    margin: 0,
+    filename: filename,
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, logging: false },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+  };
+
+  await html2pdf().from(html).set(opt).save();
+};
+
 export default function Home() {
   const [nomorSurat, setNomorSurat] = useState("001/GMJ/--/----");
   const [data, setData] = useState<LetterData>({
@@ -114,11 +137,23 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Gagal");
+      const perihalFile = item.data.perihalCustom || item.data.perihal;
+      const nomorFile = item.nomorSurat.replace(/\//g, "-");
+      const filename = `${nomorFile} - ${perihalFile}.pdf`;
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        const htmlFallback = err?.html as string | undefined;
+        if (htmlFallback) {
+          await downloadPdfClientSide(htmlFallback, filename);
+          return;
+        }
+        throw new Error("Gagal");
+      }
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url; a.download = `Surat-${item.nomorSurat.replace(/\//g, "-")}.pdf`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     } catch (e) { alert("Gagal unduh"); } finally { setIsGenerating(false); }
   };
 
@@ -135,12 +170,18 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+
+      const perihalFile = data.perihalCustom || data.perihal;
+      const nomorFile = data.nomorSurat.replace(/\//g, "-");
+      const filename = `${nomorFile} - ${perihalFile}.pdf`;
+
       if (!res.ok) {
         const err = await res.json().catch(() => null);
         const htmlFallback = err?.html as string | undefined;
         if (htmlFallback) {
-          const win = window.open("", "_blank");
-          if (win) { win.document.write(htmlFallback); win.document.close(); win.focus(); setTimeout(() => win.print(), 500); }
+          const customNomorFile = (err.nomorSurat || data.nomorSurat).replace(/\//g, "-");
+          const customFilename = `${customNomorFile} - ${perihalFile}.pdf`;
+          await downloadPdfClientSide(htmlFallback, customFilename);
           return;
         }
         throw new Error(err?.error || "Gagal generate PDF");
@@ -150,8 +191,9 @@ export default function Home() {
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      const nomorFile = (nomorFromHeader || data.nomorSurat).replace(/\//g, "-");
-      a.href = url; a.download = `Surat-${nomorFile}.pdf`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      const finalNomorFile = (nomorFromHeader || data.nomorSurat).replace(/\//g, "-");
+      const finalFilename = `${finalNomorFile} - ${perihalFile}.pdf`;
+      a.href = url; a.download = finalFilename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
       const nextRes = await fetch("/api/nomor-surat");
       const nextJson = await nextRes.json().catch(() => null);
       if (nextJson?.nomorSurat) setNomorSurat(nextJson.nomorSurat);
