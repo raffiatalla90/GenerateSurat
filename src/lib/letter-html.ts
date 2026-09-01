@@ -72,39 +72,47 @@ export function generateLetterHTML(
     const stImg = signer.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : null;
     ttdHtml = `
       <div class="ttd-container">
-        <div class="ttd-row justify-end">
-          <div class="ttd-box">
-            <div class="tanggal">Hormat kami,</div>
-            <div class="ttd-images">
-              ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;margin-top:20px;">(tanpa tanda tangan)</div>`}
-              ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
-            </div>
-            <div class="ttd-name">${escapeHtml(signer.nama)}</div>
-            <div class="ttd-jabatan">${escapeHtml(signer.jabatan)}</div>
-          </div>
-        </div>
-      </div>
-    `;
-  } else if (signersList.length <= 3) {
-    ttdHtml = `
-      <div class="ttd-container">
-        <div style="font-size: 10pt; color: #333; margin-bottom: 10px; padding-left: 20px;">Hormat kami,</div>
-        <div class="ttd-row">
-          ${signersList.map((signer) => {
-            const sImg = signer.showSignature ? (signer.signatureImage || sig.signatureImage || SIGNATURE_SVG_FALLBACK) : null;
-            const stImg = signer.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : null;
-            return `
+        <table class="ttd-table">
+          <tr>
+            <td style="text-align: right; vertical-align: top;">
               <div class="ttd-box">
+                <div class="tanggal">Hormat kami,</div>
                 <div class="ttd-images">
-                  ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;margin-top:20px;">(tanpa tanda tangan)</div>`}
+                  ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;padding-top:20px;">(tanpa tanda tangan)</div>`}
                   ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
                 </div>
                 <div class="ttd-name">${escapeHtml(signer.nama)}</div>
                 <div class="ttd-jabatan">${escapeHtml(signer.jabatan)}</div>
               </div>
-            `;
-          }).join('')}
-        </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    `;
+  } else if (signersList.length <= 3) {
+    ttdHtml = `
+      <div class="ttd-container">
+        <div style="font-size: 10pt; color: #333; margin-bottom: 8px;">Hormat kami,</div>
+        <table class="ttd-table">
+          <tr>
+            ${signersList.map((signer) => {
+              const sImg = signer.showSignature ? (signer.signatureImage || sig.signatureImage || SIGNATURE_SVG_FALLBACK) : null;
+              const stImg = signer.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : null;
+              return `
+                <td class="ttd-cell">
+                  <div class="ttd-box">
+                    <div class="ttd-images">
+                      ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;padding-top:20px;">(tanpa tanda tangan)</div>`}
+                      ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
+                    </div>
+                    <div class="ttd-name">${escapeHtml(signer.nama)}</div>
+                    <div class="ttd-jabatan">${escapeHtml(signer.jabatan)}</div>
+                  </div>
+                </td>
+              `;
+            }).join('')}
+          </tr>
+        </table>
       </div>
     `;
   } else {
@@ -112,47 +120,54 @@ export function generateLetterHTML(
     const row2 = signersList.slice(2, 4);
     ttdHtml = `
       <div class="ttd-container">
-        <div style="font-size: 10pt; color: #333; margin-bottom: 10px; padding-left: 20px;">Hormat kami,</div>
-        <div class="ttd-row">
-          ${row1.map((signer) => {
-            const sImg = signer.showSignature ? (signer.signatureImage || sig.signatureImage || SIGNATURE_SVG_FALLBACK) : null;
-            const stImg = signer.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : null;
-            return `
-              <div class="ttd-box">
-                <div class="ttd-images">
-                  ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;margin-top:20px;">(tanpa tanda tangan)</div>`}
-                  ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
-                </div>
-                <div class="ttd-name">${escapeHtml(signer.nama)}</div>
-                <div class="ttd-jabatan">${escapeHtml(signer.jabatan)}</div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-        <div class="ttd-row" style="margin-top: 20px;">
-          ${row2.map((signer) => {
-            const sImg = signer.showSignature ? (signer.signatureImage || sig.signatureImage || SIGNATURE_SVG_FALLBACK) : null;
-            const stImg = signer.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : null;
-            return `
-              <div class="ttd-box">
-                <div class="ttd-images">
-                  ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;margin-top:20px;">(tanpa tanda tangan)</div>`}
-                  ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
-                </div>
-                <div class="ttd-name">${escapeHtml(signer.nama)}</div>
-                <div class="ttd-jabatan">${escapeHtml(signer.jabatan)}</div>
-              </div>
-            `;
-          }).join('')}
-        </div>
+        <div style="font-size: 10pt; color: #333; margin-bottom: 8px;">Hormat kami,</div>
+        <table class="ttd-table">
+          <tr>
+            ${row1.map((signer) => {
+              const sImg = signer.showSignature ? (signer.signatureImage || sig.signatureImage || SIGNATURE_SVG_FALLBACK) : null;
+              const stImg = signer.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : null;
+              return `
+                <td class="ttd-cell">
+                  <div class="ttd-box">
+                    <div class="ttd-images">
+                      ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;padding-top:20px;">(tanpa tanda tangan)</div>`}
+                      ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
+                    </div>
+                    <div class="ttd-name">${escapeHtml(signer.nama)}</div>
+                    <div class="ttd-jabatan">${escapeHtml(signer.jabatan)}</div>
+                  </div>
+                </td>
+              `;
+            }).join('')}
+          </tr>
+        </table>
+        <table class="ttd-table" style="margin-top: 16px;">
+          <tr>
+            ${row2.map((signer) => {
+              const sImg = signer.showSignature ? (signer.signatureImage || sig.signatureImage || SIGNATURE_SVG_FALLBACK) : null;
+              const stImg = signer.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : null;
+              return `
+                <td class="ttd-cell">
+                  <div class="ttd-box">
+                    <div class="ttd-images">
+                      ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;padding-top:20px;">(tanpa tanda tangan)</div>`}
+                      ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
+                    </div>
+                    <div class="ttd-name">${escapeHtml(signer.nama)}</div>
+                    <div class="ttd-jabatan">${escapeHtml(signer.jabatan)}</div>
+                  </div>
+                </td>
+              `;
+            }).join('')}
+          </tr>
+        </table>
       </div>
     `;
   }
   const logoHtml = kop.logoImage
-    ? `<img src="${kop.logoImage}" alt="logo" style="width:46px;height:46px;object-fit:contain;" />`
+    ? `<img src="${kop.logoImage}" alt="logo" style="width:44px;height:44px;object-fit:contain;display:block;" />`
     : `<div class="logo" style="background:${escapeHtml(kop.accentColor)}">${escapeHtml(kop.logoText || "GM")}</div>`;
 
-  // Split company name for GetMasjid style if contains no space; otherwise full
   const companyHtml = kop.companyName.includes("GetMasjid") || kop.companyName.includes("Get")
     ? kop.companyName.replace("GetMasjid", "Get<span>Masjid</span>").replace("Get Masjid", "Get<span>Masjid</span>")
     : escapeHtml(kop.companyName);
@@ -178,9 +193,6 @@ export function generateLetterHTML(
     line-height: 1.5;
     padding: 20px 10px;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -190,44 +202,47 @@ export function generateLetterHTML(
     max-height: 297mm;
     min-height: 297mm;
     margin: 0 auto 20px auto;
-    padding: 14mm 20mm 12mm 20mm;
+    padding: 14mm 20mm 15mm 20mm;
     background: white;
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
     position: relative;
     overflow: hidden;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
     border-radius: 2px;
-    flex-shrink: 0;
   }
   .page:last-child {
     margin-bottom: 0;
   }
-  /* Kop Surat */
-  .kop {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  /* Kop Surat Table Layout */
+  .kop-table {
+    width: 100%;
+    border-collapse: collapse;
     border-bottom: 2px solid ${escapeHtml(kop.accentColor)};
     padding-bottom: 8px;
     margin-bottom: 4px;
-    flex-shrink: 0;
+    table-layout: fixed;
   }
-  .kop-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  .kop-left-cell {
+    vertical-align: middle;
+    text-align: left;
   }
+  .kop-right-cell {
+    vertical-align: middle;
+    text-align: right;
+    font-size: 7.5pt;
+    color: #555;
+    line-height: 1.45;
+    width: 210px;
+  }
+  .kop-right-cell strong { color: #1a1a1a; font-size: 7.5pt; }
   .logo {
     width: 44px;
     height: 44px;
     background: ${escapeHtml(kop.accentColor)};
     border-radius: 9px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-block;
+    text-align: center;
+    line-height: 44px;
     color: white;
     font-weight: 700;
     font-size: 17px;
@@ -239,6 +254,7 @@ export function generateLetterHTML(
     color: ${escapeHtml(kop.accentColor)};
     letter-spacing: -0.3px;
     line-height: 1;
+    margin: 0;
   }
   .kop-text h1 span { font-weight: 400; color: ${escapeHtml(kop.accentColor)}; }
   .kop-text p {
@@ -248,38 +264,42 @@ export function generateLetterHTML(
     line-height: 1.35;
     max-width: 380px;
   }
-  .kop-right {
-    text-align: right;
-    font-size: 7.5pt;
-    color: #555;
-    line-height: 1.45;
-  }
-  .kop-right strong { color: #1a1a1a; font-size: 7.5pt; }
   .kop-line-2 {
     height: 1px;
     background: ${escapeHtml(kop.accentColor)}22;
     margin-bottom: 12px;
-    flex-shrink: 0;
   }
-  /* Meta */
-  .meta {
-    display: flex;
-    justify-content: space-between;
+  /* Meta Table Layout */
+  .meta-table {
+    width: 100%;
+    border-collapse: collapse;
     margin-bottom: 12px;
     font-size: 9.5pt;
-    flex-shrink: 0;
+    table-layout: fixed;
   }
-  .meta table { border-collapse: collapse; }
-  .meta td { padding: 1px 0; vertical-align: top; }
-  .meta td:first-child { width: 85px; color: #333; }
-  .meta td:nth-child(2) { width: 10px; text-align: center; }
-  .meta td:last-child { font-weight: 500; }
+  .meta-left-cell {
+    vertical-align: top;
+    text-align: left;
+  }
+  .meta-right-cell {
+    vertical-align: top;
+    text-align: right;
+    font-size: 9.5pt;
+    color: #333;
+    padding-top: 1px;
+    width: 180px;
+  }
+  .meta-inner-table { border-collapse: collapse; }
+  .meta-inner-table td { padding: 1px 0; vertical-align: top; }
+  .meta-inner-table td.label-cell { width: 70px; color: #333; }
+  .meta-inner-table td.colon-cell { width: 14px; text-align: center; }
+  .meta-inner-table td.val-cell { font-weight: 500; }
+
   /* Tujuan */
   .tujuan {
     margin-bottom: 12px;
     font-size: 10pt;
     line-height: 1.45;
-    flex-shrink: 0;
   }
   .tujuan .label { color: #555; font-size: 8.5pt; margin-bottom: 2px; }
   .isi {
@@ -288,44 +308,38 @@ export function generateLetterHTML(
     line-height: 1.5;
     color: #222;
     margin-bottom: 12px;
-    flex-shrink: 0;
   }
   .isi p { margin-bottom: 8px; text-indent: 0; }
   .isi p:last-child { margin-bottom: 0; }
-  /* TTD */
+
+  /* TTD Table Layout */
   .ttd-container {
     margin-top: 14px;
     width: 100%;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    flex-shrink: 0;
   }
-  .ttd-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
+  .ttd-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
   }
-  .ttd-row.justify-end {
-    justify-content: flex-end;
+  .ttd-cell {
+    vertical-align: top;
+    text-align: center;
   }
   .ttd-box {
     text-align: center;
     width: 200px;
+    display: inline-block;
     position: relative;
     box-sizing: border-box;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
   }
   .ttd-box .tanggal { font-size: 9.5pt; margin-bottom: 4px; color: #333; }
-  .ttd-box .jabatan-atas { font-size: 9.5pt; color: #333; margin-bottom: 4px; }
   .ttd-images {
     position: relative;
     height: 75px;
     min-height: 75px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     margin: 4px 0;
   }
   .ttd-images .signature {
@@ -337,7 +351,6 @@ export function generateLetterHTML(
     height: 52px;
     object-fit: contain;
     z-index: 1;
-    mix-blend-mode: multiply;
   }
   .ttd-images .stamp {
     position: absolute;
@@ -347,7 +360,6 @@ export function generateLetterHTML(
     height: 82px;
     opacity: 0.88;
     z-index: 2;
-    mix-blend-mode: multiply;
     pointer-events: none;
   }
   .ttd-name {
@@ -365,19 +377,24 @@ export function generateLetterHTML(
     font-weight: 500;
     line-height: 1.3;
   }
+
+  /* Footer Layout */
   .footer {
-    margin-top: auto;
+    position: absolute;
+    bottom: 10mm;
+    left: 20mm;
+    right: 20mm;
     border-top: 1px solid #e5e7eb;
     padding-top: 6px;
-    display: flex;
-    justify-content: space-between;
+  }
+  .footer-table {
+    width: 100%;
+    border-collapse: collapse;
     font-size: 7pt;
     color: #888;
     letter-spacing: 0.2px;
-    flex-shrink: 0;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
   }
+
   @media print {
     @page {
       size: A4 portrait;
@@ -403,7 +420,7 @@ export function generateLetterHTML(
       max-height: 297mm !important;
       min-height: 297mm !important;
       margin: 0 auto !important;
-      padding: 14mm 20mm 12mm 20mm !important;
+      padding: 14mm 20mm 15mm 20mm !important;
       box-sizing: border-box !important;
       box-shadow: none !important;
       border-radius: 0 !important;
@@ -425,7 +442,7 @@ export function generateLetterHTML(
       max-height: 297mm !important;
       overflow: hidden !important;
     }
-    .kop, .meta, .tujuan, .isi, .ttd-container, .ttd-box, .footer {
+    .kop-table, .meta-table, .tujuan, .isi, .ttd-container, .ttd-box, .footer {
       page-break-inside: avoid !important;
       break-inside: avoid !important;
     }
@@ -435,34 +452,60 @@ export function generateLetterHTML(
 <body>
   <div class="page">
     <!-- KOP -->
-    <div class="kop">
-      <div class="kop-left">
-        ${logoHtml}
-        <div class="kop-text">
-          <h1>${companyHtml}</h1>
-          <p>${escapeHtml(kop.tagline)}<br/>${escapeHtml(kop.subTagline)}</p>
-        </div>
-      </div>
-      <div class="kop-right">
-        ${kop.legalName ? `<strong>${escapeHtml(kop.legalName)}</strong><br/>` : ""}
-        ${escapeHtml(kop.alamat)}<br/>
-        ${escapeHtml(kop.email)} &nbsp;|&nbsp; ${escapeHtml(kop.website)}<br/>
-        ${escapeHtml(kop.phone)}
-      </div>
-    </div>
+    <table class="kop-table">
+      <tr>
+        <td class="kop-left-cell">
+          <table style="border-collapse:collapse;">
+            <tr>
+              <td style="vertical-align:middle; padding-right:12px;">
+                ${logoHtml}
+              </td>
+              <td style="vertical-align:middle;">
+                <div class="kop-text">
+                  <h1>${companyHtml}</h1>
+                  <p>${escapeHtml(kop.tagline)}<br/>${escapeHtml(kop.subTagline)}</p>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td class="kop-right-cell">
+          ${kop.legalName ? `<strong>${escapeHtml(kop.legalName)}</strong><br/>` : ""}
+          ${escapeHtml(kop.alamat)}<br/>
+          ${escapeHtml(kop.email)} &nbsp;|&nbsp; ${escapeHtml(kop.website)}<br/>
+          ${escapeHtml(kop.phone)}
+        </td>
+      </tr>
+    </table>
     <div class="kop-line-2"></div>
 
     <!-- META -->
-    <div class="meta">
-      <table>
-        <tr><td>Nomor</td><td>:</td><td>${escapeHtml(data.nomorSurat)}</td></tr>
-        <tr><td>Lampiran</td><td>:</td><td>${data.attachments && data.attachments.length > 0 ? `${data.attachments.length} lembar` : "-"}</td></tr>
-        <tr><td>Perihal</td><td>:</td><td><strong>${escapeHtml(perihalDisplay)}</strong></td></tr>
-      </table>
-      <div style="text-align:right; font-size:9.5pt; color:#333;">
-        Surakarta, ${escapeHtml(tanggalFormatted)}
-      </div>
-    </div>
+    <table class="meta-table">
+      <tr>
+        <td class="meta-left-cell">
+          <table class="meta-inner-table">
+            <tr>
+              <td class="label-cell">Nomor</td>
+              <td class="colon-cell">:</td>
+              <td class="val-cell">${escapeHtml(data.nomorSurat)}</td>
+            </tr>
+            <tr>
+              <td class="label-cell">Lampiran</td>
+              <td class="colon-cell">:</td>
+              <td class="val-cell">${data.attachments && data.attachments.length > 0 ? `${data.attachments.length} lembar` : "-"}</td>
+            </tr>
+            <tr>
+              <td class="label-cell">Perihal</td>
+              <td class="colon-cell">:</td>
+              <td class="val-cell"><strong>${escapeHtml(perihalDisplay)}</strong></td>
+            </tr>
+          </table>
+        </td>
+        <td class="meta-right-cell">
+          Surakarta, ${escapeHtml(tanggalFormatted)}
+        </td>
+      </tr>
+    </table>
 
     <!-- TUJUAN -->
     <div class="tujuan">
@@ -481,29 +524,40 @@ export function generateLetterHTML(
     <!-- TTD -->
     ${ttdHtml}
 
+    <!-- FOOTER -->
     <div class="footer">
-      <span>Dokumen ini diterbitkan secara elektronik oleh GetMasjid &bull; Sah tanpa tanda tangan basah</span>
-      <span>${escapeHtml(data.nomorSurat)}</span>
+      <table class="footer-table">
+        <tr>
+          <td style="text-align:left;">Dokumen ini diterbitkan secara elektronik oleh GetMasjid &bull; Sah tanpa tanda tangan basah</td>
+          <td style="text-align:right;">${escapeHtml(data.nomorSurat)}</td>
+        </tr>
+      </table>
     </div>
   </div>
 
   ${data.attachments && data.attachments.length > 0 ? data.attachments.map((img, idx) => `
-    <div class="page attachment-page" style="page-break-before: always; break-before: page; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;">
+    <div class="page attachment-page" style="page-break-before: always; break-before: page; position: relative;">
       <!-- Header Lampiran -->
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #0f6b4a; padding-bottom: 8px; margin-bottom: 15px; flex-shrink: 0;">
-        <span style="font-size: 10pt; font-weight: 700; color: #0f6b4a; text-transform: uppercase; letter-spacing: 0.5px;">Lampiran ${idx + 1}</span>
-        <span style="font-size: 8.5pt; color: #666; font-family: monospace;">No. ${escapeHtml(data.nomorSurat)}</span>
-      </div>
+      <table style="width: 100%; border-collapse: collapse; border-bottom: 1.5px solid #0f6b4a; padding-bottom: 8px; margin-bottom: 15px;">
+        <tr>
+          <td style="font-size: 10pt; font-weight: 700; color: #0f6b4a; text-transform: uppercase; letter-spacing: 0.5px;">Lampiran ${idx + 1}</td>
+          <td style="font-size: 8.5pt; color: #666; font-family: monospace; text-align: right;">No. ${escapeHtml(data.nomorSurat)}</td>
+        </tr>
+      </table>
       
       <!-- Body Lampiran: Center Image -->
-      <div style="flex: 1 1 auto; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 10px 0;">
+      <div style="text-align: center; margin: 20px 0;">
         <img src="${img}" alt="Lampiran ${idx + 1}" style="max-width: 100%; max-height: 200mm; object-fit: contain; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" />
       </div>
       
       <!-- Footer Lampiran -->
-      <div style="border-top: 1px solid #e5e7eb; padding-top: 8px; display: flex; justify-content: space-between; font-size: 7pt; color: #888; letter-spacing: 0.2px; margin-top: 15px; flex-shrink: 0;">
-        <span>Dokumen ini diterbitkan secara elektronik oleh GetMasjid</span>
-        <span>Halaman ${idx + 2}</span>
+      <div class="footer">
+        <table class="footer-table">
+          <tr>
+            <td style="text-align:left;">Dokumen ini diterbitkan secara elektronik oleh GetMasjid</td>
+            <td style="text-align:right;">Halaman ${idx + 2}</td>
+          </tr>
+        </table>
       </div>
     </div>
   `).join("") : ""}
