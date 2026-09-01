@@ -3,23 +3,26 @@
 import { useState, useRef } from "react";
 import { LetterData, PerihalOption } from "@/types/letter";
 import { SURAT_TEMPLATES, PERIHAL_OPTIONS } from "@/lib/letter-templates";
+import { removeBackground, pdfToImageDataUrl } from "@/lib/bg-remove";
 
 interface Props {
   data: LetterData;
   onChange: (data: LetterData) => void;
   onPreview: () => void;
-  onDownload: () => void;
+  onPrint: () => void;
+  onDownload?: () => void;
   onSave: () => void;
-  isGenerating: boolean;
+  isGenerating?: boolean;
 }
 
-export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGenerating }: Props) {
+export function LetterForm({ data, onChange, onPreview, onPrint, onDownload, onSave, isGenerating }: Props) {
   const [perihalOption, setPerihalOption] = useState<PerihalOption>(
     (PERIHAL_OPTIONS as readonly string[]).includes(data.perihal) ? (data.perihal as PerihalOption) : "Custom"
   );
   const [customPerihal, setCustomPerihal] = useState(
     !(PERIHAL_OPTIONS as readonly string[]).includes(data.perihal) ? data.perihal : ""
   );
+  const [processingSigIdx, setProcessingSigIdx] = useState<number | null>(null);
   const attachmentInputRef = useRef<HTMLInputElement>(null);
 
   const handleAttachmentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,6 +102,53 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
       namaPenandatangan: newList[0]?.nama || "",
       jabatan: newList[0]?.jabatan || "",
     });
+  };
+
+  const handleSignerSigUpload = async (idx: number, file: File | undefined) => {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Maksimal ukuran file tanda tangan 5MB.");
+      return;
+    }
+    try {
+      setProcessingSigIdx(idx);
+      let dataUrl = "";
+      if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
+        dataUrl = await pdfToImageDataUrl(file, 2);
+      } else {
+        dataUrl = await new Promise<string>((resolve, reject) => {
+          const r = new FileReader();
+          r.onload = () => resolve(r.result as string);
+          r.onerror = reject;
+          r.readAsDataURL(file);
+        });
+      }
+      // Hapus background putih agar transparan dan bisa ditimpa cap
+      const cleaned = await removeBackground(dataUrl, { threshold: 228 });
+      handleSignerPropertyChange(idx, "signatureImage", cleaned);
+    } catch (e) {
+      console.error("Gagal memproses tanda tangan:", e);
+      const r = new FileReader();
+      r.onload = () => handleSignerPropertyChange(idx, "signatureImage", r.result as string);
+      r.readAsDataURL(file);
+    } finally {
+      setProcessingSigIdx(null);
+    }
+  };
+
+  const handleSignerRemoveBg = async (idx: number) => {
+    const currentImg = (data.signers || [])[idx]?.signatureImage;
+    if (!currentImg) return;
+    try {
+      setProcessingSigIdx(idx);
+      const cleaned = await removeBackground(currentImg, { threshold: 228 });
+      handleSignerPropertyChange(idx, "signatureImage", cleaned);
+    } catch (e) {
+      console.error("Gagal hapus background:", e);
+      alert("Gagal menghapus background.");
+    } finally {
+      setProcessingSigIdx(null);
+    }
   };
 
 
@@ -308,46 +358,57 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
 
                   {signer.showSignature && (
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 pt-1 bg-white p-2.5 rounded-xl border border-black/5">
-                      <div className="w-[64px] h-[40px] rounded-lg border border-black/5 bg-[#FDFBF7] flex items-center justify-center overflow-hidden shrink-0">
+                      <div className="w-[64px] h-[40px] rounded-lg border border-black/5 bg-[#FDFBF7] flex items-center justify-center overflow-hidden shrink-0 relative">
                         {signer.signatureImage ? (
                           <img src={signer.signatureImage} alt={`ttd ${idx+1}`} className="max-w-full max-h-full object-contain" />
                         ) : (
                           <span className="text-[9px] text-stone-400 text-center">Default</span>
                         )}
+                        {processingSigIdx === idx && (
+                          <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
+                            <span className="w-3.5 h-3.5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+                          </div>
+                        )}
                       </div>
                       <div className="flex-1 flex flex-wrap gap-2 items-center">
                         <button
                           type="button"
+                          disabled={processingSigIdx === idx}
                           onClick={() => {
                             const input = document.getElementById(`signer-sig-input-${idx}`);
                             input?.click();
                           }}
-                          className="h-7 px-3 rounded-full bg-white ring-1 ring-black/5 text-[10px] font-semibold hover:bg-stone-50 whitespace-nowrap shrink-0"
+                          className="h-7 px-3 rounded-full bg-white ring-1 ring-black/5 text-[10px] font-semibold hover:bg-stone-50 whitespace-nowrap shrink-0 disabled:opacity-60"
                         >
-                          Upload Tanda Tangan
+                          {processingSigIdx === idx ? "Memproses..." : "Upload TTD (PDF/JPG/PNG)"}
                         </button>
                         {signer.signatureImage && (
-                          <button
-                            type="button"
-                            onClick={() => handleSignerPropertyChange(idx, "signatureImage", undefined)}
-                            className="h-7 px-2.5 rounded-full bg-red-50 text-red-600 text-[10px] font-semibold hover:bg-red-100 whitespace-nowrap shrink-0"
-                          >
-                            Reset
-                          </button>
+                          <>
+                            <button
+                              type="button"
+                              disabled={processingSigIdx === idx}
+                              onClick={() => handleSignerRemoveBg(idx)}
+                              className="h-7 px-2.5 rounded-full bg-[#0f6b4a] text-white text-[10px] font-semibold hover:bg-[#0d5a3f] whitespace-nowrap shrink-0 disabled:opacity-60"
+                              title="Hapus background putih agar transparan"
+                            >
+                              ✨ Hapus BG
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleSignerPropertyChange(idx, "signatureImage", undefined)}
+                              className="h-7 px-2.5 rounded-full bg-red-50 text-red-600 text-[10px] font-semibold hover:bg-red-100 whitespace-nowrap shrink-0"
+                            >
+                              Reset
+                            </button>
+                          </>
                         )}
                       </div>
                       <input
                         id={`signer-sig-input-${idx}`}
                         type="file"
-                        accept="image/png,image/jpeg,image/jpg"
+                        accept=".pdf,image/png,image/jpeg,image/jpg,image/webp,application/pdf"
                         className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (!file) return;
-                          const r = new FileReader();
-                          r.onload = () => handleSignerPropertyChange(idx, "signatureImage", r.result as string);
-                          r.readAsDataURL(file);
-                        }}
+                        onChange={(e) => handleSignerSigUpload(idx, e.target.files?.[0])}
                       />
                     </div>
                   )}
@@ -371,20 +432,23 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
             </button>
             <button 
               type="button" 
-              onClick={onDownload} 
+              onClick={onPrint || onDownload} 
               disabled={isGenerating} 
               className="group flex-1 h-[48px] rounded-full bg-[#0f6b4a] text-white font-semibold text-[14px] hover:bg-[#0d5a3f] disabled:opacity-60 flex items-center justify-center gap-2 pl-5 pr-2 active:scale-[0.98] transition-all shadow-[0_8px_20px_rgba(15,107,74,0.22)]"
             >
               {isGenerating ? (
                 <>
                   <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin"/>
-                  <span>Memproses...</span>
+                  <span>Menyiapkan...</span>
                 </>
               ) : (
                 <>
-                  <span>Download PDF</span>
+                  <span>Cetak / Print PDF</span>
                   <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:translate-x-0.5 transition-all">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v12M8 11l4 4 4-4M3 17v3h18v-3" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M6 14h12v8H6z" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                   </span>
                 </>
               )}
@@ -399,7 +463,7 @@ export function LetterForm({ data, onChange, onPreview, onDownload, onSave, isGe
             <span>Simpan ke Riwayat (save-first)</span>
           </button>
         </div>
-        <p className="px-4 sm:px-6 md:px-8 pb-6 text-[11px] text-stone-500 text-center">Nomor tercatat otomatis saat download. Pastikan data benar.</p>
+        <p className="px-4 sm:px-6 md:px-8 pb-6 text-[11px] text-stone-500 text-center">Buka dialog cetak untuk print langsung ke printer atau Simpan sebagai PDF (Save as PDF).</p>
       </div>
     </div>
   );

@@ -7,10 +7,11 @@ interface Props {
   items: HistoryItem[];
   onLoad: (item: HistoryItem) => void;
   onDelete: (id: string) => void;
-  onDownload: (item: HistoryItem) => void;
+  onPrint?: (item: HistoryItem) => void;
+  onDownload?: (item: HistoryItem) => void;
 }
 
-export function HistoryPanel({ items, onLoad, onDelete, onDownload }: Props) {
+export function HistoryPanel({ items, onLoad, onDelete, onPrint, onDownload }: Props) {
   const [q, setQ] = useState("");
   const filtered = items.filter(i =>
     !q || `${i.nomorSurat} ${i.penerima} ${i.tujuan} ${i.perihal}`.toLowerCase().includes(q.toLowerCase())
@@ -65,7 +66,13 @@ export function HistoryPanel({ items, onLoad, onDelete, onDownload }: Props) {
                     </div>
                     <div className="flex flex-col gap-1.5 shrink-0">
                       <button onClick={() => onLoad(item)} className="h-7 px-3 rounded-full bg-black text-white text-xs font-medium hover:bg-stone-800">Muat</button>
-                      <button onClick={() => onDownload(item)} className="h-7 px-3 rounded-full bg-white ring-1 ring-black/5 text-xs">Unduh</button>
+                      <button onClick={() => (onPrint ? onPrint(item) : onDownload?.(item))} className="h-7 px-3 rounded-full bg-white ring-1 ring-black/5 text-xs text-stone-700 hover:bg-stone-50 flex items-center justify-center gap-1" title="Cetak Surat / Simpan PDF">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M6 14h12v8H6z" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        <span>Cetak</span>
+                      </button>
                       <button onClick={() => { if(confirm("Hapus riwayat ini?")) onDelete(item.id); }} className="h-7 px-3 rounded-full bg-white ring-1 ring-black/5 text-xs text-red-600 hover:bg-red-50">Hapus</button>
                     </div>
                   </div>

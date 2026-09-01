@@ -20,18 +20,16 @@ async function getPdfBuffer(html: string): Promise<Buffer> {
     }
 
     // Node runtime: coba import sparticuz/chromium jika tersedia
-    let puppeteerModule;
+    let puppeteer;
     try {
-      puppeteerModule = await import("@sparticuz/chromium");
+      const puppeteerModule = await import("puppeteer");
+      puppeteer = puppeteerModule.default || puppeteerModule;
     } catch (e) {
-      console.log("@sparticuz/chromium tidak tersedia, pakai puppeteer default");
-      puppeteerModule = await import("puppeteer");
+      console.log("Puppeteer tidak dapat di-load");
+      throw new Error("Puppeteer tidak tersedia di environment ini.");
     }
 
-    const puppeteer = puppeteerModule.default || puppeteerModule;
     const fs = await import("fs");
-
-    // Cek executable system Chrome (untuk dev local)
     const systemChromePaths = [
       "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
       "/Applications/Chromium.app/Contents/MacOS/Chromium",

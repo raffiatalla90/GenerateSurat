@@ -75,12 +75,12 @@ export function generateLetterHTML(
         <div class="ttd-row justify-end">
           <div class="ttd-box">
             <div class="tanggal">Hormat kami,</div>
-            <div class="jabatan-atas">${escapeHtml(signer.jabatan)}</div>
             <div class="ttd-images">
-              ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
               ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;margin-top:20px;">(tanpa tanda tangan)</div>`}
+              ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
             </div>
             <div class="ttd-name">${escapeHtml(signer.nama)}</div>
+            <div class="ttd-jabatan">${escapeHtml(signer.jabatan)}</div>
           </div>
         </div>
       </div>
@@ -95,12 +95,12 @@ export function generateLetterHTML(
             const stImg = signer.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : null;
             return `
               <div class="ttd-box">
-                <div class="jabatan-atas">${escapeHtml(signer.jabatan)}</div>
                 <div class="ttd-images">
-                  ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
                   ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;margin-top:20px;">(tanpa tanda tangan)</div>`}
+                  ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
                 </div>
                 <div class="ttd-name">${escapeHtml(signer.nama)}</div>
+                <div class="ttd-jabatan">${escapeHtml(signer.jabatan)}</div>
               </div>
             `;
           }).join('')}
@@ -119,12 +119,12 @@ export function generateLetterHTML(
             const stImg = signer.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : null;
             return `
               <div class="ttd-box">
-                <div class="jabatan-atas">${escapeHtml(signer.jabatan)}</div>
                 <div class="ttd-images">
-                  ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
                   ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;margin-top:20px;">(tanpa tanda tangan)</div>`}
+                  ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
                 </div>
                 <div class="ttd-name">${escapeHtml(signer.nama)}</div>
+                <div class="ttd-jabatan">${escapeHtml(signer.jabatan)}</div>
               </div>
             `;
           }).join('')}
@@ -135,12 +135,12 @@ export function generateLetterHTML(
             const stImg = signer.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : null;
             return `
               <div class="ttd-box">
-                <div class="jabatan-atas">${escapeHtml(signer.jabatan)}</div>
                 <div class="ttd-images">
-                  ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
                   ${sImg ? `<img class="signature" src="${sImg}" alt="tanda tangan" style="transform: translate(-50%, -50%) scale(${sig.signatureScale})" />` : `<div style="font-size:9pt;color:#999;font-style:italic;margin-top:20px;">(tanpa tanda tangan)</div>`}
+                  ${stImg ? `<img class="stamp" src="${stImg}" alt="stempel" style="opacity:${sig.stampOpacity}" />` : ""}
                 </div>
                 <div class="ttd-name">${escapeHtml(signer.nama)}</div>
+                <div class="ttd-jabatan">${escapeHtml(signer.jabatan)}</div>
               </div>
             `;
           }).join('')}
@@ -168,48 +168,68 @@ export function generateLetterHTML(
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: #1a1a1a;
-    background: #fff;
-    font-size: 11.5pt;
-    line-height: 1.6;
+    background: #eef1f5;
+    font-size: 10.5pt;
+    line-height: 1.5;
+    padding: 20px 10px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
   .page {
     width: 210mm;
+    height: 297mm;
+    max-height: 297mm;
     min-height: 297mm;
-    margin: 0 auto;
-    padding: 18mm 22mm 18mm 22mm;
+    margin: 0 auto 20px auto;
+    padding: 14mm 20mm 12mm 20mm;
     background: white;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .page:last-child {
+    margin-bottom: 0;
   }
   /* Kop Surat */
   .kop {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 2.5px solid ${escapeHtml(kop.accentColor)};
-    padding-bottom: 12px;
-    margin-bottom: 6px;
+    border-bottom: 2px solid ${escapeHtml(kop.accentColor)};
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
   }
   .kop-left {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
   }
   .logo {
-    width: 46px;
-    height: 46px;
+    width: 44px;
+    height: 44px;
     background: ${escapeHtml(kop.accentColor)};
-    border-radius: 10px;
+    border-radius: 9px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-weight: 700;
-    font-size: 18px;
+    font-size: 17px;
     letter-spacing: -0.5px;
   }
   .kop-text h1 {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 800;
     color: ${escapeHtml(kop.accentColor)};
     letter-spacing: -0.3px;
@@ -220,133 +240,189 @@ export function generateLetterHTML(
     font-size: 7.5pt;
     color: #555;
     margin-top: 3px;
-    line-height: 1.4;
+    line-height: 1.35;
     max-width: 380px;
   }
   .kop-right {
     text-align: right;
     font-size: 7.5pt;
     color: #555;
-    line-height: 1.5;
+    line-height: 1.45;
   }
   .kop-right strong { color: #1a1a1a; font-size: 7.5pt; }
   .kop-line-2 {
     height: 1px;
     background: ${escapeHtml(kop.accentColor)}22;
-    margin-bottom: 18px;
+    margin-bottom: 12px;
+    flex-shrink: 0;
   }
   /* Meta */
   .meta {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 18px;
-    font-size: 10pt;
+    margin-bottom: 12px;
+    font-size: 9.5pt;
+    flex-shrink: 0;
   }
   .meta table { border-collapse: collapse; }
-  .meta td { padding: 1.5px 0; vertical-align: top; }
-  .meta td:first-child { width: 90px; color: #333; }
+  .meta td { padding: 1px 0; vertical-align: top; }
+  .meta td:first-child { width: 85px; color: #333; }
   .meta td:nth-child(2) { width: 10px; text-align: center; }
   .meta td:last-child { font-weight: 500; }
   /* Tujuan */
-  .tujuan { margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; }
-  .tujuan .label { color: #555; font-size: 9pt; margin-bottom: 2px; }
+  .tujuan {
+    margin-bottom: 12px;
+    font-size: 10pt;
+    line-height: 1.45;
+    flex-shrink: 0;
+  }
+  .tujuan .label { color: #555; font-size: 8.5pt; margin-bottom: 2px; }
   .isi {
     text-align: justify;
-    font-size: 10.8pt;
-    line-height: 1.75;
+    font-size: 10pt;
+    line-height: 1.5;
     color: #222;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
+    flex-shrink: 0;
   }
-  .isi p { margin-bottom: 10px; text-indent: 0; }
-  .isi p:first-child { margin-top: 0; }
-  .penutup {
-    text-align: justify;
-    font-size: 10.8pt;
-    line-height: 1.7;
-    margin-bottom: 28px;
-  }
+  .isi p { margin-bottom: 8px; text-indent: 0; }
+  .isi p:last-child { margin-bottom: 0; }
   /* TTD */
   .ttd-container {
-    margin-top: 15px;
+    margin-top: 14px;
     width: 100%;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    flex-shrink: 0;
   }
   .ttd-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 20px;
+    gap: 16px;
   }
   .ttd-row.justify-end {
     justify-content: flex-end;
   }
   .ttd-box {
     text-align: center;
-    width: 220px;
+    width: 200px;
     position: relative;
     box-sizing: border-box;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
-  .ttd-box .tanggal { font-size: 10pt; margin-bottom: 6px; color: #333; }
-  .ttd-box .jabatan-atas { font-size: 10pt; color: #333; margin-bottom: 8px; }
+  .ttd-box .tanggal { font-size: 9.5pt; margin-bottom: 4px; color: #333; }
+  .ttd-box .jabatan-atas { font-size: 9.5pt; color: #333; margin-bottom: 4px; }
   .ttd-images {
     position: relative;
-    height: 92px;
+    height: 75px;
+    min-height: 75px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 6px 0;
-  }
-  .ttd-images .stamp {
-    position: absolute;
-    right: 12px;
-    top: 4px;
-    width: 88px;
-    height: 88px;
-    opacity: 0.85;
-    mix-blend-mode: multiply;
+    margin: 4px 0;
   }
   .ttd-images .signature {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 140px;
+    width: 130px;
     height: 52px;
     object-fit: contain;
+    z-index: 1;
+    mix-blend-mode: multiply;
+  }
+  .ttd-images .stamp {
+    position: absolute;
+    left: 18px;
+    top: -4px;
+    width: 82px;
+    height: 82px;
+    opacity: 0.88;
+    z-index: 2;
+    mix-blend-mode: multiply;
+    pointer-events: none;
   }
   .ttd-name {
     font-weight: 700;
-    font-size: 11pt;
+    font-size: 10.5pt;
     color: #111;
     border-bottom: 1.5px solid #111;
     display: inline-block;
-    padding-bottom: 2px;
+    padding-bottom: 1.5px;
     margin-bottom: 3px;
   }
-  .ttd-jabatan { font-size: 9pt; color: #555; }
+  .ttd-jabatan {
+    font-size: 9.5pt;
+    color: #333;
+    font-weight: 500;
+    line-height: 1.3;
+  }
   .footer {
-    margin-top: 36px;
+    margin-top: auto;
     border-top: 1px solid #e5e7eb;
-    padding-top: 10px;
+    padding-top: 6px;
     display: flex;
     justify-content: space-between;
     font-size: 7pt;
     color: #888;
     letter-spacing: 0.2px;
+    flex-shrink: 0;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
   @media print {
     @page {
+      size: A4 portrait;
       margin: 0;
     }
-    body {
-      background: white;
+    *, *::before, *::after {
+      box-sizing: border-box !important;
+    }
+    html, body {
+      background: white !important;
       zoom: 1 !important;
-      width: auto !important;
-      margin: 0;
+      width: 210mm !important;
+      height: 297mm !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      display: block !important;
     }
     .page {
-      padding: 18mm 22mm 18mm 22mm;
-      box-shadow: none;
+      width: 210mm !important;
+      height: 297mm !important;
+      max-height: 297mm !important;
+      min-height: 297mm !important;
+      margin: 0 auto !important;
+      padding: 14mm 20mm 12mm 20mm !important;
+      box-sizing: border-box !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
       transform: none !important;
+      page-break-after: always;
+      break-after: page;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+      overflow: hidden !important;
+    }
+    .page:last-child {
+      page-break-after: avoid !important;
+      break-after: avoid !important;
+    }
+    .attachment-page {
+      page-break-before: always !important;
+      break-before: page !important;
+      height: 297mm !important;
+      max-height: 297mm !important;
+      overflow: hidden !important;
+    }
+    .kop, .meta, .tujuan, .isi, .ttd-container, .ttd-box, .footer {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
     }
   }
 </style>
@@ -378,7 +454,7 @@ export function generateLetterHTML(
         <tr><td>Lampiran</td><td>:</td><td>${data.attachments && data.attachments.length > 0 ? `${data.attachments.length} lembar` : "-"}</td></tr>
         <tr><td>Perihal</td><td>:</td><td><strong>${escapeHtml(perihalDisplay)}</strong></td></tr>
       </table>
-      <div style="text-align:right; font-size:10pt; color:#333;">
+      <div style="text-align:right; font-size:9.5pt; color:#333;">
         Surakarta, ${escapeHtml(tanggalFormatted)}
       </div>
     </div>
@@ -386,19 +462,15 @@ export function generateLetterHTML(
     <!-- TUJUAN -->
     <div class="tujuan">
       <div class="label">Kepada Yth.</div>
-      <div style="font-weight:600; font-size:11pt;">${escapeHtml(data.namaPenerima)}</div>
+      <div style="font-weight:600; font-size:10.5pt;">${escapeHtml(data.namaPenerima)}</div>
       <div style="font-weight:500; color:#333;">${escapeHtml(data.instansiTujuan)}</div>
-      ${data.alamatPenerima ? `<div style="color:#555; font-size:9.5pt; margin-top:2px;">${escapeHtml(data.alamatPenerima)}</div>` : ""}
-      <div style="margin-top:10px;">di Tempat</div>
+      ${data.alamatPenerima ? `<div style="color:#555; font-size:9pt; margin-top:2px;">${escapeHtml(data.alamatPenerima)}</div>` : ""}
+      <div style="margin-top:6px;">di Tempat</div>
     </div>
 
     <!-- ISI -->
     <div class="isi">
       ${isiParagraphs}
-    </div>
-
-    <div class="penutup">
-      Demikian surat ini kami sampaikan. Atas perhatian dan kerja sama Bapak/Ibu, kami ucapkan terima kasih.
     </div>
 
     <!-- TTD -->
@@ -411,20 +483,20 @@ export function generateLetterHTML(
   </div>
 
   ${data.attachments && data.attachments.length > 0 ? data.attachments.map((img, idx) => `
-    <div class="page attachment-page" style="page-break-before: always; break-before: page; display: flex; flex-direction: column; justify-content: space-between; min-height: 297mm; background: white; padding: 18mm 22mm; box-sizing: border-box;">
+    <div class="page attachment-page" style="page-break-before: always; break-before: page; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;">
       <!-- Header Lampiran -->
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #0f6b4a; padding-bottom: 8px; margin-bottom: 15px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #0f6b4a; padding-bottom: 8px; margin-bottom: 15px; flex-shrink: 0;">
         <span style="font-size: 10pt; font-weight: 700; color: #0f6b4a; text-transform: uppercase; letter-spacing: 0.5px;">Lampiran ${idx + 1}</span>
         <span style="font-size: 8.5pt; color: #666; font-family: monospace;">No. ${escapeHtml(data.nomorSurat)}</span>
       </div>
       
       <!-- Body Lampiran: Center Image -->
-      <div style="flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 10px 0;">
+      <div style="flex: 1 1 auto; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 10px 0;">
         <img src="${img}" alt="Lampiran ${idx + 1}" style="max-width: 100%; max-height: 200mm; object-fit: contain; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" />
       </div>
       
       <!-- Footer Lampiran -->
-      <div style="border-top: 1px solid #e5e7eb; padding-top: 8px; display: flex; justify-content: space-between; font-size: 7pt; color: #888; letter-spacing: 0.2px; margin-top: 15px;">
+      <div style="border-top: 1px solid #e5e7eb; padding-top: 8px; display: flex; justify-content: space-between; font-size: 7pt; color: #888; letter-spacing: 0.2px; margin-top: 15px; flex-shrink: 0;">
         <span>Dokumen ini diterbitkan secara elektronik oleh GetMasjid</span>
         <span>Halaman ${idx + 2}</span>
       </div>
@@ -437,23 +509,20 @@ export function generateLetterHTML(
       if (pages.length === 0) return;
       const width = window.innerWidth;
       const targetWidth = 794; // approx A4 width in px at 96dpi (210mm)
+      const availableWidth = width - 20;
       let fitScale = 1;
-      if (width < targetWidth) {
-        fitScale = width / targetWidth;
+      if (availableWidth < targetWidth) {
+        fitScale = availableWidth / targetWidth;
       }
       const finalScale = fitScale * currentManualScale;
 
       if ('zoom' in document.body.style) {
         document.body.style.zoom = finalScale;
-        document.body.style.overflowX = finalScale > (width / targetWidth) ? 'auto' : 'hidden';
       } else {
-        // Firefox fallback
         pages.forEach(function(page) {
           page.style.transform = 'scale(' + finalScale + ')';
           page.style.transformOrigin = 'top center';
         });
-        document.body.style.width = targetWidth + 'px';
-        document.body.style.overflowX = finalScale > (width / targetWidth) ? 'auto' : 'hidden';
       }
     }
 
@@ -462,6 +531,21 @@ export function generateLetterHTML(
         currentManualScale = event.data.scale;
         autoScale();
       }
+    });
+
+    window.addEventListener('beforeprint', function() {
+      if ('zoom' in document.body.style) {
+        document.body.style.zoom = '1';
+      }
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(function(page) {
+        page.style.transform = 'none';
+      });
+      document.body.style.width = '210mm';
+    });
+
+    window.addEventListener('afterprint', function() {
+      autoScale();
     });
 
     window.addEventListener('load', autoScale);
