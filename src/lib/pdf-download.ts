@@ -9,12 +9,15 @@ export async function downloadPdfFile(html: string, filename: string) {
   const html2pdfModule = await import("html2pdf.js");
   const html2pdf = html2pdfModule.default || html2pdfModule;
 
-  // Buat element container tersembunyi
+  // Buat element container tersembunyi di koordinat (0, 0) agar html2canvas dapat merender dengan presisi
   const container = document.createElement("div");
-  container.style.position = "absolute";
-  container.style.left = "-9999px";
+  container.style.position = "fixed";
+  container.style.left = "0";
   container.style.top = "0";
   container.style.width = "210mm";
+  container.style.zIndex = "-99999";
+  container.style.opacity = "0.999";
+  container.style.pointerEvents = "none";
   container.style.background = "#ffffff";
   container.innerHTML = html;
   document.body.appendChild(container);
@@ -28,9 +31,13 @@ export async function downloadPdfFile(html: string, filename: string) {
   pages.forEach((p) => {
     p.style.transform = "none";
     p.style.zoom = "1";
-    p.style.margin = "0";
+    p.style.margin = "0 auto";
     p.style.boxShadow = "none";
+    p.style.borderRadius = "0";
   });
+
+  // Beri jeda 350ms agar gambar base64 (logo, ttd, cap) & font eksternal ter-render sempurna sebelum dimasukkan ke canvas
+  await new Promise((resolve) => setTimeout(resolve, 350));
 
   const cleanFilename = filename.endsWith(".pdf") ? filename : `${filename}.pdf`;
 
@@ -47,6 +54,7 @@ export async function downloadPdfFile(html: string, filename: string) {
       windowWidth: 794, // 210mm at 96dpi
     },
     jsPDF: { unit: "mm" as const, format: "a4" as const, orientation: "portrait" as const },
+    pagebreak: { mode: ["css", "legacy"], before: ".attachment-page" },
   };
 
   try {
