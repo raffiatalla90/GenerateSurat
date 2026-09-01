@@ -266,7 +266,8 @@ export function generateLetterHTML(
   }
   .kop-line-2 {
     height: 1px;
-    background: ${escapeHtml(kop.accentColor)}22;
+    background: ${escapeHtml(kop.accentColor)};
+    opacity: 0.25;
     margin-bottom: 12px;
   }
   /* Meta Table Layout */
@@ -291,7 +292,7 @@ export function generateLetterHTML(
   }
   .meta-inner-table { border-collapse: collapse; }
   .meta-inner-table td { padding: 1px 0; vertical-align: top; }
-  .meta-inner-table td.label-cell { width: 70px; color: #333; }
+  .meta-inner-table td.label-cell { width: 75px; color: #333; }
   .meta-inner-table td.colon-cell { width: 14px; text-align: center; }
   .meta-inner-table td.val-cell { font-weight: 500; }
 
@@ -354,8 +355,9 @@ export function generateLetterHTML(
   }
   .ttd-images .stamp {
     position: absolute;
-    left: 18px;
-    top: -4px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-65%, -50%);
     width: 82px;
     height: 82px;
     opacity: 0.88;
