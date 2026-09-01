@@ -143,30 +143,20 @@ export default function Home() {
     setTimeout(() => setToast(null), 2500);
   };
 
-  const handleDownloadHistoryPDF = async (item: HistoryItem) => {
-    try {
-      setToast(`Menyiapkan PDF: ${item.nomorSurat}...`);
-      const payloadData = {
-        ...item.data,
-        signers: item.data.signers || [{
-          nama: item.data.namaPenandatangan || "Raffi Atalla Natha Atmaja",
-          jabatan: item.data.jabatan || "CEO GetMasjid",
-          showSignature: true,
-          showStamp: true,
-        }]
-      };
-      const html = generateLetterHTML(payloadData, item.kopConfig, item.signatureConfig);
-      const perihalDisplay = item.data.perihalCustom || item.data.perihal;
-      const filename = `${item.nomorSurat.replace(/\//g, "-")} - ${perihalDisplay}.pdf`;
-      await downloadPdfFile(html, filename);
-      setToast(`Berhasil unduh PDF: ${item.nomorSurat}`);
-    } catch (e) {
-      console.error(e);
-      alert("Gagal mengunduh PDF riwayat. Mengalihkan ke mode cetak.");
-      handlePrintHistory(item);
-    } finally {
-      setTimeout(() => setToast(null), 2500);
-    }
+  const handleDownloadHistoryPDF = (item: HistoryItem) => {
+    const payloadData = {
+      ...item.data,
+      signers: item.data.signers || [{
+        nama: item.data.namaPenandatangan || "Raffi Atalla Natha Atmaja",
+        jabatan: item.data.jabatan || "CEO GetMasjid",
+        showSignature: true,
+        showStamp: true,
+      }]
+    };
+    const html = generateLetterHTML(payloadData, item.kopConfig, item.signatureConfig);
+    printLetter(html);
+    setToast(`Membuka dialog Simpan PDF: ${item.nomorSurat}`);
+    setTimeout(() => setToast(null), 3000);
   };
 
   const handlePrint = () => {
@@ -188,27 +178,15 @@ export default function Home() {
       .catch(() => {});
   };
 
-  const handleDownloadPDF = async () => {
+  const handleDownloadPDF = () => {
     if (!data.namaPenerima.trim() || !data.instansiTujuan.trim() || !data.perihal.trim() || !data.isiSurat.trim()) {
       alert("Mohon lengkapi Nama Penerima, Instansi, Perihal, dan Isi Surat.");
       return;
     }
-    setIsGenerating(true);
-    setToast(`Menyiapkan PDF: ${data.nomorSurat}...`);
-    try {
-      const html = generateLetterHTML(data, kopConfig, sigConfig);
-      const perihalDisplay = data.perihalCustom || data.perihal;
-      const filename = `${data.nomorSurat.replace(/\//g, "-")} - ${perihalDisplay}.pdf`;
-      await downloadPdfFile(html, filename);
-      setToast(`Berhasil unduh PDF: ${data.nomorSurat}`);
-    } catch (e) {
-      console.error("Download PDF error:", e);
-      alert("Gagal mengunduh PDF. Mengalihkan ke dialog cetak.");
-      handlePrint();
-    } finally {
-      setIsGenerating(false);
-      setTimeout(() => setToast(null), 3000);
-    }
+    const html = generateLetterHTML(data, kopConfig, sigConfig);
+    printLetter(html);
+    setToast(`Membuka PDF A4 presisi: Pilih 'Simpan sebagai PDF' (Save as PDF)`);
+    setTimeout(() => setToast(null), 3500);
   };
 
   return (
