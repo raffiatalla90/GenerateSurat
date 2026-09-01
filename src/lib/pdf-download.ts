@@ -9,25 +9,44 @@ export async function downloadPdfFile(html: string, filename: string) {
   const html2pdfModule = await import("html2pdf.js");
   const html2pdf = html2pdfModule.default || html2pdfModule;
 
-  // Buat element container tersembunyi di koordinat (0, 0) agar html2canvas dapat merender dengan presisi
+  // 1. Buat container wrapper dengan z-index positif di (0, 0) agar html2canvas merender dengan sempurna
   const container = document.createElement("div");
   container.style.position = "fixed";
   container.style.left = "0";
   container.style.top = "0";
-  container.style.width = "210mm";
-  container.style.zIndex = "-99999";
-  container.style.opacity = "0.999";
-  container.style.pointerEvents = "none";
+  container.style.width = "794px"; // 210mm at 96dpi
+  container.style.height = "1123px"; // 297mm at 96dpi
+  container.style.zIndex = "99998";
   container.style.background = "#ffffff";
-  container.innerHTML = html;
+  container.style.overflow = "hidden";
+  container.style.pointerEvents = "none";
+
+  // 2. Buat iframe di dalam container agar dokumen HTML ter-parse secara native
+  const iframe = document.createElement("iframe");
+  iframe.style.width = "794px";
+  iframe.style.height = "1123px";
+  iframe.style.border = "0";
+  iframe.style.background = "#ffffff";
+  container.appendChild(iframe);
   document.body.appendChild(container);
 
-  // Pastikan script autoScale di dalam html tidak mengganggu rendering canvas
-  const scripts = container.querySelectorAll("script");
-  scripts.forEach((s) => s.remove());
+  const doc = iframe.contentWindow?.document;
+  if (!doc) {
+    if (document.body.contains(container)) document.body.removeChild(container);
+    throw new Error("Gagal membuat iframe dokumen PDF");
+  }
 
-  // Pastikan halaman .page memiliki dimensi persis A4
-  const pages = container.querySelectorAll<HTMLElement>(".page");
+  doc.open();
+  doc.write(html);
+  doc.close();
+
+  // Beri jeda 450ms agar font & gambar base64 (logo, ttd, cap) ter-load penuh di iframe
+  await new Promise((resolve) => setTimeout(resolve, 450));
+
+  const targetBody = doc.body;
+
+  // Pastikan style elemen .page di dalam iframe presisi A4 tanpa margin luar
+  const pages = targetBody.querySelectorAll<HTMLElement>(".page");
   pages.forEach((p) => {
     p.style.transform = "none";
     p.style.zoom = "1";
@@ -35,9 +54,6 @@ export async function downloadPdfFile(html: string, filename: string) {
     p.style.boxShadow = "none";
     p.style.borderRadius = "0";
   });
-
-  // Beri jeda 350ms agar gambar base64 (logo, ttd, cap) & font eksternal ter-render sempurna sebelum dimasukkan ke canvas
-  await new Promise((resolve) => setTimeout(resolve, 350));
 
   const cleanFilename = filename.endsWith(".pdf") ? filename : `${filename}.pdf`;
 
@@ -51,14 +67,14 @@ export async function downloadPdfFile(html: string, filename: string) {
       logging: false,
       scrollY: 0,
       scrollX: 0,
-      windowWidth: 794, // 210mm at 96dpi
+      windowWidth: 794,
     },
     jsPDF: { unit: "mm" as const, format: "a4" as const, orientation: "portrait" as const },
     pagebreak: { mode: ["css", "legacy"], before: ".attachment-page" },
   };
 
   try {
-    await html2pdf().set(opt).from(container).save();
+    await html2pdf().set(opt).from(targetBody).save();
   } catch (err) {
     console.error("Gagal generate PDF dengan html2pdf:", err);
     throw err;
