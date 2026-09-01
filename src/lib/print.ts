@@ -20,6 +20,13 @@ export function printLetter(html: string) {
     doc.write(html);
     doc.close();
 
+    const matchTitle = html.match(/<title>(.*?)<\/title>/i);
+    const titleText = matchTitle ? matchTitle[1] : "Surat GetMasjid";
+
+    if (iframe.contentWindow) {
+      iframe.contentWindow.document.title = titleText;
+    }
+
     // Beri jeda sejenak agar font eksternal (Inter/Merriweather) & image ter-load
     setTimeout(() => {
       try {
@@ -31,6 +38,9 @@ export function printLetter(html: string) {
         const win = window.open("", "_blank");
         if (win) {
           win.document.write(html);
+          if (win.document) {
+            win.document.title = titleText;
+          }
           win.document.close();
           win.focus();
           setTimeout(() => win.print(), 350);

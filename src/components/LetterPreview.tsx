@@ -10,11 +10,15 @@ export function LetterPreview({
   kop,
   sig,
   onPrint,
+  onDownload,
+  isGenerating,
 }: {
   data: LetterData;
   kop?: KopSuratConfig;
   sig?: SignatureConfig;
   onPrint?: () => void;
+  onDownload?: () => void;
+  isGenerating?: boolean;
 }) {
   const html = generateLetterHTML(data, kop, sig);
   const [zoomMultiplier, setZoomMultiplier] = useState(1);
@@ -81,18 +85,32 @@ export function LetterPreview({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+            {onDownload && (
+              <button
+                type="button"
+                onClick={onDownload}
+                disabled={isGenerating}
+                className="inline-flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-full bg-[#0f6b4a] hover:bg-[#0d5a3f] text-white text-[11px] sm:text-xs font-semibold transition active:scale-95 shadow-sm disabled:opacity-60"
+                title="Download File PDF Resmi (Tanpa Watermark Domain)"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span>{isGenerating ? "Proses..." : "Download PDF"}</span>
+              </button>
+            )}
             <button
               type="button"
               onClick={handlePrintClick}
-              className="inline-flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-full bg-[#0f6b4a] hover:bg-[#0d5a3f] text-white text-[11px] sm:text-xs font-semibold transition active:scale-95 shadow-sm"
-              title="Cetak Surat atau Simpan sebagai PDF"
+              className="inline-flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-full bg-stone-100 hover:bg-stone-200 ring-1 ring-black/5 text-stone-800 text-[11px] sm:text-xs font-semibold transition active:scale-95"
+              title="Cetak via Printer Browser"
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M6 14h12v8H6z" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span>Cetak Surat</span>
+              <span>Cetak</span>
             </button>
             <span className="text-[10.5px] sm:text-[11px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-[#FDFBF7] ring-1 ring-black/5 text-stone-700 font-mono truncate max-w-[130px] sm:max-w-none text-center" title={data.nomorSurat}>
               {data.nomorSurat}

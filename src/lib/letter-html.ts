@@ -162,7 +162,12 @@ export function generateLetterHTML(
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>${escapeHtml(perihalDisplay)} - ${escapeHtml(data.nomorSurat)}</title>
 <style>
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {

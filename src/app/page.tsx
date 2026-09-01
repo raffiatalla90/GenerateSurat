@@ -11,6 +11,7 @@ import { HistoryPanel } from "@/components/HistoryPanel";
 import { HistoryItem, loadHistory, addHistoryItem, deleteHistoryItem } from "@/lib/history";
 import { generateLetterHTML } from "@/lib/letter-html";
 import { printLetter } from "@/lib/print";
+import { downloadPdfFile } from "@/lib/pdf-download";
 
 function todayISO(): string {
   const d = new Date();
@@ -142,6 +143,32 @@ export default function Home() {
     setTimeout(() => setToast(null), 2500);
   };
 
+  const handleDownloadHistoryPDF = async (item: HistoryItem) => {
+    try {
+      setToast(`Menyiapkan PDF: ${item.nomorSurat}...`);
+      const payloadData = {
+        ...item.data,
+        signers: item.data.signers || [{
+          nama: item.data.namaPenandatangan || "Raffi Atalla Natha Atmaja",
+          jabatan: item.data.jabatan || "CEO GetMasjid",
+          showSignature: true,
+          showStamp: true,
+        }]
+      };
+      const html = generateLetterHTML(payloadData, item.kopConfig, item.signatureConfig);
+      const perihalDisplay = item.data.perihalCustom || item.data.perihal;
+      const filename = `${item.nomorSurat.replace(/\//g, "-")} - ${perihalDisplay}.pdf`;
+      await downloadPdfFile(html, filename);
+      setToast(`Berhasil unduh PDF: ${item.nomorSurat}`);
+    } catch (e) {
+      console.error(e);
+      alert("Gagal mengunduh PDF riwayat. Mengalihkan ke mode cetak.");
+      handlePrintHistory(item);
+    } finally {
+      setTimeout(() => setToast(null), 2500);
+    }
+  };
+
   const handlePrint = () => {
     if (!data.namaPenerima.trim() || !data.instansiTujuan.trim() || !data.perihal.trim() || !data.isiSurat.trim()) {
       alert("Mohon lengkapi Nama Penerima, Instansi, Perihal, dan Isi Surat.");
@@ -161,6 +188,29 @@ export default function Home() {
       .catch(() => {});
   };
 
+  const handleDownloadPDF = async () => {
+    if (!data.namaPenerima.trim() || !data.instansiTujuan.trim() || !data.perihal.trim() || !data.isiSurat.trim()) {
+      alert("Mohon lengkapi Nama Penerima, Instansi, Perihal, dan Isi Surat.");
+      return;
+    }
+    setIsGenerating(true);
+    setToast(`Menyiapkan PDF: ${data.nomorSurat}...`);
+    try {
+      const html = generateLetterHTML(data, kopConfig, sigConfig);
+      const perihalDisplay = data.perihalCustom || data.perihal;
+      const filename = `${data.nomorSurat.replace(/\//g, "-")} - ${perihalDisplay}.pdf`;
+      await downloadPdfFile(html, filename);
+      setToast(`Berhasil unduh PDF: ${data.nomorSurat}`);
+    } catch (e) {
+      console.error("Download PDF error:", e);
+      alert("Gagal mengunduh PDF. Mengalihkan ke dialog cetak.");
+      handlePrint();
+    } finally {
+      setIsGenerating(false);
+      setTimeout(() => setToast(null), 3000);
+    }
+  };
+
   return (
     <div className="flex-1 flex flex-col min-h-[100dvh] w-full max-w-full overflow-x-hidden">
       {/* Professional Header */}
@@ -177,21 +227,29 @@ export default function Home() {
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="hidden md:inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-stone-50 ring-1 ring-stone-200 text-stone-600">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Siap cetak A4
-            </span>
             <button
-              onClick={handlePrint}
-              className="group hidden sm:inline-flex items-center gap-2 pl-4 pr-2 py-1.5 h-9 rounded-full bg-[#0f6b4a] text-white text-[13px] font-medium hover:bg-[#0d5a3f] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] shadow-sm"
-              title="Cetak Surat atau Simpan sebagai PDF"
+              onClick={handleDownloadPDF}
+              disabled={isGenerating}
+              className="group hidden sm:inline-flex items-center gap-2 pl-4 pr-2 py-1.5 h-9 rounded-full bg-[#0f6b4a] text-white text-[13px] font-medium hover:bg-[#0d5a3f] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] shadow-sm disabled:opacity-60"
+              title="Download File PDF Resmi (Tanpa Domain)"
             >
-              <span>Cetak / Print PDF</span>
+              <span>{isGenerating ? "Proses..." : "Download PDF"}</span>
               <span className="w-6 h-6 rounded-full bg-white/15 grid place-items-center group-hover:translate-x-0.5 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8">
-                  <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M6 14h12v8H6z" strokeLinecap="round" strokeLinejoin="round" />
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
+            </button>
+            <button
+              onClick={handlePrint}
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 h-9 rounded-full bg-stone-100 hover:bg-stone-200 ring-1 ring-black/5 text-stone-800 text-[13px] font-medium transition"
+              title="Cetak via Printer Browser"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M6 14h12v8H6z" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>Cetak</span>
             </button>
             <button onClick={() => setMenuOpen(!menuOpen)} className="w-9 h-9 rounded-full bg-stone-900 text-white grid place-items-center md:hidden relative">
               <span className={`absolute w-3.5 h-[1.2px] bg-white rounded-full transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${menuOpen ? "rotate-45" : "-translate-y-1"}`}></span>
@@ -203,14 +261,24 @@ export default function Home() {
           <div className="md:hidden border-t border-stone-200 bg-white px-4 py-3 flex flex-col gap-2">
             <div className="text-xs font-mono px-3 py-2 rounded-lg bg-stone-50 ring-1 ring-stone-200">{nomorSurat}</div>
             <button
+              onClick={() => { setMenuOpen(false); handleDownloadPDF(); }}
+              disabled={isGenerating}
+              className="h-9 rounded-full bg-[#0f6b4a] text-white text-sm flex items-center justify-center gap-2 font-medium"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>Download File PDF</span>
+            </button>
+            <button
               onClick={() => { setMenuOpen(false); handlePrint(); }}
-              className="h-9 rounded-full bg-[#0f6b4a] text-white text-sm flex items-center justify-center gap-2"
+              className="h-9 rounded-full bg-stone-100 text-stone-800 text-sm flex items-center justify-center gap-2 font-medium"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M6 14h12v8H6z" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span>Cetak / Print PDF</span>
+              <span>Cetak via Browser</span>
             </button>
           </div>
         )}
@@ -246,12 +314,12 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-[580px_1fr] gap-6 md:gap-8 items-start w-full min-w-0">
           <div className={`${showMobilePreview ? "hidden lg:block" : "block"} w-full min-w-0 space-y-6 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${reveal ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}>
             <SettingsPanel kop={kopConfig} sig={sigConfig} onKopChange={setKopConfig} onSigChange={setSigConfig} />
-            <LetterForm data={data} onChange={setData} onPreview={handlePreview} onPrint={handlePrint} onSave={handleSave} isGenerating={isGenerating} />
+            <LetterForm data={data} onChange={setData} onPreview={handlePreview} onPrint={handlePrint} onDownload={handleDownloadPDF} onSave={handleSave} isGenerating={isGenerating} />
             <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full min-w-0">
               {[
                 { k: "Format Nomor", v: nomorSurat },
                 { k: "Kertas", v: "A4 Premium" },
-                { k: "Output", v: "Cetak & PDF" },
+                { k: "Output", v: "File PDF Resmi" },
               ].map(card => (
                 <div key={card.k} className="p-0.5 sm:p-1 rounded-2xl bg-black/[0.04] ring-1 ring-black/5 min-w-0 overflow-hidden">
                   <div className="rounded-[calc(1rem-2px)] bg-white p-2.5 sm:p-3.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] overflow-hidden">
@@ -263,8 +331,8 @@ export default function Home() {
             </div>
           </div>
           <div ref={previewRef} className={`${showMobilePreview ? "block" : "hidden lg:block"} w-full min-w-0 lg:sticky lg:top-[104px] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] delay-200 ${reveal ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"} space-y-6`}>
-            <LetterPreview data={data} kop={kopConfig} sig={sigConfig} onPrint={handlePrint} />
-            <HistoryPanel items={history} onLoad={handleLoadHistory} onDelete={handleDeleteHistory} onPrint={handlePrintHistory} />
+            <LetterPreview data={data} kop={kopConfig} sig={sigConfig} onPrint={handlePrint} onDownload={handleDownloadPDF} isGenerating={isGenerating} />
+            <HistoryPanel items={history} onLoad={handleLoadHistory} onDelete={handleDeleteHistory} onPrint={handlePrintHistory} onDownload={handleDownloadHistoryPDF} />
             {/* Floating Action Bar on Mobile Preview */}
             {showMobilePreview && (
               <div className="lg:hidden fixed bottom-5 left-3 right-3 sm:left-6 sm:right-6 z-40 flex gap-2.5 bg-white/95 backdrop-blur-xl p-2 rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.18)] ring-1 ring-black/10 transition-all">
@@ -272,12 +340,11 @@ export default function Home() {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                   <span>Edit Surat</span>
                 </button>
-                <button onClick={handlePrint} className="flex-1 h-12 rounded-xl bg-[#0f6b4a] hover:bg-[#0d5a3f] text-white font-semibold text-xs uppercase tracking-wider transition active:scale-95 flex items-center justify-center gap-2 shadow-md">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M6 14h12v8H6z" strokeLinecap="round" strokeLinejoin="round" />
+                <button onClick={handleDownloadPDF} disabled={isGenerating} className="flex-1 h-12 rounded-xl bg-[#0f6b4a] hover:bg-[#0d5a3f] text-white font-semibold text-xs uppercase tracking-wider transition active:scale-95 flex items-center justify-center gap-2 shadow-md disabled:opacity-60">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                  <span>Cetak Surat (PDF)</span>
+                  <span>{isGenerating ? "Proses..." : "Download PDF"}</span>
                 </button>
               </div>
             )}
@@ -285,7 +352,7 @@ export default function Home() {
         </div>
         {/* History also for mobile form view */}
         <div className={`${showMobilePreview ? "hidden" : "block lg:hidden"} mt-8`}>
-          <HistoryPanel items={history} onLoad={handleLoadHistory} onDelete={handleDeleteHistory} onPrint={handlePrintHistory} />
+          <HistoryPanel items={history} onLoad={handleLoadHistory} onDelete={handleDeleteHistory} onPrint={handlePrintHistory} onDownload={handleDownloadHistoryPDF} />
         </div>
       </main>
 

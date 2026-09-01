@@ -66,7 +66,15 @@ export function HistoryPanel({ items, onLoad, onDelete, onPrint, onDownload }: P
                     </div>
                     <div className="flex flex-col gap-1.5 shrink-0">
                       <button onClick={() => onLoad(item)} className="h-7 px-3 rounded-full bg-black text-white text-xs font-medium hover:bg-stone-800">Muat</button>
-                      <button onClick={() => (onPrint ? onPrint(item) : onDownload?.(item))} className="h-7 px-3 rounded-full bg-white ring-1 ring-black/5 text-xs text-stone-700 hover:bg-stone-50 flex items-center justify-center gap-1" title="Cetak Surat / Simpan PDF">
+                      {onDownload && (
+                        <button onClick={() => onDownload(item)} className="h-7 px-3 rounded-full bg-[#0f6b4a] text-white text-xs font-medium hover:bg-[#0d5a3f] flex items-center justify-center gap-1" title="Download File PDF Resmi (Tanpa Domain)">
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                          <span>PDF</span>
+                        </button>
+                      )}
+                      <button onClick={() => onPrint?.(item)} className="h-7 px-3 rounded-full bg-white ring-1 ring-black/5 text-xs text-stone-700 hover:bg-stone-50 flex items-center justify-center gap-1" title="Cetak Surat via Browser">
                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" strokeLinecap="round" strokeLinejoin="round" />
                           <path d="M6 14h12v8H6z" strokeLinecap="round" strokeLinejoin="round" />

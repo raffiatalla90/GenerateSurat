@@ -428,30 +428,41 @@ export function LetterForm({ data, onChange, onPreview, onPrint, onDownload, onS
               <span className="w-7 h-7 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 group-hover:bg-stone-200 transition">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
               </span>
-              <span>Lihat Preview Surat</span>
+              <span>Lihat Preview</span>
             </button>
             <button 
               type="button" 
-              onClick={onPrint || onDownload} 
+              onClick={onDownload || onPrint} 
               disabled={isGenerating} 
               className="group flex-1 h-[48px] rounded-full bg-[#0f6b4a] text-white font-semibold text-[14px] hover:bg-[#0d5a3f] disabled:opacity-60 flex items-center justify-center gap-2 pl-5 pr-2 active:scale-[0.98] transition-all shadow-[0_8px_20px_rgba(15,107,74,0.22)]"
             >
               {isGenerating ? (
                 <>
                   <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin"/>
-                  <span>Menyiapkan...</span>
+                  <span>Menyiapkan PDF...</span>
                 </>
               ) : (
                 <>
-                  <span>Cetak / Print PDF</span>
+                  <span>Download File PDF</span>
                   <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:translate-x-0.5 transition-all">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" strokeLinecap="round" strokeLinejoin="round" />
-                      <path d="M6 14h12v8H6z" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </span>
                 </>
               )}
+            </button>
+            <button 
+              type="button" 
+              onClick={onPrint} 
+              className="px-4 h-[48px] rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 font-medium text-[13px] transition-all flex items-center justify-center gap-1.5 shrink-0"
+              title="Cetak via Printer Browser"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M6 14h12v8H6z" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>Cetak</span>
             </button>
           </div>
           <button 
@@ -463,7 +474,7 @@ export function LetterForm({ data, onChange, onPreview, onPrint, onDownload, onS
             <span>Simpan ke Riwayat (save-first)</span>
           </button>
         </div>
-        <p className="px-4 sm:px-6 md:px-8 pb-6 text-[11px] text-stone-500 text-center">Buka dialog cetak untuk print langsung ke printer atau Simpan sebagai PDF (Save as PDF).</p>
+        <p className="px-4 sm:px-6 md:px-8 pb-6 text-[11px] text-stone-500 text-center">Klik <b>Download File PDF</b> untuk mengunduh dokumen PDF resmi tanpa watermark/domain.</p>
       </div>
     </div>
   );
