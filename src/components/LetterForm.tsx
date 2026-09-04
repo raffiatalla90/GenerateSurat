@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { LetterData, PerihalOption } from "@/types/letter";
 import { SURAT_TEMPLATES, PERIHAL_OPTIONS } from "@/lib/letter-templates";
 import { removeBackground, pdfToImageDataUrl } from "@/lib/bg-remove";
+import { AiAssistantModal } from "@/components/AiAssistantModal";
 
 interface Props {
   data: LetterData;
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export function LetterForm({ data, onChange, onPreview, onPrint, onDownload, onSave, onOpenNumberModal, isGenerating }: Props) {
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [perihalOption, setPerihalOption] = useState<PerihalOption>(
     (PERIHAL_OPTIONS as readonly string[]).includes(data.perihal) ? (data.perihal as PerihalOption) : "Custom"
   );
@@ -239,7 +241,23 @@ export function LetterForm({ data, onChange, onPreview, onPrint, onDownload, onS
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center justify-between"><Label required>Isi Surat</Label><span className="text-[11px] px-2 py-1 rounded-full bg-black/[0.04] ring-1 ring-black/5">{data.isiSurat.length} karakter</span></div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <Label required>Isi Surat</Label>
+                <button
+                  type="button"
+                  onClick={() => setIsAiModalOpen(true)}
+                  className="h-7 px-3 rounded-full bg-gradient-to-r from-[#0f6b4a] to-[#0096D6] hover:opacity-90 text-white text-[11px] font-bold shadow-sm flex items-center gap-1.5 active:scale-95 transition"
+                  title="Buka Asisten AI untuk menyusun atau memoles kalimat surat"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                  </svg>
+                  <span>✨ Asisten AI</span>
+                </button>
+              </div>
+              <span className="text-[11px] px-2 py-1 rounded-full bg-black/[0.04] ring-1 ring-black/5">{data.isiSurat.length} karakter</span>
+            </div>
             <textarea value={data.isiSurat} onChange={(e) => onChange({ ...data, isiSurat: e.target.value })} placeholder="Tulis isi surat formal..." rows={13} className="w-full rounded-[1.25rem] bg-[#FDFBF7] ring-1 ring-black/5 p-4 text-[14px] leading-6 text-stone-800 placeholder:text-stone-400 outline-none focus:ring-2 focus:ring-[#0f6b4a]/20 focus:bg-white transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] resize-y min-h-[260px]" />
             <div className="flex flex-wrap gap-2">
               <span className="text-[11px] text-stone-500 py-1">Contoh cepat:</span>
@@ -493,6 +511,27 @@ export function LetterForm({ data, onChange, onPreview, onPrint, onDownload, onS
         </div>
         <p className="px-4 sm:px-6 md:px-8 pb-6 text-[11px] text-stone-500 text-center">Klik <b>Download File PDF</b> untuk mengunduh dokumen PDF resmi tanpa watermark/domain.</p>
       </div>
+
+      <AiAssistantModal
+        isOpen={isAiModalOpen}
+        onClose={() => setIsAiModalOpen(false)}
+        currentIsiSurat={data.isiSurat}
+        namaPenerima={data.namaPenerima}
+        instansiTujuan={data.instansiTujuan}
+        perihal={data.perihal}
+        onApply={(newIsiSurat, suggestedPerihal) => {
+          const updated: LetterData = {
+            ...data,
+            isiSurat: newIsiSurat
+          };
+          if (suggestedPerihal && (!data.perihal || data.perihal === "Kerja Sama")) {
+            updated.perihal = suggestedPerihal;
+            setCustomPerihal(suggestedPerihal);
+            setPerihalOption("Custom");
+          }
+          onChange(updated);
+        }}
+      />
     </div>
   );
 }
