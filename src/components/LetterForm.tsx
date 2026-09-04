@@ -519,15 +519,21 @@ export function LetterForm({ data, onChange, onPreview, onPrint, onDownload, onS
         namaPenerima={data.namaPenerima}
         instansiTujuan={data.instansiTujuan}
         perihal={data.perihal}
-        onApply={(newIsiSurat, suggestedPerihal) => {
+        onApply={(newIsiSurat, suggestedPerihal, suggestedPenerima, suggestedInstansi) => {
           const updated: LetterData = {
             ...data,
             isiSurat: newIsiSurat
           };
-          if (suggestedPerihal && (!data.perihal || data.perihal === "Kerja Sama")) {
+          if (suggestedPerihal) {
             updated.perihal = suggestedPerihal;
             setCustomPerihal(suggestedPerihal);
             setPerihalOption("Custom");
+          }
+          if (suggestedPenerima) {
+            updated.namaPenerima = suggestedPenerima;
+          }
+          if (suggestedInstansi) {
+            updated.instansiTujuan = suggestedInstansi;
           }
           onChange(updated);
         }}

@@ -10,7 +10,7 @@ interface Props {
   namaPenerima?: string;
   instansiTujuan?: string;
   perihal?: string;
-  onApply: (newIsiSurat: string, suggestedPerihal?: string) => void;
+  onApply: (newIsiSurat: string, suggestedPerihal?: string, suggestedPenerima?: string, suggestedInstansi?: string) => void;
 }
 
 export function AiAssistantModal({
@@ -27,6 +27,8 @@ export function AiAssistantModal({
   const [tone, setTone] = useState<LetterTone>("formal_eksekutif");
   const [resultText, setResultText] = useState("");
   const [suggestedPerihal, setSuggestedPerihal] = useState<string | undefined>(undefined);
+  const [suggestedPenerima, setSuggestedPenerima] = useState<string | undefined>(undefined);
+  const [suggestedInstansi, setSuggestedInstansi] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -50,6 +52,12 @@ export function AiAssistantModal({
       setResultText(res.resultText);
       if (res.suggestedPerihal) {
         setSuggestedPerihal(res.suggestedPerihal);
+      }
+      if (res.suggestedPenerima) {
+        setSuggestedPenerima(res.suggestedPenerima);
+      }
+      if (res.suggestedInstansi) {
+        setSuggestedInstansi(res.suggestedInstansi);
       }
     } catch (e) {
       console.error(e);
@@ -92,7 +100,7 @@ export function AiAssistantModal({
 
   const handleApplyToForm = () => {
     if (!resultText) return;
-    onApply(resultText, suggestedPerihal);
+    onApply(resultText, suggestedPerihal, suggestedPenerima, suggestedInstansi);
     onClose();
   };
 
