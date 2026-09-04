@@ -137,6 +137,60 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
             <div className="p-3.5 sm:p-5 md:p-6">
               {tab === "kop" && (
                 <div className="space-y-5">
+                  {/* Pilihan Template Kop */}
+                  <div className="p-3.5 rounded-2xl bg-black/[0.03] ring-1 ring-black/5 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs font-semibold text-stone-800 tracking-tight">Template Kop Surat</div>
+                      <span className="text-[10.5px] px-2 py-0.5 rounded-full bg-white ring-1 ring-black/5 text-stone-500 font-medium">3 Pilihan Desain</span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => onKopChange({ ...kop, template: "default" })}
+                        className={`p-2.5 rounded-xl text-left border transition-all duration-300 ${
+                          (!kop.template || kop.template === "default")
+                            ? "bg-white border-emerald-600 ring-2 ring-emerald-600/10 shadow-sm"
+                            : "bg-white/60 border-black/5 hover:bg-white hover:border-black/10"
+                        }`}
+                      >
+                        <div className="text-[12px] font-bold text-stone-900">Standar GetMasjid</div>
+                        <div className="text-[10px] text-stone-500 mt-0.5 leading-snug">Header resmi GetMasjid hijau</div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => onKopChange({ ...kop, template: "uns_colored_v1" })}
+                        className={`p-2.5 rounded-xl text-left border transition-all duration-300 ${
+                          kop.template === "uns_colored_v1"
+                            ? "bg-white border-[#0096D6] ring-2 ring-[#0096D6]/15 shadow-sm"
+                            : "bg-white/60 border-black/5 hover:bg-white hover:border-black/10"
+                        }`}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-[#FBBF24]"></span>
+                          <span className="text-[12px] font-bold text-stone-900">UNS Versi 1</span>
+                        </div>
+                        <div className="text-[10px] text-stone-500 mt-0.5 leading-snug">Aksen bar warna & dual logo (PDF LoI)</div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => onKopChange({ ...kop, template: "uns_colored_v2" })}
+                        className={`p-2.5 rounded-xl text-left border transition-all duration-300 ${
+                          kop.template === "uns_colored_v2"
+                            ? "bg-white border-[#0084C7] ring-2 ring-[#0084C7]/15 shadow-sm"
+                            : "bg-white/60 border-black/5 hover:bg-white hover:border-black/10"
+                        }`}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-[#F59E0B]"></span>
+                          <span className="text-[12px] font-bold text-stone-900">UNS Versi 2</span>
+                        </div>
+                        <div className="text-[10px] text-stone-500 mt-0.5 leading-snug">Garis ganda emas & biru UNS</div>
+                      </button>
+                    </div>
+                  </div>
+
                   <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start">
                     <div className="w-[88px] h-[88px] rounded-2xl ring-1 ring-black/5 grid place-items-center overflow-hidden shrink-0 relative" style={{ background: checkerBg }}>
                       {kop.logoImage ? <img src={kop.logoImage} alt="logo" className="w-full h-full object-contain p-1.5" /> : <div className="w-12 h-12 rounded-xl grid place-items-center text-white font-bold text-sm" style={{ background: kop.accentColor }}>{kop.logoText}</div>}

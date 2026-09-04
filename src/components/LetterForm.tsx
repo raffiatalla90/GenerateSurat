@@ -243,7 +243,7 @@ export function LetterForm({ data, onChange, onPreview, onPrint, onDownload, onS
             <textarea value={data.isiSurat} onChange={(e) => onChange({ ...data, isiSurat: e.target.value })} placeholder="Tulis isi surat formal..." rows={13} className="w-full rounded-[1.25rem] bg-[#FDFBF7] ring-1 ring-black/5 p-4 text-[14px] leading-6 text-stone-800 placeholder:text-stone-400 outline-none focus:ring-2 focus:ring-[#0f6b4a]/20 focus:bg-white transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] resize-y min-h-[260px]" />
             <div className="flex flex-wrap gap-2">
               <span className="text-[11px] text-stone-500 py-1">Contoh cepat:</span>
-              {["Kerja Sama","Pengajuan","Undangan"].map(k=>(
+              {["Minat Kerja Sama (UNS)", "Kerja Sama", "Pengajuan", "Undangan", "Penawaran"].map(k=>(
                 <button key={k} type="button" onClick={()=>handleTemplateInsert(k)} className="text-[12px] px-3 py-1 rounded-full bg-white ring-1 ring-black/5 hover:ring-black/10 hover:bg-[#FDFBF7] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">{k}</button>
               ))}
             </div>

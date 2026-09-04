@@ -84,10 +84,34 @@ Adapun bentuk dukungan yang kami harapkan berupa izin dan rekomendasi kepada mas
 Kami berharap permohonan ini dapat dipertimbangkan dengan baik. Kami siap untuk berdiskusi lebih lanjut dan memberikan penjelasan detail apabila diperlukan.
 
 Demikian surat permohonan ini kami buat. Atas perhatian dan kerja samanya, kami ucapkan terima kasih.`,
+  "Minat Kerja Sama (UNS)": `Dengan hormat,
+
+Kami tim GetMasjid, sebagai platform digital yang berfokus pada pengembangan dan digitalisasi ekosistem masjid, menyampaikan apresiasi kepada Masjid Nurul Huda Universitas Sebelas Maret Surakarta atas kesediaannya untuk membuka peluang kerja sama dalam rangka pemanfaatan layanan dan ekosistem digital GetMasjid untuk mendukung pengelolaan, pelayanan, serta pemberdayaan masjid.
+
+Kerja sama ini merupakan bentuk sinergi antara GetMasjid dan Masjid Nurul Huda Universitas Sebelas Maret Surakarta dalam mendorong transformasi digital pengelolaan masjid, khususnya melalui pemanfaatan teknologi informasi untuk meningkatkan efektivitas pengelolaan kegiatan, penyampaian informasi kepada jamaah, pengelolaan program, serta pengembangan potensi ekonomi dan sosial masjid.
+
+Melalui kerja sama ini, GetMasjid berencana menyediakan dan/atau mengembangkan layanan digital yang dapat disesuaikan dengan kebutuhan Masjid Nurul Huda Universitas Sebelas Maret Surakarta, yang antara lain dapat mencakup:
+1. digitalisasi informasi dan profil masjid;
+2. penyebaran informasi kegiatan dan agenda masjid;
+3. pengelolaan kegiatan dan program masjid secara digital;
+4. pengelolaan serta publikasi program sosial dan pemberdayaan jamaah;
+5. pengembangan kanal donasi dan/atau penghimpunan dana secara digital;
+6. pengembangan potensi ekonomi masjid dan UMKM/jamaah di sekitar masjid;
+7. penyediaan fitur komunikasi dan keterlibatan jamaah; dan
+8. layanan atau fitur digital lainnya yang disepakati oleh Para Pihak.
+
+Adapun bentuk, ruang lingkup, mekanisme pelaksanaan, hak dan kewajiban Para Pihak, serta ketentuan komersial akan dibahas dan disepakati lebih lanjut berdasarkan kebutuhan dan kondisi Masjid Nurul Huda Universitas Sebelas Maret Surakarta.
+
+Surat Pernyataan Minat Kerja Sama ini bersifat tidak mengikat (non-binding) dan dimaksudkan sebagai dasar awal bagi Para Pihak untuk melakukan pembahasan lebih lanjut mengenai kemungkinan pelaksanaan kerja sama.
+
+Demikian Surat Pernyataan Minat Kerja Sama ini kami sampaikan. Besar harapan kami agar kerja sama ini dapat memberikan manfaat bagi Masjid Nurul Huda Universitas Sebelas Maret Surakarta, GetMasjid, serta masyarakat dan jamaah yang dilayani.
+
+Atas perhatian dan kesempatan kerja sama yang diberikan, kami ucapkan terima kasih.`,
 };
 
 export const PERIHAL_OPTIONS = [
   "Kerja Sama",
+  "Minat Kerja Sama (UNS)",
   "Pengajuan",
   "Undangan",
   "Penawaran",

@@ -1,6 +1,7 @@
 import { KopSuratConfig, SignatureConfig, LetterData } from "@/types/letter";
 import { formatTanggalIndonesia } from "./utils";
 import { DEFAULT_KOP, DEFAULT_SIG } from "./kop-defaults";
+import { UNS_LOGO_SVG, GETMASJID_LOGO_SVG } from "./uns-logos";
 
 // Base64 placeholder for signature and stamp - simple SVG as fallback so PDF tetap tampil rapi tanpa image eksternal
 function svgToDataUrl(svg: string): string {
@@ -38,6 +39,123 @@ const STAMP_SVG_FALLBACK = svgToDataUrl(
 </svg>`
 );
 
+function renderKopSection(kop: KopSuratConfig, logoHtml: string, companyHtml: string): string {
+  const template = kop.template || "default";
+
+  if (template === "uns_colored_v1") {
+    // UNS Version 1: Side Color Bars & Dual Logo Header (persis PDF dokumen kemitraan)
+    const unsLogo = kop.unsLogoImage || UNS_LOGO_SVG;
+    const gmjLogo = kop.logoImage || GETMASJID_LOGO_SVG;
+
+    return `
+      <!-- UNS Colored Version 1: Side Color Bars & Dual Logo -->
+      <div class="uns-v1-accents">
+        <div class="uns-left-bar"></div>
+        <div class="uns-right-bar-yellow"></div>
+        <div class="uns-right-bar-blue"></div>
+      </div>
+      <table class="kop-table uns-kop-table" style="border-bottom: none; margin-bottom: 22px; padding-bottom: 4px;">
+        <tr>
+          <td class="kop-left-cell" style="vertical-align: middle; width: 55%;">
+            <table style="border-collapse: collapse;">
+              <tr>
+                <td style="vertical-align: middle; padding-right: 12px;">
+                  <img src="${unsLogo}" alt="Logo UNS" style="height: 50px; max-width: 175px; object-fit: contain; display: block;" />
+                </td>
+                <td style="vertical-align: middle; padding: 0 10px;">
+                  <div style="width: 1.5px; height: 38px; background: #0096D6; opacity: 0.85;"></div>
+                </td>
+                <td style="vertical-align: middle; padding-left: 4px;">
+                  <img src="${gmjLogo}" alt="Logo GetMasjid" style="height: 44px; max-width: 145px; object-fit: contain; display: block;" />
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td class="kop-right-cell" style="vertical-align: middle; text-align: right; width: 45%; line-height: 1.42; padding-right: 4px;">
+            <div style="font-size: 11.5pt; font-weight: 800; color: #0096D6; letter-spacing: 0.5px; margin-bottom: 3px;">GET MASJID</div>
+            <div style="font-size: 7.2pt; color: #262626;">Jalan Ir. Sutami No. 36 A Kentingan, Jebres,</div>
+            <div style="font-size: 7.2pt; color: #262626;">Surakarta, Jawa Tengah, Indonesia 57126.</div>
+            <div style="font-size: 7.2pt; color: #262626;">+62 85188139451</div>
+            <div style="font-size: 7.2pt; color: #262626; margin-top: 2px;">support@getmasjid.com &nbsp;|&nbsp; www.getmasjid.com</div>
+          </td>
+        </tr>
+      </table>
+    `;
+  }
+
+  if (template === "uns_colored_v2") {
+    // UNS Version 2: Formal Double-Colored Horizontal Stripe (Kuning Emas & Biru UNS)
+    const unsLogo = kop.unsLogoImage || UNS_LOGO_SVG;
+    const gmjLogo = kop.logoImage || GETMASJID_LOGO_SVG;
+
+    return `
+      <!-- UNS Colored Version 2: Dual Logo & Double Colored Stripe -->
+      <table class="kop-table" style="border-bottom: none; margin-bottom: 0px; padding-bottom: 4px;">
+        <tr>
+          <td class="kop-left-cell" style="vertical-align: middle; width: 50%;">
+            <table style="border-collapse: collapse;">
+              <tr>
+                <td style="vertical-align: middle; padding-right: 12px;">
+                  <img src="${unsLogo}" alt="Logo UNS" style="height: 50px; max-width: 175px; object-fit: contain; display: block;" />
+                </td>
+                <td style="vertical-align: middle; padding: 0 10px;">
+                  <div style="width: 1.5px; height: 38px; background: #0084C7; opacity: 0.7;"></div>
+                </td>
+                <td style="vertical-align: middle; padding-left: 4px;">
+                  <img src="${gmjLogo}" alt="Logo GetMasjid" style="height: 44px; max-width: 145px; object-fit: contain; display: block;" />
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td class="kop-right-cell" style="vertical-align: middle; text-align: right; width: 50%; line-height: 1.4;">
+            <div style="font-size: 11pt; font-weight: 800; color: #0084C7; letter-spacing: -0.2px;">UNIVERSITAS SEBELAS MARET</div>
+            <div style="font-size: 9.5pt; font-weight: 700; color: #0f6b4a; margin-top: 1px;">KOLABORASI DIGITALISASI MASJID</div>
+            <div style="font-size: 7.2pt; color: #555; margin-top: 2px;">
+              Jl. Ir. Sutami No. 36 A Kentingan, Jebres, Surakarta 57126 &bull; +62 85188139451<br/>
+              support@getmasjid.com &bull; www.getmasjid.com
+            </div>
+          </td>
+        </tr>
+      </table>
+      <!-- Double Colored Stripe (Kuning Emas & Biru UNS) -->
+      <div style="width: 100%; margin-top: 6px; margin-bottom: 16px;">
+        <div style="height: 3.5px; background: #F59E0B; width: 100%; border-radius: 2px;"></div>
+        <div style="height: 1.5px; background: #0084C7; width: 100%; margin-top: 2px;"></div>
+      </div>
+    `;
+  }
+
+  // Default Standard GetMasjid Kop
+  return `
+    <table class="kop-table">
+      <tr>
+        <td class="kop-left-cell">
+          <table style="border-collapse:collapse;">
+            <tr>
+              <td style="vertical-align:middle; padding-right:12px;">
+                ${logoHtml}
+              </td>
+              <td style="vertical-align:middle;">
+                <div class="kop-text">
+                  <h1>${companyHtml}</h1>
+                  <p>${escapeHtml(kop.tagline)}<br/>${escapeHtml(kop.subTagline)}</p>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td class="kop-right-cell">
+          ${kop.legalName ? `<strong>${escapeHtml(kop.legalName)}</strong><br/>` : ""}
+          ${escapeHtml(kop.alamat)}<br/>
+          ${escapeHtml(kop.email)} &nbsp;|&nbsp; ${escapeHtml(kop.website)}<br/>
+          ${escapeHtml(kop.phone)}
+        </td>
+      </tr>
+    </table>
+    <div class="kop-line-2"></div>
+  `;
+}
+
 export function generateLetterHTML(
   data: LetterData,
   kop: KopSuratConfig = DEFAULT_KOP,
@@ -51,9 +169,6 @@ export function generateLetterHTML(
     .filter((p) => p.length > 0)
     .map((p) => `<p>${escapeHtml(p)}</p>`)
     .join("\n");
-
-  const sigImg = sig.showSignature ? (sig.signatureImage || SIGNATURE_SVG_FALLBACK) : "";
-  const stampImg = sig.showStamp ? (sig.stampImage || STAMP_SVG_FALLBACK) : "";
 
   const signersList = data.signers && data.signers.length > 0 
     ? data.signers 
@@ -183,7 +298,7 @@ export function generateLetterHTML(
     size: A4 portrait;
     margin: 0;
   }
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@400;700&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -213,6 +328,40 @@ export function generateLetterHTML(
   .page:last-child {
     margin-bottom: 0;
   }
+
+  /* UNS Version 1 Side Accent Bars */
+  .uns-v1-accents {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+  }
+  .uns-left-bar {
+    position: absolute;
+    left: 0;
+    top: 14mm;
+    width: 7mm;
+    height: 18mm;
+    background: #FBBF24;
+  }
+  .uns-right-bar-yellow {
+    position: absolute;
+    right: 0;
+    top: 14mm;
+    width: 7mm;
+    height: 11mm;
+    background: #FBBF24;
+  }
+  .uns-right-bar-blue {
+    position: absolute;
+    right: 0;
+    top: 25mm;
+    width: 7mm;
+    height: 5mm;
+    background: #0096D6;
+  }
+
   /* Kop Surat Table Layout */
   .kop-table {
     width: 100%;
@@ -348,94 +497,58 @@ export function generateLetterHTML(
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 130px;
-    height: 52px;
+    max-height: 70px;
+    max-width: 180px;
     object-fit: contain;
     z-index: 1;
+    pointer-events: none;
   }
   .ttd-images .stamp {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-65%, -50%);
-    width: 82px;
-    height: 82px;
-    opacity: 0.88;
+    left: 48%;
+    top: 48%;
+    transform: translate(-50%, -50%);
+    max-height: 80px;
+    max-width: 80px;
+    object-fit: contain;
     z-index: 2;
     pointer-events: none;
+    mix-blend-mode: multiply;
   }
-  .ttd-name {
-    font-weight: 700;
-    font-size: 10.5pt;
-    color: #111;
-    border-bottom: 1.5px solid #111;
-    display: inline-block;
-    padding-bottom: 1.5px;
-    margin-bottom: 3px;
-  }
-  .ttd-jabatan {
-    font-size: 9.5pt;
-    color: #333;
-    font-weight: 500;
-    line-height: 1.3;
-  }
+  .ttd-name { font-weight: 700; font-size: 9.5pt; text-decoration: underline; color: #111; }
+  .ttd-jabatan { font-size: 8.5pt; color: #555; margin-top: 1px; }
 
-  /* Footer Layout */
+  /* Footer */
   .footer {
     position: absolute;
-    bottom: 10mm;
+    bottom: 12mm;
     left: 20mm;
     right: 20mm;
     border-top: 1px solid #e5e7eb;
     padding-top: 6px;
-  }
-  .footer-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 7pt;
+    font-size: 7.5pt;
     color: #888;
-    letter-spacing: 0.2px;
   }
+  .footer-table { width: 100%; border-collapse: collapse; }
+  .footer-table td { padding: 0; }
 
+  /* Print specific */
   @media print {
-    @page {
-      size: A4 portrait;
-      margin: 0;
-    }
-    *, *::before, *::after {
-      box-sizing: border-box !important;
-    }
-    html, body {
-      background: white !important;
-      zoom: 1 !important;
-      width: 210mm !important;
-      height: 297mm !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-      display: block !important;
-    }
+    body { background: white; padding: 0; margin: 0; }
     .page {
-      width: 210mm !important;
+      box-shadow: none;
+      margin: 0;
+      border-radius: 0;
+      page-break-after: always !important;
+      break-after: page !important;
       height: 297mm !important;
       max-height: 297mm !important;
       min-height: 297mm !important;
-      margin: 0 auto !important;
-      padding: 14mm 20mm 15mm 20mm !important;
-      box-sizing: border-box !important;
-      box-shadow: none !important;
-      border-radius: 0 !important;
-      transform: none !important;
-      page-break-after: always;
-      break-after: page;
-      page-break-inside: avoid !important;
-      break-inside: avoid !important;
       overflow: hidden !important;
     }
     .page:last-child {
-      page-break-after: avoid !important;
-      break-after: avoid !important;
+      page-break-after: auto !important;
+      break-after: auto !important;
     }
     .attachment-page {
       page-break-before: always !important;
@@ -454,32 +567,7 @@ export function generateLetterHTML(
 <body>
   <div class="page">
     <!-- KOP -->
-    <table class="kop-table">
-      <tr>
-        <td class="kop-left-cell">
-          <table style="border-collapse:collapse;">
-            <tr>
-              <td style="vertical-align:middle; padding-right:12px;">
-                ${logoHtml}
-              </td>
-              <td style="vertical-align:middle;">
-                <div class="kop-text">
-                  <h1>${companyHtml}</h1>
-                  <p>${escapeHtml(kop.tagline)}<br/>${escapeHtml(kop.subTagline)}</p>
-                </div>
-              </td>
-            </tr>
-          </table>
-        </td>
-        <td class="kop-right-cell">
-          ${kop.legalName ? `<strong>${escapeHtml(kop.legalName)}</strong><br/>` : ""}
-          ${escapeHtml(kop.alamat)}<br/>
-          ${escapeHtml(kop.email)} &nbsp;|&nbsp; ${escapeHtml(kop.website)}<br/>
-          ${escapeHtml(kop.phone)}
-        </td>
-      </tr>
-    </table>
-    <div class="kop-line-2"></div>
+    ${renderKopSection(kop, logoHtml, companyHtml)}
 
     <!-- META -->
     <table class="meta-table">
