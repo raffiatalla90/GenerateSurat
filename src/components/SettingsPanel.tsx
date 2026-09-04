@@ -240,7 +240,7 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                             <div className="grid grid-cols-2 gap-2">
                               <div>
                                 <div className="flex items-center justify-between text-[10.5px] text-stone-600 mb-1">
-                                  <span>Geser X: {kop.unsLogoOffsetX ?? 0}px</span>
+                                  <span>Geser X (Kanan - Kiri): {kop.unsLogoOffsetX ?? 0}px</span>
                                   {(kop.unsLogoOffsetX && kop.unsLogoOffsetX !== 0) && (
                                     <button type="button" onClick={() => onKopChange({ ...kop, unsLogoOffsetX: 0 })} className="text-[9.5px] text-blue-600 underline">0</button>
                                   )}
@@ -257,15 +257,15 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                               </div>
                               <div>
                                 <div className="flex items-center justify-between text-[10.5px] text-stone-600 mb-1">
-                                  <span>Geser Y: {kop.unsLogoOffsetY ?? 0}px</span>
+                                  <span>Geser Y (Atas - Bawah): {kop.unsLogoOffsetY ?? 0}px</span>
                                   {(kop.unsLogoOffsetY && kop.unsLogoOffsetY !== 0) && (
                                     <button type="button" onClick={() => onKopChange({ ...kop, unsLogoOffsetY: 0 })} className="text-[9.5px] text-blue-600 underline">0</button>
                                   )}
                                 </div>
                                 <input 
                                   type="range" 
-                                  min="-40" 
-                                  max="40" 
+                                  min="-60" 
+                                  max="60" 
                                   step="1" 
                                   value={kop.unsLogoOffsetY ?? 0} 
                                   onChange={(e) => onKopChange({ ...kop, unsLogoOffsetY: parseInt(e.target.value) })} 
@@ -310,7 +310,7 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                             <div className="grid grid-cols-2 gap-2">
                               <div>
                                 <div className="flex items-center justify-between text-[10.5px] text-stone-600 mb-1">
-                                  <span>Geser X: {kop.logoOffsetX ?? 0}px</span>
+                                  <span>Geser X (Kanan - Kiri): {kop.logoOffsetX ?? 0}px</span>
                                   {(kop.logoOffsetX && kop.logoOffsetX !== 0) && (
                                     <button type="button" onClick={() => onKopChange({ ...kop, logoOffsetX: 0 })} className="text-[9.5px] text-emerald-700 underline">0</button>
                                   )}
@@ -327,15 +327,15 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                               </div>
                               <div>
                                 <div className="flex items-center justify-between text-[10.5px] text-stone-600 mb-1">
-                                  <span>Geser Y: {kop.logoOffsetY ?? 0}px</span>
+                                  <span>Geser Y (Atas - Bawah): {kop.logoOffsetY ?? 0}px</span>
                                   {(kop.logoOffsetY && kop.logoOffsetY !== 0) && (
                                     <button type="button" onClick={() => onKopChange({ ...kop, logoOffsetY: 0 })} className="text-[9.5px] text-emerald-700 underline">0</button>
                                   )}
                                 </div>
                                 <input 
                                   type="range" 
-                                  min="-40" 
-                                  max="40" 
+                                  min="-60" 
+                                  max="60" 
                                   step="1" 
                                   value={kop.logoOffsetY ?? 0} 
                                   onChange={(e) => onKopChange({ ...kop, logoOffsetY: parseInt(e.target.value) })} 
@@ -370,7 +370,7 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                           </div>
                         </div>
                       </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-black/5">
+                      <div className="space-y-3 pt-3 border-t border-black/5">
                         <div>
                           <div className="flex items-center justify-between text-[11px] text-stone-600 mb-1">
                             <span>Ukuran Logo: {Math.round((kop.logoScale ?? 1) * 100)}%</span>
@@ -388,22 +388,41 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                             className="w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-[#0f6b4a]" 
                           />
                         </div>
-                        <div>
-                          <div className="flex items-center justify-between text-[11px] text-stone-600 mb-1">
-                            <span>Posisi X: {kop.logoOffsetX ?? 0}px</span>
-                            {(kop.logoOffsetX && kop.logoOffsetX !== 0) && (
-                              <button type="button" onClick={() => onKopChange({ ...kop, logoOffsetX: 0 })} className="text-[10px] text-emerald-700 underline">Reset</button>
-                            )}
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <div className="flex items-center justify-between text-[11px] text-stone-600 mb-1">
+                              <span>Geser X (Kanan - Kiri): {kop.logoOffsetX ?? 0}px</span>
+                              {(kop.logoOffsetX && kop.logoOffsetX !== 0) && (
+                                <button type="button" onClick={() => onKopChange({ ...kop, logoOffsetX: 0 })} className="text-[10px] text-emerald-700 underline">Reset</button>
+                              )}
+                            </div>
+                            <input 
+                              type="range" 
+                              min="-100" 
+                              max="100" 
+                              step="1" 
+                              value={kop.logoOffsetX ?? 0} 
+                              onChange={(e) => onKopChange({ ...kop, logoOffsetX: parseInt(e.target.value) })} 
+                              className="w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-[#0f6b4a]" 
+                            />
                           </div>
-                          <input 
-                            type="range" 
-                            min="-100" 
-                            max="100" 
-                            step="1" 
-                            value={kop.logoOffsetX ?? 0} 
-                            onChange={(e) => onKopChange({ ...kop, logoOffsetX: parseInt(e.target.value) })} 
-                            className="w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-[#0f6b4a]" 
-                          />
+                          <div>
+                            <div className="flex items-center justify-between text-[11px] text-stone-600 mb-1">
+                              <span>Geser Y (Atas - Bawah): {kop.logoOffsetY ?? 0}px</span>
+                              {(kop.logoOffsetY && kop.logoOffsetY !== 0) && (
+                                <button type="button" onClick={() => onKopChange({ ...kop, logoOffsetY: 0 })} className="text-[10px] text-emerald-700 underline">Reset</button>
+                              )}
+                            </div>
+                            <input 
+                              type="range" 
+                              min="-60" 
+                              max="60" 
+                              step="1" 
+                              value={kop.logoOffsetY ?? 0} 
+                              onChange={(e) => onKopChange({ ...kop, logoOffsetY: parseInt(e.target.value) })} 
+                              className="w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-[#0f6b4a]" 
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
