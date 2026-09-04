@@ -83,48 +83,6 @@ function renderKopSection(kop: KopSuratConfig, logoHtml: string, companyHtml: st
     `;
   }
 
-  if (template === "uns_colored_v2") {
-    // UNS Version 2: Formal Double-Colored Horizontal Stripe (Kuning Emas & Biru UNS)
-    const unsLogo = kop.unsLogoImage || UNS_LOGO_SVG;
-    const gmjLogo = kop.logoImage || GETMASJID_LOGO_SVG;
-
-    return `
-      <!-- UNS Colored Version 2: Dual Logo & Double Colored Stripe -->
-      <table class="kop-table" style="border-bottom: none; margin-bottom: 0px; padding-bottom: 4px;">
-        <tr>
-          <td class="kop-left-cell" style="vertical-align: middle; width: 50%;">
-            <table style="border-collapse: collapse;">
-              <tr>
-                <td style="vertical-align: middle; padding-right: 12px;">
-                  <img src="${unsLogo}" alt="Logo UNS" style="height: 50px; max-width: 175px; object-fit: contain; display: block;" />
-                </td>
-                <td style="vertical-align: middle; padding: 0 10px;">
-                  <div style="width: 1.5px; height: 38px; background: #0084C7; opacity: 0.7;"></div>
-                </td>
-                <td style="vertical-align: middle; padding-left: 4px;">
-                  <img src="${gmjLogo}" alt="Logo GetMasjid" style="height: 44px; max-width: 145px; object-fit: contain; display: block;" />
-                </td>
-              </tr>
-            </table>
-          </td>
-          <td class="kop-right-cell" style="vertical-align: middle; text-align: right; width: 50%; line-height: 1.4;">
-            <div style="font-size: 11pt; font-weight: 800; color: #0084C7; letter-spacing: -0.2px;">UNIVERSITAS SEBELAS MARET</div>
-            <div style="font-size: 9.5pt; font-weight: 700; color: #0f6b4a; margin-top: 1px;">KOLABORASI DIGITALISASI MASJID</div>
-            <div style="font-size: 7.2pt; color: #555; margin-top: 2px;">
-              Jl. Ir. Sutami No. 36 A Kentingan, Jebres, Surakarta 57126 &bull; +62 85188139451<br/>
-              support@getmasjid.com &bull; www.getmasjid.com
-            </div>
-          </td>
-        </tr>
-      </table>
-      <!-- Double Colored Stripe (Kuning Emas & Biru UNS) -->
-      <div style="width: 100%; margin-top: 6px; margin-bottom: 16px;">
-        <div style="height: 3.5px; background: #F59E0B; width: 100%; border-radius: 2px;"></div>
-        <div style="height: 1.5px; background: #0084C7; width: 100%; margin-top: 2px;"></div>
-      </div>
-    `;
-  }
-
   // Default Standard GetMasjid Kop
   return `
     <table class="kop-table">

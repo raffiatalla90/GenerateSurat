@@ -34,13 +34,13 @@ export interface LetterFormData extends Omit<LetterData, "nomorSurat"> {
   perihalOption: PerihalOption;
 }
 
-export type KopTemplateType = "default" | "uns_colored_v1" | "uns_colored_v2";
+export type KopTemplateType = "default" | "uns_colored_v1";
 
 export interface KopSuratConfig {
-  template?: KopTemplateType; // "default" | "uns_colored_v1" | "uns_colored_v2"
+  template?: KopTemplateType; // "default" | "uns_colored_v1"
   logoText: string; // fallback jika tidak ada logo image, ex: GM
-  logoImage?: string; // base64 dataURL
-  unsLogoImage?: string; // custom logo UNS if uploaded
+  logoImage?: string; // base64 dataURL (Logo GetMasjid)
+  unsLogoImage?: string; // base64 dataURL (Logo Mitra / UNS)
   companyName: string; // GetMasjid
   legalName: string; // PT GetMasjid Digital Indonesia
   tagline: string; // Platform Digital...
