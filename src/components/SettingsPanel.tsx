@@ -199,58 +199,27 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                   {isUnsTemplate ? (
                     <div className="space-y-4">
                       <div className="text-xs font-semibold text-stone-800 flex items-center justify-between">
-                        <span>Pengaturan Logo Kop Surat (Dual Logo)</span>
-                        <span className="text-[10.5px] text-stone-500 font-normal">Ukuran s/d 400%, geser kanan-kiri & atas-bawah</span>
+                        <span>Logo Kop Surat Resmi (UNS & GetMasjid)</span>
+                        <span className="text-[10.5px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-medium ring-1 ring-emerald-600/15">
+                          ✓ Logo Resmi Terkunci
+                        </span>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Logo 1: Mitra / UNS (Kiri) */}
                         <div className="p-3.5 rounded-2xl bg-white ring-1 ring-black/5 shadow-sm space-y-3">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-stone-800">1. Logo Kiri (UNS / Mitra)</span>
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 font-semibold">Mitra / Kampus</span>
+                            <span className="text-xs font-bold text-stone-800">1. Logo UNS (Kiri)</span>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 font-semibold">Resmi UNS</span>
                           </div>
                           <div className="h-[88px] rounded-xl ring-1 ring-black/5 grid place-items-center overflow-hidden p-2 relative" style={{ background: checkerBg }}>
                             <div style={{ transform: `translate(${kop.unsLogoOffsetX ?? 0}px, ${kop.unsLogoOffsetY ?? 0}px) scale(${kop.unsLogoScale ?? 1})`, transformOrigin: "center center", transition: "transform 0.15s ease" }}>
                               <img 
-                                src={kop.unsLogoImage || UNS_LOGO_SVG} 
-                                alt="Logo UNS/Mitra" 
+                                src={UNS_LOGO_SVG} 
+                                alt="Logo UNS Resmi" 
                                 className="max-h-[60px] max-w-[150px] object-contain" 
                               />
                             </div>
-                          </div>
-                          <div className="flex flex-wrap gap-1.5 pt-1">
-                            <button 
-                              type="button"
-                              onClick={() => unsLogoRef.current?.click()} 
-                              className="h-7 px-2.5 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 text-[11px] font-medium transition"
-                            >
-                              Ganti Logo
-                            </button>
-                            <button 
-                              type="button"
-                              onClick={() => reopenLogoCrop("uns")} 
-                              className="h-7 px-2.5 rounded-full bg-black text-white text-[11px] font-medium"
-                            >
-                              ✂️ Crop
-                            </button>
-                            <button 
-                              type="button"
-                              disabled={processing === "logo-uns"} 
-                              onClick={() => doRemoveBg(kop.unsLogoImage || UNS_LOGO_SVG, (v) => onKopChange({ ...kop, unsLogoImage: v }), "logo-uns")} 
-                              className="h-7 px-2.5 rounded-full bg-[#0096D6] hover:bg-[#0084c7] text-white text-[11px] font-medium disabled:opacity-60 flex items-center gap-1"
-                            >
-                              {processing === "logo-uns" ? <span className="w-2.5 h-2.5 border-2 border-white/40 border-t-white rounded-full animate-spin" /> : "✨ Hapus BG"}
-                            </button>
-                            {kop.unsLogoImage && (
-                              <button 
-                                type="button"
-                                onClick={() => onKopChange({ ...kop, unsLogoImage: undefined })} 
-                                className="h-7 px-2.5 rounded-full bg-white ring-1 ring-black/5 text-[11px] text-stone-600 hover:text-stone-900"
-                              >
-                                Reset UNS
-                              </button>
-                            )}
                           </div>
 
                           {/* Sliders Ukuran & Posisi Logo 1 */}
@@ -309,67 +278,22 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                               </div>
                             </div>
                           </div>
-
-                          <input 
-                            ref={unsLogoRef} 
-                            type="file" 
-                            accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml" 
-                            className="hidden" 
-                            onChange={(e) => handleLogoUpload(e.target.files?.[0], "uns")} 
-                          />
                         </div>
 
                         {/* Logo 2: GetMasjid (Kanan) */}
                         <div className="p-3.5 rounded-2xl bg-white ring-1 ring-black/5 shadow-sm space-y-3">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-stone-800">2. Logo Kanan (GetMasjid)</span>
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-semibold">GetMasjid</span>
+                            <span className="text-xs font-bold text-stone-800">2. Logo GetMasjid (Kanan)</span>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-semibold">Resmi GetMasjid</span>
                           </div>
                           <div className="h-[88px] rounded-xl ring-1 ring-black/5 grid place-items-center overflow-hidden p-2 relative" style={{ background: checkerBg }}>
                             <div style={{ transform: `translate(${kop.logoOffsetX ?? 0}px, ${kop.logoOffsetY ?? 0}px) scale(${kop.logoScale ?? 1})`, transformOrigin: "center center", transition: "transform 0.15s ease" }}>
                               <img 
-                                src={
-                                  (kop.logoImage && !kop.logoImage.startsWith("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAESCAYAAABAVYkJ")) 
-                                    ? kop.logoImage 
-                                    : GETMASJID_LOGO_SVG
-                                } 
-                                alt="Logo GetMasjid" 
+                                src={GETMASJID_LOGO_SVG} 
+                                alt="Logo GetMasjid Resmi" 
                                 className="max-h-[60px] max-w-[150px] object-contain" 
                               />
                             </div>
-                          </div>
-                          <div className="flex flex-wrap gap-1.5 pt-1">
-                            <button 
-                              type="button"
-                              onClick={() => logoRef.current?.click()} 
-                              className="h-7 px-2.5 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 text-[11px] font-medium transition"
-                            >
-                              Ganti Logo
-                            </button>
-                            <button 
-                              type="button"
-                              onClick={() => reopenLogoCrop("getmasjid")} 
-                              className="h-7 px-2.5 rounded-full bg-black text-white text-[11px] font-medium"
-                            >
-                              ✂️ Crop
-                            </button>
-                            <button 
-                              type="button"
-                              disabled={processing === "logo-gmj"} 
-                              onClick={() => doRemoveBg((kop.logoImage && !kop.logoImage.startsWith("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAESCAYAAABAVYkJ")) ? kop.logoImage : GETMASJID_LOGO_SVG, (v) => onKopChange({ ...kop, logoImage: v }), "logo-gmj")} 
-                              className="h-7 px-2.5 rounded-full bg-[#0f6b4a] hover:bg-[#0d5a3f] text-white text-[11px] font-medium disabled:opacity-60 flex items-center gap-1"
-                            >
-                              {processing === "logo-gmj" ? <span className="w-2.5 h-2.5 border-2 border-white/40 border-t-white rounded-full animate-spin" /> : "✨ Hapus BG"}
-                            </button>
-                            {kop.logoImage && (
-                              <button 
-                                type="button"
-                                onClick={() => onKopChange({ ...kop, logoImage: undefined })} 
-                                className="h-7 px-2.5 rounded-full bg-white ring-1 ring-black/5 text-[11px] text-stone-600 hover:text-stone-900"
-                              >
-                                Reset GM
-                              </button>
-                            )}
                           </div>
 
                           {/* Sliders Ukuran & Posisi Logo 2 */}
@@ -428,19 +352,17 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                               </div>
                             </div>
                           </div>
-
-                          <input 
-                            ref={logoRef} 
-                            type="file" 
-                            accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml" 
-                            className="hidden" 
-                            onChange={(e) => handleLogoUpload(e.target.files?.[0], "getmasjid")} 
-                          />
                         </div>
                       </div>
                     </div>
                   ) : (
                     <div className="p-4 rounded-2xl bg-white ring-1 ring-black/5 shadow-sm space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold text-stone-800">Logo Resmi GetMasjid</span>
+                        <span className="text-[10.5px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-medium ring-1 ring-emerald-600/15">
+                          ✓ Logo Resmi Terkunci
+                        </span>
+                      </div>
                       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start">
                         <div className="w-[88px] h-[88px] rounded-2xl ring-1 ring-black/5 grid place-items-center overflow-hidden shrink-0 relative" style={{ background: checkerBg }}>
                           <div style={{ transform: `translate(${kop.logoOffsetX ?? 0}px, ${kop.logoOffsetY ?? 0}px) scale(${kop.logoScale ?? 1})`, transformOrigin: "center center", transition: "transform 0.15s ease" }}>
@@ -448,21 +370,8 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                           </div>
                         </div>
                         <div className="flex-1 space-y-2 w-full min-w-0">
-                          <div className="text-xs font-medium text-stone-700">Logo GetMasjid — Preview & Crop</div>
-                          <p className="text-[11px] text-stone-500">Upload → geser & zoom di preview → crop. Bisa hapus background juga.</p>
-                          <div className="flex flex-wrap gap-2">
-                            <button onClick={() => logoRef.current?.click()} className="h-8 px-3 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-medium transition">Upload Logo</button>
-                            {kop.logoImage && (
-                              <>
-                                <button onClick={() => reopenLogoCrop("getmasjid")} className="h-8 px-3 rounded-full bg-black text-white text-xs font-medium">✂️ Crop / Geser</button>
-                                <button disabled={processing === "logo"} onClick={() => doRemoveBg(kop.logoImage!, (v) => onKopChange({ ...kop, logoImage: v }), "logo")} className="h-8 px-3 rounded-full bg-[#0f6b4a] text-white text-xs font-medium disabled:opacity-60 flex items-center gap-1.5">
-                                  {processing === "logo" ? <><span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" /> Memproses</> : <>✨ Hapus BG</>}
-                                </button>
-                                <button onClick={() => onKopChange({ ...kop, logoImage: undefined })} className="h-8 px-3 rounded-full bg-white ring-1 ring-black/5 text-xs">Hapus</button>
-                              </>
-                            )}
-                          </div>
-                          <input ref={logoRef} type="file" accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml" className="hidden" onChange={(e) => handleLogoUpload(e.target.files?.[0], "getmasjid")} />
+                          <div className="text-xs font-medium text-stone-700">Logo Resmi Standar GetMasjid</div>
+                          <p className="text-[11px] text-stone-500">Logo baku bawaan resmi GetMasjid telah aktif secara otomatis.</p>
                           <div className="flex gap-2 items-center pt-1 flex-wrap">
                             <span className="text-xs text-stone-600">Inisial</span><input value={kop.logoText} onChange={(e) => onKopChange({ ...kop, logoText: e.target.value.slice(0, 4).toUpperCase() })} className="w-16 h-7 rounded-full bg-[#FDFBF7] ring-1 ring-black/5 px-2 text-xs text-center" placeholder="GM" />
                             <span className="text-xs text-stone-600">Warna</span><input type="color" value={kop.accentColor} onChange={(e) => onKopChange({ ...kop, accentColor: e.target.value })} className="w-7 h-7 rounded-full ring-1 ring-black/5 p-0.5" />
