@@ -254,9 +254,7 @@ export function generateLetterHTML(
   const gmjOffsetX = kop.logoOffsetX ?? 0;
   const gmjOffsetY = kop.logoOffsetY ?? 0;
 
-  const logoHtml = kop.logoImage
-    ? `<div style="transform: translate(${gmjOffsetX}px, ${gmjOffsetY}px) scale(${gmjScale}); transform-origin: left center; display: inline-block;"><img src="${kop.logoImage}" alt="logo" style="width:46px;height:46px;object-fit:contain;display:block;" /></div>`
-    : `<div class="logo" style="background:${escapeHtml(kop.accentColor)}; transform: translate(${gmjOffsetX}px, ${gmjOffsetY}px) scale(${gmjScale});">${escapeHtml(kop.logoText || "GM")}</div>`;
+  const logoHtml = `<div style="transform: translate(${gmjOffsetX}px, ${gmjOffsetY}px) scale(${gmjScale}); transform-origin: left center; display: inline-block;"><img src="${GETMASJID_LOGO_SVG}" alt="Logo GetMasjid" style="width:48px;height:48px;object-fit:contain;display:block;" /></div>`;
 
   const companyHtml = kop.companyName.includes("GetMasjid") || kop.companyName.includes("Get")
     ? kop.companyName.replace("GetMasjid", "Get<span>Masjid</span>").replace("Get Masjid", "Get<span>Masjid</span>")

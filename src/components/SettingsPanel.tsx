@@ -366,7 +366,7 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start">
                         <div className="w-[88px] h-[88px] rounded-2xl ring-1 ring-black/5 grid place-items-center overflow-hidden shrink-0 relative" style={{ background: checkerBg }}>
                           <div style={{ transform: `translate(${kop.logoOffsetX ?? 0}px, ${kop.logoOffsetY ?? 0}px) scale(${kop.logoScale ?? 1})`, transformOrigin: "center center", transition: "transform 0.15s ease" }}>
-                            {kop.logoImage ? <img src={kop.logoImage} alt="logo" className="w-full h-full object-contain p-1.5" /> : <div className="w-12 h-12 rounded-xl grid place-items-center text-white font-bold text-sm" style={{ background: kop.accentColor }}>{kop.logoText}</div>}
+                            <img src={GETMASJID_LOGO_SVG} alt="Logo GetMasjid Resmi" className="max-h-[64px] max-w-[76px] object-contain p-1" />
                           </div>
                         </div>
                         <div className="flex-1 space-y-2 w-full min-w-0">
