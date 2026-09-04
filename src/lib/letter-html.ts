@@ -70,7 +70,7 @@ function renderKopSection(kop: KopSuratConfig, logoHtml: string, companyHtml: st
               <tr>
                 <td style="vertical-align: middle; padding-right: 10px;">
                   <div style="transform: translate(${unsOffsetX}px, ${unsOffsetY}px) scale(${unsScale}); transform-origin: left center; display: inline-block;">
-                    <img src="${unsLogo}" alt="Logo UNS" style="height: 56px; max-width: 240px; object-fit: contain; display: block;" />
+                    <img src="${unsLogo}" alt="Logo UNS" style="height: 54px; max-width: 220px; object-fit: contain; display: block;" />
                   </div>
                 </td>
                 <td style="vertical-align: middle; padding: 0 10px;">

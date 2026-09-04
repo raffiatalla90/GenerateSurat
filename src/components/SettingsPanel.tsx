@@ -204,9 +204,7 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                           ✓ Logo Resmi Terkunci
                         </span>
                       </div>
-
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Logo 1: Mitra / UNS (Kiri) */}
                         <div className="p-3.5 rounded-2xl bg-white ring-1 ring-black/5 shadow-sm space-y-3">
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-bold text-stone-800">1. Logo UNS (Kiri)</span>
@@ -221,8 +219,6 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                               />
                             </div>
                           </div>
-
-                          {/* Sliders Ukuran & Posisi Logo 1 */}
                           <div className="space-y-2 pt-2 border-t border-black/5">
                             <div>
                               <div className="flex items-center justify-between text-[11px] text-stone-600 mb-1">
@@ -279,8 +275,6 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                             </div>
                           </div>
                         </div>
-
-                        {/* Logo 2: GetMasjid (Kanan) */}
                         <div className="p-3.5 rounded-2xl bg-white ring-1 ring-black/5 shadow-sm space-y-3">
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-bold text-stone-800">2. Logo GetMasjid (Kanan)</span>
@@ -295,8 +289,6 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                               />
                             </div>
                           </div>
-
-                          {/* Sliders Ukuran & Posisi Logo 2 */}
                           <div className="space-y-2 pt-2 border-t border-black/5">
                             <div>
                               <div className="flex items-center justify-between text-[11px] text-stone-600 mb-1">
@@ -371,15 +363,13 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                         </div>
                         <div className="flex-1 space-y-2 w-full min-w-0">
                           <div className="text-xs font-medium text-stone-700">Logo Resmi Standar GetMasjid</div>
-                          <p className="text-[11px] text-stone-500">Logo baku bawaan resmi GetMasjid telah aktif secara otomatis.</p>
+                          <p className="text-[11px] text-stone-500">Logo baku bawaan resmi GetMasjid telah aktif dengan proporsi optimal.</p>
                           <div className="flex gap-2 items-center pt-1 flex-wrap">
                             <span className="text-xs text-stone-600">Inisial</span><input value={kop.logoText} onChange={(e) => onKopChange({ ...kop, logoText: e.target.value.slice(0, 4).toUpperCase() })} className="w-16 h-7 rounded-full bg-[#FDFBF7] ring-1 ring-black/5 px-2 text-xs text-center" placeholder="GM" />
                             <span className="text-xs text-stone-600">Warna</span><input type="color" value={kop.accentColor} onChange={(e) => onKopChange({ ...kop, accentColor: e.target.value })} className="w-7 h-7 rounded-full ring-1 ring-black/5 p-0.5" />
                           </div>
                         </div>
                       </div>
-
-                      {/* Sliders Ukuran & Posisi Standard Logo */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-black/5">
                         <div>
                           <div className="flex items-center justify-between text-[11px] text-stone-600 mb-1">
@@ -400,7 +390,7 @@ export function SettingsPanel({ kop, sig, onKopChange, onSigChange }: Props) {
                         </div>
                         <div>
                           <div className="flex items-center justify-between text-[11px] text-stone-600 mb-1">
-                            <span>Posisi Kanan-Kiri: {kop.logoOffsetX ?? 0}px</span>
+                            <span>Posisi X: {kop.logoOffsetX ?? 0}px</span>
                             {(kop.logoOffsetX && kop.logoOffsetX !== 0) && (
                               <button type="button" onClick={() => onKopChange({ ...kop, logoOffsetX: 0 })} className="text-[10px] text-emerald-700 underline">Reset</button>
                             )}
