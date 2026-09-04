@@ -196,7 +196,7 @@ export function LetterForm({ data, onChange, onPreview, onPrint, onDownload, onS
               <div>
                 <div className="text-[10px] tracking-[0.14em] uppercase font-bold text-emerald-700">Nomor Surat</div>
                 <div className="text-[14px] sm:text-[15px] font-mono font-bold text-emerald-950 mt-0.5">{data.nomorSurat}</div>
-                <div className="text-[11px] text-emerald-700/70 mt-0.5">Sistem Daur Ulang Nomor Aktif • Auto Increment</div>
+                <div className="text-[11px] text-emerald-700/70 mt-0.5">Penomoran otomatis & daur ulang urutan surat</div>
               </div>
               <div className="flex items-center gap-2 self-start sm:self-auto">
                 {onOpenNumberModal && (
@@ -206,7 +206,11 @@ export function LetterForm({ data, onChange, onPreview, onPrint, onDownload, onS
                     className="h-8 px-3.5 rounded-full bg-[#0f6b4a] hover:bg-[#0d5a3f] text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm active:scale-95 transition"
                     title="Buka Generator Sertifikat / Surat & Buku Registrasi"
                   >
-                    <span>📘 Buku & Generator Nomor</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                    <span>Buku & Generator Nomor</span>
                   </button>
                 )}
                 <div className="w-8 h-8 rounded-full bg-emerald-700 text-white grid place-items-center font-bold text-xs">GM</div>
@@ -404,7 +408,7 @@ export function LetterForm({ data, onChange, onPreview, onPrint, onDownload, onS
                               className="h-7 px-2.5 rounded-full bg-[#0f6b4a] text-white text-[10px] font-semibold hover:bg-[#0d5a3f] whitespace-nowrap shrink-0 disabled:opacity-60"
                               title="Hapus background putih agar transparan"
                             >
-                              ✨ Hapus BG
+                              Hapus Background
                             </button>
                             <button
                               type="button"

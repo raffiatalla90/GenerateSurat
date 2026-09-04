@@ -25,10 +25,17 @@ function todayISO(): string {
   return d.toISOString().slice(0, 10);
 }
 
+function getInitialNomorSurat(): string {
+  const now = new Date();
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const yyyy = String(now.getFullYear());
+  return `001/GMJ/${mm}/${yyyy}`;
+}
+
 export default function Home() {
-  const [nomorSurat, setNomorSurat] = useState("001/GMJ/--/----");
+  const [nomorSurat, setNomorSurat] = useState(getInitialNomorSurat);
   const [data, setData] = useState<LetterData>({
-    nomorSurat: "001/GMJ/--/----",
+    nomorSurat: getInitialNomorSurat(),
     namaPenerima: "Bapak Kepala DKM",
     instansiTujuan: "Masjid Al-Ikhlas Jakarta Selatan",
     alamatPenerima: "Jl. Melati No. 12, Kebayoran Baru, Jakarta Selatan 12130",
@@ -142,9 +149,8 @@ export default function Home() {
     const remaining = deleteHistoryItem(id);
     setHistory(remaining);
     setRegistryCount(loadNumberRegistry().length);
-    setToast("Riwayat dihapus & nomor surat dikembalikan (siap didaur ulang)");
+    setToast("Riwayat dihapus dan nomor surat dikembalikan");
     setTimeout(() => setToast(null), 3000);
-    // Refresh nomor surat form dengan slot daur ulang terkecil yang kini tersedia
     refreshAutoNumber();
   };
 
@@ -246,7 +252,11 @@ export default function Home() {
               className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 h-9 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[12px] sm:text-[13px] font-semibold ring-1 ring-emerald-300/70 transition shadow-sm"
               title="Buka Generator Nomor Dokumen & Buku Registrasi"
             >
-              <span>📘 Buku Nomor & Sertifikat</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              </svg>
+              <span>Buku Nomor & Sertifikat</span>
               {registryCount > 0 && (
                 <span className="bg-emerald-700 text-white text-[10px] px-1.5 py-0.2 rounded-full font-mono">
                   {registryCount}
@@ -291,7 +301,7 @@ export default function Home() {
               onClick={() => { setMenuOpen(false); openNumberModalFor("Sertifikat"); }}
               className="h-9 rounded-full bg-emerald-50 text-emerald-800 text-sm flex items-center justify-center gap-2 font-semibold ring-1 ring-emerald-300"
             >
-              <span>📘 Buka Buku Nomor & Sertifikat</span>
+              <span>Buka Buku Nomor & Sertifikat</span>
             </button>
             <button
               onClick={() => { setMenuOpen(false); handleDownloadPDF(); }}
@@ -334,7 +344,10 @@ export default function Home() {
               onClick={() => openNumberModalFor("Sertifikat")}
               className="inline-flex items-center gap-2 px-4 py-2.5 sm:py-2 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold shadow-sm transition active:scale-95"
             >
-              <span>📜 Generate Nomor Sertifikat / SK</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 5v14M5 12h14" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <span>Generate Nomor Dokumen</span>
             </button>
             <button onClick={handlePreview} className="inline-flex items-center gap-2 px-4 py-2.5 sm:py-2 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold shadow-sm transition active:scale-95">
               <span>Lihat Preview</span>
@@ -348,7 +361,7 @@ export default function Home() {
       <main className="max-w-[1280px] w-full mx-auto px-4 sm:px-6 md:px-8 py-5 sm:py-6 md:py-8">
         <div className="flex justify-center mb-5 sm:mb-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 p-2.5 sm:p-1 rounded-2xl sm:rounded-full bg-black/[0.04] ring-1 ring-black/5 w-full sm:w-auto text-center sm:text-left">
-            <span className="text-xs px-2 sm:px-3 py-0.5 text-stone-700">💾 Riwayat & Buku Nomor tersimpan di browser • Surat yang dihapus mengembalikan nomor urut</span>
+            <span className="text-xs px-2 sm:px-3 py-0.5 text-stone-700">Riwayat & Buku Nomor tersimpan di browser • Nomor surat yang dihapus akan kembali tersedia</span>
             <button onClick={handleSave} className="w-full sm:w-auto px-4 py-2 sm:py-1.5 rounded-full bg-black text-white text-xs font-medium hover:bg-stone-800 transition shadow-sm">Simpan Surat ke Riwayat</button>
           </div>
         </div>
@@ -421,7 +434,7 @@ export default function Home() {
       <footer className="mt-auto border-t border-black/5 bg-white">
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 h-14 flex items-center justify-between text-xs text-stone-500">
           <span>© {new Date().getFullYear()} GetMasjid • PT GetMasjid Digital Indonesia</span>
-          <span className="hidden md:inline text-stone-400">Surat resmi & sertifikat • Sistem Daur Ulang Nomor • A4 PDF</span>
+          <span className="hidden md:inline text-stone-400">Surat resmi & sertifikat • Penomoran otomatis • A4 PDF</span>
         </div>
       </footer>
 
@@ -433,4 +446,3 @@ export default function Home() {
     </div>
   );
 }
-

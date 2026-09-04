@@ -11,7 +11,6 @@ export interface CategoryDefinition {
   label: DocCategory;
   code: string;
   prefixPattern: string; // e.g., "{NUM}/{CODE}/{MM}/{YYYY}"
-  icon: string;
   description: string;
 }
 
@@ -20,49 +19,42 @@ export const CATEGORY_DEFINITIONS: Record<DocCategory, CategoryDefinition> = {
     label: "Surat Resmi",
     code: "GMJ",
     prefixPattern: "{NUM}/GMJ/{MM}/{YYYY}",
-    icon: "📑",
     description: "Surat dinas resmi keluar GetMasjid ke pihak eksternal",
   },
   "Sertifikat": {
     label: "Sertifikat",
     code: "SERT",
     prefixPattern: "{NUM}/SERT/GMJ/{MM}/{YYYY}",
-    icon: "📜",
     description: "Sertifikat pemateri, peserta webinar, apresiasi & piagam",
   },
   "Surat Keputusan (SK)": {
     label: "Surat Keputusan (SK)",
     code: "SK",
     prefixPattern: "{NUM}/SK/GMJ/{MM}/{YYYY}",
-    icon: "⚖️",
     description: "Surat keputusan kepengurusan, legalitas, atau penetapan kebijakan",
   },
   "Surat Keterangan (SKET)": {
     label: "Surat Keterangan (SKET)",
     code: "SKET",
     prefixPattern: "{NUM}/SKET/GMJ/{MM}/{YYYY}",
-    icon: "📋",
     description: "Surat keterangan aktif, rekomendasi, atau keterangan mitra",
   },
   "Surat Tugas (ST)": {
     label: "Surat Tugas (ST)",
     code: "ST",
     prefixPattern: "{NUM}/ST/GMJ/{MM}/{YYYY}",
-    icon: "🎯",
     description: "Surat penugasan personil / perwakilan resmi di lapangan",
   },
   "MoU / Kerja Sama": {
     label: "MoU / Kerja Sama",
     code: "MOU",
     prefixPattern: "{NUM}/MOU/GMJ/{MM}/{YYYY}",
-    icon: "🤝",
     description: "Nota kesepahaman atau perjanjian kemitraan resmi",
   },
   "Custom": {
     label: "Custom",
     code: "DOC",
     prefixPattern: "{NUM}/DOC/{MM}/{YYYY}",
-    icon: "⚙️",
     description: "Format penomoran dokumen kustom sesuai kebutuhan",
   },
 };
