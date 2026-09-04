@@ -45,7 +45,8 @@ function renderKopSection(kop: KopSuratConfig, logoHtml: string, companyHtml: st
   if (template === "uns_colored_v1") {
     // UNS Version 1: Side Color Bars & Dual Logo Header (persis PDF dokumen kemitraan)
     const unsLogo = kop.unsLogoImage || UNS_LOGO_SVG;
-    const gmjLogo = kop.logoImage || GETMASJID_LOGO_SVG;
+    const isOldWhitePng = kop.logoImage && kop.logoImage.startsWith("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAESCAYAAABAVYkJ");
+    const gmjLogo = (!kop.logoImage || isOldWhitePng) ? GETMASJID_LOGO_SVG : kop.logoImage;
 
     const unsScale = kop.unsLogoScale ?? 1.0;
     const unsOffsetX = kop.unsLogoOffsetX ?? 0;
@@ -64,26 +65,26 @@ function renderKopSection(kop: KopSuratConfig, logoHtml: string, companyHtml: st
       </div>
       <table class="kop-table uns-kop-table" style="border-bottom: none; margin-bottom: 22px; padding-bottom: 4px;">
         <tr>
-          <td class="kop-left-cell" style="vertical-align: middle; width: 55%;">
+          <td class="kop-left-cell" style="vertical-align: middle; width: 56%;">
             <table style="border-collapse: collapse;">
               <tr>
-                <td style="vertical-align: middle; padding-right: 12px;">
+                <td style="vertical-align: middle; padding-right: 10px;">
                   <div style="transform: translate(${unsOffsetX}px, ${unsOffsetY}px) scale(${unsScale}); transform-origin: left center; display: inline-block;">
-                    <img src="${unsLogo}" alt="Logo UNS" style="height: 52px; max-width: 185px; object-fit: contain; display: block;" />
+                    <img src="${unsLogo}" alt="Logo UNS" style="height: 56px; max-width: 240px; object-fit: contain; display: block;" />
                   </div>
                 </td>
                 <td style="vertical-align: middle; padding: 0 10px;">
-                  <div style="width: 1.5px; height: 38px; background: #0096D6; opacity: 0.85;"></div>
+                  <div style="width: 1.5px; height: 42px; background: #0096D6; opacity: 0.85;"></div>
                 </td>
                 <td style="vertical-align: middle; padding-left: 4px;">
                   <div style="transform: translate(${gmjOffsetX}px, ${gmjOffsetY}px) scale(${gmjScale}); transform-origin: left center; display: inline-block;">
-                    <img src="${gmjLogo}" alt="Logo GetMasjid" style="height: 48px; max-width: 160px; object-fit: contain; display: block;" />
+                    <img src="${gmjLogo}" alt="Logo GetMasjid" style="height: 52px; max-width: 200px; object-fit: contain; display: block;" />
                   </div>
                 </td>
               </tr>
             </table>
           </td>
-          <td class="kop-right-cell" style="vertical-align: middle; text-align: right; width: 45%; line-height: 1.42; padding-right: 4px;">
+          <td class="kop-right-cell" style="vertical-align: middle; text-align: right; width: 44%; line-height: 1.42; padding-right: 4px;">
             <div style="font-size: 11.5pt; font-weight: 800; color: #0096D6; letter-spacing: 0.5px; margin-bottom: 3px;">GET MASJID</div>
             <div style="font-size: 7.2pt; color: #262626;">Jalan Ir. Sutami No. 36 A Kentingan, Jebres,</div>
             <div style="font-size: 7.2pt; color: #262626;">Surakarta, Jawa Tengah, Indonesia 57126.</div>
