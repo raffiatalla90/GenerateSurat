@@ -78,9 +78,23 @@ export default function Home() {
   useEffect(() => {
     setKopConfig(loadKopConfig());
     setSigConfig(loadSigConfig());
+    try {
+      const rawForm = localStorage.getItem("getmasjid_letter_form_data");
+      if (rawForm) {
+        const parsed = JSON.parse(rawForm);
+        if (parsed && typeof parsed === "object") {
+          setData((prev) => ({ ...prev, ...parsed }));
+        }
+      }
+    } catch {}
   }, []);
   useEffect(() => { saveKopConfig(kopConfig); }, [kopConfig]);
   useEffect(() => { saveSigConfig(sigConfig); }, [sigConfig]);
+  useEffect(() => {
+    try {
+      localStorage.setItem("getmasjid_letter_form_data", JSON.stringify(data));
+    } catch {}
+  }, [data]);
 
   // Hitung nomor awal berdasarkan nomor aktif dan daur ulang slot kosong
   const refreshAutoNumber = () => {
@@ -170,7 +184,7 @@ export default function Home() {
     setTimeout(() => setToast(null), 2500);
   };
 
-  const handleDownloadHistoryPDF = (item: HistoryItem) => {
+  const handleDownloadHistoryPDF = async (item: HistoryItem) => {
     const payloadData = {
       ...item.data,
       signers: item.data.signers || [{
@@ -181,9 +195,19 @@ export default function Home() {
       }]
     };
     const html = generateLetterHTML(payloadData, item.kopConfig, item.signatureConfig);
-    printLetter(html);
-    setToast(`Membuka dialog Simpan PDF: ${item.nomorSurat}`);
-    setTimeout(() => setToast(null), 3000);
+    const perihalDisplay = item.perihal;
+    const cleanFilename = `${item.nomorSurat.replace(/\//g, "-")} - ${perihalDisplay}.pdf`;
+    
+    setToast(`Mengunduh riwayat: ${item.nomorSurat}...`);
+    try {
+      await downloadPdfFile(html, cleanFilename);
+      setToast(`Berhasil mengunduh: ${cleanFilename}`);
+    } catch (e) {
+      console.error(e);
+      printLetter(html);
+    } finally {
+      setTimeout(() => setToast(null), 3000);
+    }
   };
 
   const handlePrint = () => {
@@ -197,15 +221,28 @@ export default function Home() {
     setTimeout(() => setToast(null), 2500);
   };
 
-  const handleDownloadPDF = () => {
+  const handleDownloadPDF = async () => {
     if (!data.namaPenerima.trim() || !data.instansiTujuan.trim() || !data.perihal.trim() || !data.isiSurat.trim()) {
       alert("Mohon lengkapi Nama Penerima, Instansi, Perihal, dan Isi Surat.");
       return;
     }
+    setIsGenerating(true);
     const html = generateLetterHTML(data, kopConfig, sigConfig);
-    printLetter(html);
-    setToast(`Membuka PDF A4 presisi: Pilih 'Simpan sebagai PDF' (Save as PDF)`);
-    setTimeout(() => setToast(null), 3500);
+    const perihalDisplay = data.perihalCustom || data.perihal;
+    const cleanFilename = `${data.nomorSurat.replace(/\//g, "-")} - ${perihalDisplay}.pdf`;
+
+    setToast("Mengunduh file PDF resmi...");
+    try {
+      await downloadPdfFile(html, cleanFilename);
+      setToast(`Berhasil mengunduh: ${cleanFilename}`);
+    } catch (e) {
+      console.error(e);
+      setToast("Mengalihkan ke dialog cetak...");
+      printLetter(html);
+    } finally {
+      setIsGenerating(false);
+      setTimeout(() => setToast(null), 3500);
+    }
   };
 
   const handleApplyNumberFromModal = (
