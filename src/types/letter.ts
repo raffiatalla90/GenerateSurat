@@ -67,7 +67,11 @@ export interface SignatureConfig {
   stampOpacity: number; // 0.7 - 1
 }
 
-export interface GeneratePdfPayload extends LetterData {
+export interface GeneratePdfPayload extends Partial<LetterData> {
   kopConfig?: KopSuratConfig;
   signatureConfig?: SignatureConfig;
+  html?: string;
+  url?: string;
+  filename?: string;
 }
+

@@ -202,7 +202,11 @@ export default function Home() {
     
     setToast(`Mengunduh riwayat: ${item.nomorSurat}...`);
     try {
-      await downloadPdfFile(html, cleanFilename);
+      await downloadPdfFile(html, cleanFilename, {
+        data: payloadData,
+        kopConfig: item.kopConfig,
+        signatureConfig: item.signatureConfig,
+      });
       setToast(`Berhasil mengunduh: ${cleanFilename}`);
     } catch (e) {
       console.error(e);
@@ -235,7 +239,11 @@ export default function Home() {
 
     setToast("Mengunduh file PDF resmi...");
     try {
-      await downloadPdfFile(html, cleanFilename);
+      await downloadPdfFile(html, cleanFilename, {
+        data,
+        kopConfig,
+        signatureConfig: sigConfig,
+      });
       setToast(`Berhasil mengunduh: ${cleanFilename}`);
     } catch (e) {
       console.error(e);
