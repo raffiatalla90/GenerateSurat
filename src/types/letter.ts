@@ -41,6 +41,12 @@ export interface KopSuratConfig {
   logoText: string; // fallback jika tidak ada logo image, ex: GM
   logoImage?: string; // base64 dataURL (Logo GetMasjid)
   unsLogoImage?: string; // base64 dataURL (Logo Mitra / UNS)
+  logoScale?: number; // 0.5 - 2.5 (default 1)
+  logoOffsetX?: number; // -60 - 60 px
+  logoOffsetY?: number; // -30 - 30 px
+  unsLogoScale?: number; // 0.5 - 2.5 (default 1)
+  unsLogoOffsetX?: number; // -60 - 60 px
+  unsLogoOffsetY?: number; // -30 - 30 px
   companyName: string; // GetMasjid
   legalName: string; // PT GetMasjid Digital Indonesia
   tagline: string; // Platform Digital...

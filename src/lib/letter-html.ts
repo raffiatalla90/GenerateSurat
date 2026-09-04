@@ -47,6 +47,14 @@ function renderKopSection(kop: KopSuratConfig, logoHtml: string, companyHtml: st
     const unsLogo = kop.unsLogoImage || UNS_LOGO_SVG;
     const gmjLogo = kop.logoImage || GETMASJID_LOGO_SVG;
 
+    const unsScale = kop.unsLogoScale ?? 1.0;
+    const unsOffsetX = kop.unsLogoOffsetX ?? 0;
+    const unsOffsetY = kop.unsLogoOffsetY ?? 0;
+
+    const gmjScale = kop.logoScale ?? 1.0;
+    const gmjOffsetX = kop.logoOffsetX ?? 0;
+    const gmjOffsetY = kop.logoOffsetY ?? 0;
+
     return `
       <!-- UNS Colored Version 1: Side Color Bars & Dual Logo -->
       <div class="uns-v1-accents">
@@ -60,13 +68,17 @@ function renderKopSection(kop: KopSuratConfig, logoHtml: string, companyHtml: st
             <table style="border-collapse: collapse;">
               <tr>
                 <td style="vertical-align: middle; padding-right: 12px;">
-                  <img src="${unsLogo}" alt="Logo UNS" style="height: 50px; max-width: 175px; object-fit: contain; display: block;" />
+                  <div style="transform: translate(${unsOffsetX}px, ${unsOffsetY}px) scale(${unsScale}); transform-origin: left center; display: inline-block;">
+                    <img src="${unsLogo}" alt="Logo UNS" style="height: 52px; max-width: 185px; object-fit: contain; display: block;" />
+                  </div>
                 </td>
                 <td style="vertical-align: middle; padding: 0 10px;">
                   <div style="width: 1.5px; height: 38px; background: #0096D6; opacity: 0.85;"></div>
                 </td>
                 <td style="vertical-align: middle; padding-left: 4px;">
-                  <img src="${gmjLogo}" alt="Logo GetMasjid" style="height: 44px; max-width: 145px; object-fit: contain; display: block;" />
+                  <div style="transform: translate(${gmjOffsetX}px, ${gmjOffsetY}px) scale(${gmjScale}); transform-origin: left center; display: inline-block;">
+                    <img src="${gmjLogo}" alt="Logo GetMasjid" style="height: 48px; max-width: 160px; object-fit: contain; display: block;" />
+                  </div>
                 </td>
               </tr>
             </table>
@@ -237,9 +249,13 @@ export function generateLetterHTML(
       </div>
     `;
   }
+  const gmjScale = kop.logoScale ?? 1.0;
+  const gmjOffsetX = kop.logoOffsetX ?? 0;
+  const gmjOffsetY = kop.logoOffsetY ?? 0;
+
   const logoHtml = kop.logoImage
-    ? `<img src="${kop.logoImage}" alt="logo" style="width:44px;height:44px;object-fit:contain;display:block;" />`
-    : `<div class="logo" style="background:${escapeHtml(kop.accentColor)}">${escapeHtml(kop.logoText || "GM")}</div>`;
+    ? `<div style="transform: translate(${gmjOffsetX}px, ${gmjOffsetY}px) scale(${gmjScale}); transform-origin: left center; display: inline-block;"><img src="${kop.logoImage}" alt="logo" style="width:46px;height:46px;object-fit:contain;display:block;" /></div>`
+    : `<div class="logo" style="background:${escapeHtml(kop.accentColor)}; transform: translate(${gmjOffsetX}px, ${gmjOffsetY}px) scale(${gmjScale});">${escapeHtml(kop.logoText || "GM")}</div>`;
 
   const companyHtml = kop.companyName.includes("GetMasjid") || kop.companyName.includes("Get")
     ? kop.companyName.replace("GetMasjid", "Get<span>Masjid</span>").replace("Get Masjid", "Get<span>Masjid</span>")
