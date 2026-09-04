@@ -49,12 +49,12 @@ function renderKopSection(kop: KopSuratConfig, logoHtml: string, companyHtml: st
     const gmjLogo = GETMASJID_LOGO_SVG;
 
     const unsScale = kop.unsLogoScale ?? 1.0;
-    const unsOffsetX = kop.unsLogoOffsetX ?? 0;
-    const unsOffsetY = kop.unsLogoOffsetY ?? 0;
+    const unsOffsetX = kop.unsLogoOffsetX ?? -16;
+    const unsOffsetY = kop.unsLogoOffsetY ?? -1;
 
-    const gmjScale = kop.logoScale ?? 1.0;
-    const gmjOffsetX = kop.logoOffsetX ?? 0;
-    const gmjOffsetY = kop.logoOffsetY ?? 0;
+    const gmjScale = kop.logoScale ?? 1.2;
+    const gmjOffsetX = kop.logoOffsetX ?? 18;
+    const gmjOffsetY = kop.logoOffsetY ?? -2;
 
     return `
       <!-- UNS Colored Version 1: Side Color Bars & Dual Logo -->
@@ -250,9 +250,10 @@ export function generateLetterHTML(
       </div>
     `;
   }
-  const gmjScale = kop.logoScale ?? 1.0;
-  const gmjOffsetX = kop.logoOffsetX ?? 0;
-  const gmjOffsetY = kop.logoOffsetY ?? 0;
+  const isUns = (kop.template || "default") === "uns_colored_v1";
+  const gmjScale = kop.logoScale ?? (isUns ? 1.2 : 1.0);
+  const gmjOffsetX = kop.logoOffsetX ?? (isUns ? 18 : 4);
+  const gmjOffsetY = kop.logoOffsetY ?? -2;
 
   const logoHtml = `<div style="transform: translate(${gmjOffsetX}px, ${gmjOffsetY}px) scale(${gmjScale}); transform-origin: left center; display: inline-block;"><img src="${GETMASJID_LOGO_SVG}" alt="Logo GetMasjid" style="width:48px;height:48px;object-fit:contain;display:block;" /></div>`;
 
