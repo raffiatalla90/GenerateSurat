@@ -13,6 +13,7 @@ import { generateLetterHTML } from "@/lib/letter-html";
 import { printLetter } from "@/lib/print";
 import { downloadPdfFile } from "@/lib/pdf-download";
 import { DocumentNumberModal } from "@/components/DocumentNumberModal";
+import { SavePdfTutorialModal } from "@/components/SavePdfTutorialModal";
 import {
   loadNumberRegistry,
   getSequenceAnalysis,
@@ -66,6 +67,7 @@ export default function Home() {
 
   // Document Number & Registry Modal State
   const [isNumberModalOpen, setIsNumberModalOpen] = useState(false);
+  const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false);
   const [numberModalCategory, setNumberModalCategory] = useState<DocCategory>("Sertifikat");
   const [registryCount, setRegistryCount] = useState(0);
 
@@ -301,6 +303,17 @@ export default function Home() {
               )}
             </button>
 
+            {/* Tombol Panduan Cetak & PDF */}
+            <button
+              onClick={() => setIsTutorialModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 h-9 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 text-[12px] sm:text-[13px] font-semibold ring-1 ring-amber-300/80 transition shadow-sm"
+              title="Panduan Simpan PDF via Menu Cetak (iPhone, Laptop, Android)"
+            >
+              <span>💡</span>
+              <span className="hidden lg:inline">Cara Simpan PDF</span>
+              <span className="lg:hidden">Panduan</span>
+            </button>
+
             <button
               onClick={handleDownloadPDF}
               disabled={isGenerating}
@@ -334,6 +347,12 @@ export default function Home() {
         {menuOpen && (
           <div className="md:hidden border-t border-stone-200 bg-white px-4 py-3 flex flex-col gap-2">
             <div className="text-xs font-mono px-3 py-2 rounded-lg bg-stone-50 ring-1 ring-stone-200">{nomorSurat}</div>
+            <button
+              onClick={() => { setMenuOpen(false); setIsTutorialModalOpen(true); }}
+              className="h-9 rounded-full bg-amber-50 text-amber-900 text-sm flex items-center justify-center gap-2 font-semibold ring-1 ring-amber-300"
+            >
+              <span>💡 Panduan Simpan PDF via Cetak</span>
+            </button>
             <button
               onClick={() => { setMenuOpen(false); openNumberModalFor("Sertifikat"); }}
               className="h-9 rounded-full bg-emerald-50 text-emerald-800 text-sm flex items-center justify-center gap-2 font-semibold ring-1 ring-emerald-300"
@@ -431,7 +450,15 @@ export default function Home() {
             </div>
           </div>
           <div ref={previewRef} className={`${showMobilePreview ? "block" : "hidden lg:block"} w-full min-w-0 lg:sticky lg:top-[104px] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] delay-200 ${reveal ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"} space-y-6`}>
-            <LetterPreview data={data} kop={kopConfig} sig={sigConfig} onPrint={handlePrint} onDownload={handleDownloadPDF} isGenerating={isGenerating} />
+            <LetterPreview 
+              data={data} 
+              kop={kopConfig} 
+              sig={sigConfig} 
+              onPrint={handlePrint} 
+              onDownload={handleDownloadPDF} 
+              onOpenTutorial={() => setIsTutorialModalOpen(true)}
+              isGenerating={isGenerating} 
+            />
             <HistoryPanel items={history} onLoad={handleLoadHistory} onDelete={handleDeleteHistory} onPrint={handlePrintHistory} onDownload={handleDownloadHistoryPDF} />
             {/* Floating Action Bar on Mobile Preview */}
             {showMobilePreview && (
@@ -466,6 +493,12 @@ export default function Home() {
         }}
         onApplyToLetter={handleApplyNumberFromModal}
         defaultCategory={numberModalCategory}
+      />
+
+      {/* Interactive Save PDF Tutorial Modal */}
+      <SavePdfTutorialModal
+        isOpen={isTutorialModalOpen}
+        onClose={() => setIsTutorialModalOpen(false)}
       />
 
       <footer className="mt-auto border-t border-black/5 bg-white">

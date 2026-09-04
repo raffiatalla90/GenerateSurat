@@ -11,6 +11,7 @@ export function LetterPreview({
   sig,
   onPrint,
   onDownload,
+  onOpenTutorial,
   isGenerating,
 }: {
   data: LetterData;
@@ -18,6 +19,7 @@ export function LetterPreview({
   sig?: SignatureConfig;
   onPrint?: () => void;
   onDownload?: () => void;
+  onOpenTutorial?: () => void;
   isGenerating?: boolean;
 }) {
   const html = generateLetterHTML(data, kop, sig);
@@ -92,7 +94,7 @@ export function LetterPreview({
                 onClick={onDownload}
                 disabled={isGenerating}
                 className="inline-flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-full bg-[#0f6b4a] hover:bg-[#0d5a3f] text-white text-[11px] sm:text-xs font-semibold transition active:scale-95 shadow-sm disabled:opacity-60"
-                title="Download File PDF Resmi (Tanpa Watermark Domain)"
+                title="Download File PDF Resmi"
               >
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                   <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" strokeLinecap="round" strokeLinejoin="round" />
@@ -104,7 +106,7 @@ export function LetterPreview({
               type="button"
               onClick={handlePrintClick}
               className="inline-flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-full bg-stone-100 hover:bg-stone-200 ring-1 ring-black/5 text-stone-800 text-[11px] sm:text-xs font-semibold transition active:scale-95"
-              title="Cetak via Printer Browser"
+              title="Cetak atau Simpan PDF lewat Browser / iOS"
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" strokeLinecap="round" strokeLinejoin="round" />
@@ -112,6 +114,19 @@ export function LetterPreview({
               </svg>
               <span>Cetak</span>
             </button>
+
+            {onOpenTutorial && (
+              <button
+                type="button"
+                onClick={onOpenTutorial}
+                className="inline-flex items-center gap-1 px-2.5 py-1 sm:py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 ring-1 ring-amber-300 text-amber-900 text-[11px] sm:text-xs font-medium transition active:scale-95"
+                title="Panduan Cara Simpan PDF lewat Cetak"
+              >
+                <span>💡</span>
+                <span className="hidden sm:inline">Panduan PDF</span>
+              </button>
+            )}
+
             <span className="text-[10.5px] sm:text-[11px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-[#FDFBF7] ring-1 ring-black/5 text-stone-700 font-mono truncate max-w-[130px] sm:max-w-none text-center" title={data.nomorSurat}>
               {data.nomorSurat}
             </span>
@@ -126,7 +141,23 @@ export function LetterPreview({
             sandbox="allow-same-origin"
           />
         </div>
-        <p className="text-[11px] text-stone-500 text-center px-4 sm:px-6 pb-3 sm:pb-4 pt-1">Preview real-time • Dokumen tercetak rapi A4</p>
+
+        {/* Tip Banner */}
+        <div className="flex items-center justify-between px-4 sm:px-6 py-2.5 bg-emerald-50/80 border-t border-emerald-600/10 text-xs text-emerald-950 flex-wrap gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-sm">💡</span>
+            <span><b>Tips Simpan PDF:</b> Untuk kualitas terbaik, klik tombol <b>Cetak</b> ➡️ pilih <b>"Simpan sebagai PDF (Save as PDF)"</b>.</span>
+          </div>
+          {onOpenTutorial && (
+            <button
+              type="button"
+              onClick={onOpenTutorial}
+              className="font-bold underline text-[#0f6b4a] hover:text-emerald-900 shrink-0 text-[11.5px]"
+            >
+              Lihat Panduan Lengkap (iPhone, PC, Android) →
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
