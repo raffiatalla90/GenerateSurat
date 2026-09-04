@@ -12,12 +12,18 @@ import { HistoryItem, loadHistory, addHistoryItem, deleteHistoryItem } from "@/l
 import { generateLetterHTML } from "@/lib/letter-html";
 import { printLetter } from "@/lib/print";
 import { downloadPdfFile } from "@/lib/pdf-download";
+import { DocumentNumberModal } from "@/components/DocumentNumberModal";
+import {
+  loadNumberRegistry,
+  getSequenceAnalysis,
+  formatDocumentNumber,
+  DocCategory,
+} from "@/lib/letter-number-registry";
 
 function todayISO(): string {
   const d = new Date();
   return d.toISOString().slice(0, 10);
 }
-
 
 export default function Home() {
   const [nomorSurat, setNomorSurat] = useState("001/GMJ/--/----");
@@ -51,8 +57,16 @@ export default function Home() {
   const [reveal, setReveal] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
+  // Document Number & Registry Modal State
+  const [isNumberModalOpen, setIsNumberModalOpen] = useState(false);
+  const [numberModalCategory, setNumberModalCategory] = useState<DocCategory>("Sertifikat");
+  const [registryCount, setRegistryCount] = useState(0);
+
   useEffect(() => setReveal(true), []);
-  useEffect(() => { setHistory(loadHistory()); }, []);
+  useEffect(() => { 
+    setHistory(loadHistory());
+    setRegistryCount(loadNumberRegistry().length);
+  }, []);
 
   useEffect(() => {
     setKopConfig(loadKopConfig());
@@ -61,17 +75,18 @@ export default function Home() {
   useEffect(() => { saveKopConfig(kopConfig); }, [kopConfig]);
   useEffect(() => { saveSigConfig(sigConfig); }, [sigConfig]);
 
+  // Hitung nomor awal berdasarkan nomor aktif dan daur ulang slot kosong
+  const refreshAutoNumber = () => {
+    const analysis = getSequenceAnalysis("GMJ", todayISO());
+    const newNum = formatDocumentNumber(analysis.recommendedSeq, "GMJ", todayISO());
+    setNomorSurat(newNum);
+    setData((prev) => ({ ...prev, nomorSurat: newNum }));
+  };
+
   useEffect(() => {
-    fetch("/api/nomor-surat")
-      .then((r) => r.json())
-      .then((j) => {
-        if (j.nomorSurat) {
-          setNomorSurat(j.nomorSurat);
-          setData((prev) => ({ ...prev, nomorSurat: j.nomorSurat }));
-        }
-      })
-      .catch(() => {});
+    refreshAutoNumber();
   }, []);
+
   useEffect(() => { setData((prev) => ({ ...prev, nomorSurat })); }, [nomorSurat]);
 
   const handlePreview = () => {
@@ -98,6 +113,7 @@ export default function Home() {
       penerima: data.namaPenerima,
     });
     setHistory(loadHistory());
+    setRegistryCount(loadNumberRegistry().length);
     setToast(`Tersimpan: ${item.nomorSurat}`);
     setTimeout(() => setToast(null), 2500);
   };
@@ -123,8 +139,13 @@ export default function Home() {
   };
 
   const handleDeleteHistory = (id: string) => {
-    deleteHistoryItem(id);
-    setHistory(loadHistory());
+    const remaining = deleteHistoryItem(id);
+    setHistory(remaining);
+    setRegistryCount(loadNumberRegistry().length);
+    setToast("Riwayat dihapus & nomor surat dikembalikan (siap didaur ulang)");
+    setTimeout(() => setToast(null), 3000);
+    // Refresh nomor surat form dengan slot daur ulang terkecil yang kini tersedia
+    refreshAutoNumber();
   };
 
   const handlePrintHistory = (item: HistoryItem) => {
@@ -168,14 +189,6 @@ export default function Home() {
     printLetter(html);
     setToast(`Membuka dialog cetak: ${data.nomorSurat}`);
     setTimeout(() => setToast(null), 2500);
-
-    // Refresh nomor surat dari server
-    fetch("/api/nomor-surat")
-      .then((r) => r.json())
-      .then((j) => {
-        if (j?.nomorSurat) setNomorSurat(j.nomorSurat);
-      })
-      .catch(() => {});
   };
 
   const handleDownloadPDF = () => {
@@ -189,6 +202,28 @@ export default function Home() {
     setTimeout(() => setToast(null), 3500);
   };
 
+  const handleApplyNumberFromModal = (
+    selectedNomor: string,
+    extraData?: { perihal?: string; penerima?: string; instansi?: string }
+  ) => {
+    setNomorSurat(selectedNomor);
+    setData((prev) => ({
+      ...prev,
+      nomorSurat: selectedNomor,
+      ...(extraData?.perihal ? { perihal: extraData.perihal } : {}),
+      ...(extraData?.penerima ? { namaPenerima: extraData.penerima } : {}),
+      ...(extraData?.instansi ? { instansiTujuan: extraData.instansi } : {}),
+    }));
+    setRegistryCount(loadNumberRegistry().length);
+    setToast(`Nomor diterapkan: ${selectedNomor}`);
+    setTimeout(() => setToast(null), 2500);
+  };
+
+  const openNumberModalFor = (cat: DocCategory) => {
+    setNumberModalCategory(cat);
+    setIsNumberModalOpen(true);
+  };
+
   return (
     <div className="flex-1 flex flex-col min-h-[100dvh] w-full max-w-full overflow-x-hidden">
       {/* Professional Header */}
@@ -197,14 +232,28 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-[#0f6b4a] text-white grid place-items-center font-bold text-[11px]">GM</div>
             <div>
-              <div className="text-[14px] font-semibold tracking-tight leading-none">GetMasjid <span className="font-normal text-stone-500">— Surat Resmi</span></div>
-              <div className="text-[11px] text-stone-500 hidden sm:block -mt-0.5">Platform manajemen masjid • Generator surat</div>
+              <div className="text-[14px] font-semibold tracking-tight leading-none">GetMasjid <span className="font-normal text-stone-500">— Surat & Dokumen</span></div>
+              <div className="text-[11px] text-stone-500 hidden sm:block -mt-0.5">Platform surat resmi, sertifikat & penomoran dokumen</div>
             </div>
-            <span className="hidden lg:inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full bg-stone-50 ring-1 ring-stone-200 text-stone-600 ml-2">
+            <span className="hidden xl:inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full bg-stone-50 ring-1 ring-stone-200 text-stone-600 ml-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> {nomorSurat}
             </span>
           </div>
           <div className="flex items-center gap-2">
+            {/* Tombol Buku Nomor & Sertifikat */}
+            <button
+              onClick={() => openNumberModalFor("Sertifikat")}
+              className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 h-9 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[12px] sm:text-[13px] font-semibold ring-1 ring-emerald-300/70 transition shadow-sm"
+              title="Buka Generator Nomor Dokumen & Buku Registrasi"
+            >
+              <span>📘 Buku Nomor & Sertifikat</span>
+              {registryCount > 0 && (
+                <span className="bg-emerald-700 text-white text-[10px] px-1.5 py-0.2 rounded-full font-mono">
+                  {registryCount}
+                </span>
+              )}
+            </button>
+
             <button
               onClick={handleDownloadPDF}
               disabled={isGenerating}
@@ -239,6 +288,12 @@ export default function Home() {
           <div className="md:hidden border-t border-stone-200 bg-white px-4 py-3 flex flex-col gap-2">
             <div className="text-xs font-mono px-3 py-2 rounded-lg bg-stone-50 ring-1 ring-stone-200">{nomorSurat}</div>
             <button
+              onClick={() => { setMenuOpen(false); openNumberModalFor("Sertifikat"); }}
+              className="h-9 rounded-full bg-emerald-50 text-emerald-800 text-sm flex items-center justify-center gap-2 font-semibold ring-1 ring-emerald-300"
+            >
+              <span>📘 Buka Buku Nomor & Sertifikat</span>
+            </button>
+            <button
               onClick={() => { setMenuOpen(false); handleDownloadPDF(); }}
               disabled={isGenerating}
               className="h-9 rounded-full bg-[#0f6b4a] text-white text-sm flex items-center justify-center gap-2 font-medium"
@@ -266,14 +321,22 @@ export default function Home() {
       <section className="max-w-[1280px] w-full mx-auto px-4 sm:px-6 md:px-8 pt-6 sm:pt-8 md:pt-10 pb-5 sm:pb-6 border-b border-stone-200 bg-white">
         <div className={`flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 sm:gap-6 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${reveal ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}>
           <div className="space-y-2.5 sm:space-y-3">
-            <span className="inline-flex rounded-full px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] font-medium bg-stone-900 text-white">Generator Surat Resmi</span>
+            <span className="inline-flex rounded-full px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] font-medium bg-stone-900 text-white">Generator Surat & Nomor Dokumen</span>
             <h1 className="text-[24px] sm:text-[28px] md:text-[32px] font-semibold tracking-tight leading-tight text-stone-900">
-              Buat surat resmi <span className="text-[#0f6b4a]">GetMasjid</span> yang rapi,<br className="hidden md:block" /> siap kirim ke masjid & instansi
+              Surat resmi, sertifikat & penomoran <span className="text-[#0f6b4a]">GetMasjid</span><br className="hidden md:block" /> rapi, terlacak & siap kirim
             </h1>
-            <p className="text-[13px] leading-relaxed sm:leading-6 text-stone-600 max-w-[560px]">Nomor otomatis <span className="font-mono bg-stone-50 px-1 py-0.5 rounded ring-1 ring-stone-200">XXX/GMJ/MM/YYYY</span> • Kop & TTD custom • PDF A4 presisi.</p>
+            <p className="text-[13px] leading-relaxed sm:leading-6 text-stone-600 max-w-[620px]">
+              Penomoran otomatis <span className="font-mono bg-stone-50 px-1 py-0.5 rounded ring-1 ring-stone-200">XXX/GMJ/...</span> & <span className="font-mono bg-stone-50 px-1 py-0.5 rounded ring-1 ring-stone-200">XXX/SERT/...</span> • Sistem daur ulang nomor urut • Riwayat peruntukan surat & sertifikat.
+            </p>
           </div>
-          <div className="flex flex-wrap gap-2 items-center">
-            <button onClick={handlePreview} className="inline-flex items-center gap-2 px-5 py-2.5 sm:py-2 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold shadow-sm transition active:scale-95">
+          <div className="flex flex-wrap gap-2.5 items-center">
+            <button
+              onClick={() => openNumberModalFor("Sertifikat")}
+              className="inline-flex items-center gap-2 px-4 py-2.5 sm:py-2 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold shadow-sm transition active:scale-95"
+            >
+              <span>📜 Generate Nomor Sertifikat / SK</span>
+            </button>
+            <button onClick={handlePreview} className="inline-flex items-center gap-2 px-4 py-2.5 sm:py-2 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold shadow-sm transition active:scale-95">
               <span>Lihat Preview</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
@@ -285,14 +348,23 @@ export default function Home() {
       <main className="max-w-[1280px] w-full mx-auto px-4 sm:px-6 md:px-8 py-5 sm:py-6 md:py-8">
         <div className="flex justify-center mb-5 sm:mb-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 p-2.5 sm:p-1 rounded-2xl sm:rounded-full bg-black/[0.04] ring-1 ring-black/5 w-full sm:w-auto text-center sm:text-left">
-            <span className="text-xs px-2 sm:px-3 py-0.5 text-stone-700">💾 Riwayat save-first — simpan dulu baru muncul di riwayat</span>
+            <span className="text-xs px-2 sm:px-3 py-0.5 text-stone-700">💾 Riwayat & Buku Nomor tersimpan di browser • Surat yang dihapus mengembalikan nomor urut</span>
             <button onClick={handleSave} className="w-full sm:w-auto px-4 py-2 sm:py-1.5 rounded-full bg-black text-white text-xs font-medium hover:bg-stone-800 transition shadow-sm">Simpan Surat ke Riwayat</button>
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-[580px_1fr] gap-6 md:gap-8 items-start w-full min-w-0">
           <div className={`${showMobilePreview ? "hidden lg:block" : "block"} w-full min-w-0 space-y-6 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${reveal ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}>
             <SettingsPanel kop={kopConfig} sig={sigConfig} onKopChange={setKopConfig} onSigChange={setSigConfig} />
-            <LetterForm data={data} onChange={setData} onPreview={handlePreview} onPrint={handlePrint} onDownload={handleDownloadPDF} onSave={handleSave} isGenerating={isGenerating} />
+            <LetterForm
+              data={data}
+              onChange={setData}
+              onPreview={handlePreview}
+              onPrint={handlePrint}
+              onDownload={handleDownloadPDF}
+              onSave={handleSave}
+              onOpenNumberModal={() => openNumberModalFor("Surat Resmi")}
+              isGenerating={isGenerating}
+            />
             <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full min-w-0">
               {[
                 { k: "Format Nomor", v: nomorSurat },
@@ -334,10 +406,22 @@ export default function Home() {
         </div>
       </main>
 
+      {/* Document & Certificate Number Generator Modal */}
+      <DocumentNumberModal
+        isOpen={isNumberModalOpen}
+        onClose={() => {
+          setIsNumberModalOpen(false);
+          setRegistryCount(loadNumberRegistry().length);
+          refreshAutoNumber();
+        }}
+        onApplyToLetter={handleApplyNumberFromModal}
+        defaultCategory={numberModalCategory}
+      />
+
       <footer className="mt-auto border-t border-black/5 bg-white">
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 h-14 flex items-center justify-between text-xs text-stone-500">
           <span>© {new Date().getFullYear()} GetMasjid • PT GetMasjid Digital Indonesia</span>
-          <span className="hidden md:inline text-stone-400">Surat resmi • A4 • PDF</span>
+          <span className="hidden md:inline text-stone-400">Surat resmi & sertifikat • Sistem Daur Ulang Nomor • A4 PDF</span>
         </div>
       </footer>
 
@@ -349,3 +433,4 @@ export default function Home() {
     </div>
   );
 }
+

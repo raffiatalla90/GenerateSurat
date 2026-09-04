@@ -81,7 +81,7 @@ export function HistoryPanel({ items, onLoad, onDelete, onPrint, onDownload }: P
                         </svg>
                         <span>Cetak</span>
                       </button>
-                      <button onClick={() => { if(confirm("Hapus riwayat ini?")) onDelete(item.id); }} className="h-7 px-3 rounded-full bg-white ring-1 ring-black/5 text-xs text-red-600 hover:bg-red-50">Hapus</button>
+                      <button onClick={() => { if(confirm(`Hapus riwayat surat ${item.nomorSurat}?\n\nNomor surat ini akan DIKEMBALIKAN (daur ulang) dan dapat digunakan kembali untuk surat/sertifikat berikutnya.`)) onDelete(item.id); }} className="h-7 px-3 rounded-full bg-white ring-1 ring-black/5 text-xs text-red-600 hover:bg-red-50" title="Hapus riwayat & kembalikan nomor surat">Hapus</button>
                     </div>
                   </div>
                 </div>
@@ -91,7 +91,7 @@ export function HistoryPanel({ items, onLoad, onDelete, onPrint, onDownload }: P
         </div>
 
         <div className="px-6 pb-4 text-[11px] text-stone-500 text-center border-t border-black/5 pt-3">
-          Maks 50 riwayat • Tersimpan di browser (localStorage) • Logo/TTD/Cap ikut tersimpan persis
+          Maks 50 riwayat • Tersimpan di browser • ♻️ Surat yang dihapus otomatis mengembalikan nomor suratnya
         </div>
       </div>
     </div>

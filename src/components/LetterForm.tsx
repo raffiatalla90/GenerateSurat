@@ -12,10 +12,11 @@ interface Props {
   onPrint: () => void;
   onDownload?: () => void;
   onSave: () => void;
+  onOpenNumberModal?: () => void;
   isGenerating?: boolean;
 }
 
-export function LetterForm({ data, onChange, onPreview, onPrint, onDownload, onSave, isGenerating }: Props) {
+export function LetterForm({ data, onChange, onPreview, onPrint, onDownload, onSave, onOpenNumberModal, isGenerating }: Props) {
   const [perihalOption, setPerihalOption] = useState<PerihalOption>(
     (PERIHAL_OPTIONS as readonly string[]).includes(data.perihal) ? (data.perihal as PerihalOption) : "Custom"
   );
@@ -191,13 +192,25 @@ export function LetterForm({ data, onChange, onPreview, onPrint, onDownload, onS
 
         <div className="px-4 sm:px-6 md:px-8 pb-6 space-y-5 sm:space-y-6">
           <div className="p-1 rounded-2xl bg-black/[0.03] ring-1 ring-black/5">
-            <div className="rounded-[calc(1rem-4px)] bg-[#f0faf4] px-4 py-3.5 flex items-center justify-between">
+            <div className="rounded-[calc(1rem-4px)] bg-[#f0faf4] px-4 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <div className="text-[10px] tracking-[0.14em] uppercase font-medium text-emerald-700">Nomor Surat</div>
-                <div className="text-[13px] font-mono font-semibold text-emerald-900 mt-0.5">{data.nomorSurat}</div>
-                <div className="text-[11px] text-emerald-700/60 mt-0.5">XXX/GMJ/MM/YYYY • Auto increment</div>
+                <div className="text-[10px] tracking-[0.14em] uppercase font-bold text-emerald-700">Nomor Surat</div>
+                <div className="text-[14px] sm:text-[15px] font-mono font-bold text-emerald-950 mt-0.5">{data.nomorSurat}</div>
+                <div className="text-[11px] text-emerald-700/70 mt-0.5">Sistem Daur Ulang Nomor Aktif • Auto Increment</div>
               </div>
-              <div className="w-9 h-9 rounded-full bg-[#0f6b4a] text-white grid place-items-center font-bold text-xs">GM</div>
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                {onOpenNumberModal && (
+                  <button
+                    type="button"
+                    onClick={onOpenNumberModal}
+                    className="h-8 px-3.5 rounded-full bg-[#0f6b4a] hover:bg-[#0d5a3f] text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm active:scale-95 transition"
+                    title="Buka Generator Sertifikat / Surat & Buku Registrasi"
+                  >
+                    <span>📘 Buku & Generator Nomor</span>
+                  </button>
+                )}
+                <div className="w-8 h-8 rounded-full bg-emerald-700 text-white grid place-items-center font-bold text-xs">GM</div>
+              </div>
             </div>
           </div>
 
