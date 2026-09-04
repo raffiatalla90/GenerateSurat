@@ -509,17 +509,37 @@ export function generateLetterHTML(
 
   /* Print specific */
   @media print {
-    body { background: white; padding: 0; margin: 0; }
+    *, *:before, *:after {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+    html, body {
+      background: white !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      width: 210mm !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
     .page {
-      box-shadow: none;
-      margin: 0;
-      border-radius: 0;
-      page-break-after: always !important;
-      break-after: page !important;
+      box-shadow: none !important;
+      margin: 0 !important;
+      padding: 14mm 20mm 15mm 20mm !important;
+      border: none !important;
+      border-radius: 0 !important;
+      width: 210mm !important;
       height: 297mm !important;
       max-height: 297mm !important;
       min-height: 297mm !important;
       overflow: hidden !important;
+      transform: none !important;
+      page-break-after: always !important;
+      break-after: page !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
     }
     .page:last-child {
       page-break-after: auto !important;
@@ -528,13 +548,20 @@ export function generateLetterHTML(
     .attachment-page {
       page-break-before: always !important;
       break-before: page !important;
+      width: 210mm !important;
       height: 297mm !important;
       max-height: 297mm !important;
       overflow: hidden !important;
+      padding: 14mm 20mm 15mm 20mm !important;
     }
     .kop-table, .meta-table, .tujuan, .isi, .ttd-container, .ttd-box, .footer {
       page-break-inside: avoid !important;
       break-inside: avoid !important;
+    }
+    .uns-left-bar, .uns-right-bar-yellow, .uns-right-bar-blue {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
     }
   }
 </style>

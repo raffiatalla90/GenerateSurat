@@ -81,8 +81,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Data tidak lengkap." }, { status: 400 });
     }
 
-    // Generate nomor surat random agar aman di Vercel
-    const nomorSurat = generateNomorSurat();
+    // Gunakan nomor surat yang sedang aktif di form/preview
+    const nomorSurat = body.nomorSurat || generateNomorSurat();
 
     const kopConfig = body.kopConfig || DEFAULT_KOP;
     const signatureConfig = body.signatureConfig || DEFAULT_SIG;
