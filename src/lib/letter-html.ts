@@ -44,9 +44,9 @@ function renderKopSection(kop: KopSuratConfig, logoHtml: string, companyHtml: st
 
   if (template === "uns_colored_v1") {
     // UNS Version 1: Side Color Bars & Dual Logo Header (persis PDF dokumen kemitraan)
-    const unsLogo = kop.unsLogoImage || UNS_LOGO_SVG;
+    const unsLogo = UNS_LOGO_SVG;
     const isOldWhitePng = kop.logoImage && kop.logoImage.startsWith("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmwAAAESCAYAAABAVYkJ");
-    const gmjLogo = (!kop.logoImage || isOldWhitePng) ? GETMASJID_LOGO_SVG : kop.logoImage;
+    const gmjLogo = GETMASJID_LOGO_SVG;
 
     const unsScale = kop.unsLogoScale ?? 1.0;
     const unsOffsetX = kop.unsLogoOffsetX ?? 0;
