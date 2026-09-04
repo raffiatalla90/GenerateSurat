@@ -90,6 +90,7 @@ async function generatePdfFromSource(source: { html?: string; url?: string }): P
   try {
     const page = await browser.newPage();
     await (page as any).setViewport({ width: 794, height: 1123, deviceScaleFactor: 2 });
+    await (page as any).emulateMediaType("print");
 
     if (source.url) {
       await (page as any).goto(source.url, {
@@ -108,8 +109,21 @@ async function generatePdfFromSource(source: { html?: string; url?: string }): P
 
     // Tunggu font Google & gambar selesai di-render 100%
     try {
-      await (page as any).evaluate(() => {
-        return (document as any).fonts?.ready;
+      await (page as any).evaluate(async () => {
+        if ((document as any).fonts && (document as any).fonts.ready) {
+          await (document as any).fonts.ready;
+        }
+        const imgs = Array.from(document.images);
+        await Promise.all(
+          imgs.map((img) => {
+            if (img.complete) return Promise.resolve();
+            return new Promise((res) => {
+              img.onload = res;
+              img.onerror = res;
+              setTimeout(res, 1000);
+            });
+          })
+        );
       });
     } catch {}
 

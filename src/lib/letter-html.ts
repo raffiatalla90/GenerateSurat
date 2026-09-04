@@ -58,10 +58,10 @@ function renderKopSection(kop: KopSuratConfig, logoHtml: string, companyHtml: st
 
     return `
       <!-- UNS Colored Version 1: Side Color Bars & Dual Logo -->
-      <div class="uns-v1-accents">
-        <div class="uns-left-bar"></div>
-        <div class="uns-right-bar-yellow"></div>
-        <div class="uns-right-bar-blue"></div>
+      <div class="uns-v1-accents" style="position: absolute; top: 0; left: 0; right: 0; pointer-events: none; z-index: 10;">
+        <div class="uns-left-bar" style="position: absolute; left: 0; top: 14mm; width: 7mm; height: 18mm; background-color: #FBBF24 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;"></div>
+        <div class="uns-right-bar-yellow" style="position: absolute; right: 0; top: 14mm; width: 7mm; height: 11mm; background-color: #FBBF24 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;"></div>
+        <div class="uns-right-bar-blue" style="position: absolute; right: 0; top: 25mm; width: 7mm; height: 5mm; background-color: #0096D6 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;"></div>
       </div>
       <table class="kop-table uns-kop-table" style="border-bottom: none; margin-bottom: 22px; padding-bottom: 4px;">
         <tr>
@@ -267,15 +267,17 @@ export function generateLetterHTML(
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>${escapeHtml(perihalDisplay)} - ${escapeHtml(data.nomorSurat)}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@400;700&display=swap" rel="stylesheet" />
 <style>
   @page {
     size: A4 portrait;
     margin: 0;
   }
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@400;700&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: #1a1a1a;
     background: #eef1f5;
     font-size: 10.5pt;
@@ -310,6 +312,7 @@ export function generateLetterHTML(
     left: 0;
     right: 0;
     pointer-events: none;
+    z-index: 10;
   }
   .uns-left-bar {
     position: absolute;
@@ -317,7 +320,9 @@ export function generateLetterHTML(
     top: 14mm;
     width: 7mm;
     height: 18mm;
-    background: #FBBF24;
+    background-color: #FBBF24 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
   .uns-right-bar-yellow {
     position: absolute;
@@ -325,7 +330,9 @@ export function generateLetterHTML(
     top: 14mm;
     width: 7mm;
     height: 11mm;
-    background: #FBBF24;
+    background-color: #FBBF24 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
   .uns-right-bar-blue {
     position: absolute;
@@ -333,7 +340,9 @@ export function generateLetterHTML(
     top: 25mm;
     width: 7mm;
     height: 5mm;
-    background: #0096D6;
+    background-color: #0096D6 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   /* Kop Surat Table Layout */
@@ -415,9 +424,9 @@ export function generateLetterHTML(
   }
   .meta-inner-table { border-collapse: collapse; }
   .meta-inner-table td { padding: 1px 0; vertical-align: top; }
-  .meta-inner-table td.label-cell { width: 75px; color: #333; }
-  .meta-inner-table td.colon-cell { width: 14px; text-align: center; }
-  .meta-inner-table td.val-cell { font-weight: 500; }
+  .meta-inner-table td.label-cell { width: 75px; min-width: 75px; color: #333; }
+  .meta-inner-table td.colon-cell { width: 14px; min-width: 14px; text-align: center; color: #333; }
+  .meta-inner-table td.val-cell { font-weight: 500; color: #111; }
 
   /* Tujuan */
   .tujuan {
@@ -571,32 +580,33 @@ export function generateLetterHTML(
     ${renderKopSection(kop, logoHtml, companyHtml)}
 
     <!-- META -->
-    <table class="meta-table">
+    <table class="meta-table" style="width: 100%; border-collapse: collapse; margin-bottom: 12px; table-layout: fixed;">
       <tr>
-        <td class="meta-left-cell">
-          <table class="meta-inner-table">
+        <td class="meta-left-cell" style="vertical-align: top; text-align: left; width: 62%;">
+          <table class="meta-inner-table" style="border-collapse: collapse; font-size: 9.5pt;">
             <tr>
-              <td class="label-cell">Nomor</td>
-              <td class="colon-cell">:</td>
-              <td class="val-cell">${escapeHtml(data.nomorSurat)}</td>
+              <td class="label-cell" style="width: 75px; min-width: 75px; color: #333; padding: 1.5px 0;">Nomor</td>
+              <td class="colon-cell" style="width: 14px; min-width: 14px; text-align: center; color: #333; padding: 1.5px 0;">:</td>
+              <td class="val-cell" style="font-weight: 500; color: #111; padding: 1.5px 0;">${escapeHtml(data.nomorSurat)}</td>
             </tr>
             <tr>
-              <td class="label-cell">Lampiran</td>
-              <td class="colon-cell">:</td>
-              <td class="val-cell">${data.attachments && data.attachments.length > 0 ? `${data.attachments.length} lembar` : "-"}</td>
+              <td class="label-cell" style="width: 75px; min-width: 75px; color: #333; padding: 1.5px 0;">Lampiran</td>
+              <td class="colon-cell" style="width: 14px; min-width: 14px; text-align: center; color: #333; padding: 1.5px 0;">:</td>
+              <td class="val-cell" style="color: #333; padding: 1.5px 0;">${data.attachments && data.attachments.length > 0 ? `${data.attachments.length} lembar` : "-"}</td>
             </tr>
             <tr>
-              <td class="label-cell">Perihal</td>
-              <td class="colon-cell">:</td>
-              <td class="val-cell"><strong>${escapeHtml(perihalDisplay)}</strong></td>
+              <td class="label-cell" style="width: 75px; min-width: 75px; color: #333; padding: 1.5px 0;">Perihal</td>
+              <td class="colon-cell" style="width: 14px; min-width: 14px; text-align: center; color: #333; padding: 1.5px 0;">:</td>
+              <td class="val-cell" style="font-weight: 700; color: #111; padding: 1.5px 0;">${escapeHtml(perihalDisplay)}</td>
             </tr>
           </table>
         </td>
-        <td class="meta-right-cell">
+        <td class="meta-right-cell" style="vertical-align: top; text-align: right; width: 38%; font-size: 9.5pt; color: #333; padding-top: 1.5px;">
           Surakarta, ${escapeHtml(tanggalFormatted)}
         </td>
       </tr>
     </table>
+
 
     <!-- TUJUAN -->
     <div class="tujuan">
